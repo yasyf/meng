@@ -1,0 +1,49 @@
+\section{Preliminary Work}
+
+The past six weeks have been spent exploring the opportunities described above, envisioning what each solution would look like, and which would provide the greatest combination of technical novelty, feasibility, and impact for a venture fund. After completing roughly 20 user interviews with venture partners in Boston and San Francisco, and a further 10 with startup founders across the country, two of the proposals stand out as the best to dive deeper into. We have decided to build \textit{a system to discover and monitor promising out-of-network individuals and organizations} (``FounderRank'') and \textit{a system for the discovery of and supporting outreach to the optimal set of seed-stage investors} (``VCWiz'').
+
+\subsection{FounderRank}
+
+For FounderRank, we have started the process of building a graph of relevant institutions and entities, as well as preliminary work on ranking the nodes of this graph. For now, we have limited the graph to a given educational institution.
+
+To build the graph, we first start with the \texttt{.edu} domain of the institution. From there, we use Google to find the websites of the entrepreneurship organizations and clubs on campus. We then crawl these to find startup websites, and crawl those startup sites to find news and press sites. Finally, we add backlinks from the press sites to any other existing startup node in the graph. We end up with a graph of authority hubs, which link to startups and their founders, as well as news sites that provide relative rankings for the other linked entities.
+
+% Diagram of mit.edu -> MTC, etc -> startups -> bostinno
+
+We initially ran the standard PageRank~\cite{page1999pagerank} algorithm (with \texttt{NetworkX}~\cite{networkx}) on the graph crawled as described above, with fairly abysmal results. There is far too much noise on the web, particularly in the variety of (potentially irrelevant) sites that an entrepreneurship center can link to. We attempted to filter out some of this noisiness by pruning ``company'' nodes which only have one inbound edge. Adding only backlinks from news sites was also an attempt to make the final graph much less noisy. When tested on MIT and evaluated manually, these two strategies resulted in a set of nodes that were valuable to a venture firm, though the accuracy of the collection process could be much improved.
+
+To further increase the efficacy of the system, we need a way to filter out appropriate nodes at each level of the graph. For example, we first sought to isolate only the startups linked from each entrepreneurship center, ignoring all other outgoing links. We attempted to train a binary classifier on nothing but the domain name itself, a humorous attempt that proved somewhat successful.
+
+For our training data, we used the top $20000$ sites from Alexa~\cite{alexa} as negative data points, and the domains of the $20000$ most recent startups in Boston and San Francisco, as reported by Crunchbase~\cite{crunchbase}, as the positive. Note the equal numbers of data points to avoid class bias. We started by mapping each domain to a padded vector of ASCII character codes. These character code vectors were then fed into a neural architecture (using Tensorflow~\cite{tensorflow}) containing an embedding layer, followed by an LSTM layer, and finally a sigmoid output layer. Biasing the decision threshold to avoid false negatives (thresholding around 40\%) gave around 70\% accuracy.
+
+% \textbf{TODO: get f1 score}
+
+Examining the results of this classifier did not seem to indicate that the high-information top level domain (TLD) was being taken into account, so we developed a second model which takes the output of the LSTM from the previous, as well as two engineered features (the length of the domain and a one-hot representation of the TLD), and feeds into a fully-connected net. Optimizing for a weighted combination of the loss of the original model and the loss of the new model renders an accuracy of 89\%.
+
+% \textbf{TODO: get f1 score}
+
+A linear model with only the two engineered features as input performs fairly well, giving about 76\% accuracy.
+
+% \textbf{TODO: get f1 score}
+
+Future work will involve more complicated categorization and filtering of websites based on bodies, not just domain names.
+
+\subsection{VCWiz}
+
+Our work on VCWiz to date has involved exploring what data we need collect and how we can collect it, on the discovery side, and identifying the ideal user interface and experience on the outreach side. We realized that in order to provide truly useful investor recommendations to founders, it was necessary to collect and leverage a large corpus of user-sourced data on founder-investor pairings.
+
+We first spent time talking to startup founders going through YCombinator and other well-known accelerators, right as they were about to begin raising their seed funding rounds. They all identified a need for personalized suggestions of investors. Our initial idea was to collect information from each founder on their ideal investor (characterizing investors and firms with features such as industry, check size, and location), and generate suggestions from a cluster of similar investors (using a k-nearest neighbors algorithm). With this in hand, we build the first iteration of the VCWiz application.
+
+The first version of VCWiz collected a founder's ideal investor profile, as well as basic company information, before taking them to a screen of recommendations. The founder had the option to add any of the recommended investors to their list to begin tracking them, and were then taken to the main card-based view of the app. This view presented a series of stages, from ``Waiting for Into'' to ``Waiting for Response'', to ``Need to Respond'', to ``Interested'' or ``Not Interested''. Investor cards, which showed summaries of a partner at a firm, alongside community notes on both the partner and firm, could be moved between stages through dynamic buttons, which captured the transitions between stages. At this time, the collected data was not leveraged, save for sorting the recommendations for new users by popularity in the existing user base.
+
+We learned a few crucial insights through the launch and test of this first iteration of the application.
+
+The first was that it was very difficult to convince users to trust us with their investor data, and that anything we could do to build credibility (auto-filling form fields or leveraging existing brands, to name a couple examples) vastly increased willingness to share data.
+
+The next big learning was that our users were very familiar with a spreadsheet-based experience (which is what they most commonly used before our tool existed), and that trying to replace it was difficult and unnecessary.
+
+Finally, the most important takeaway from this iteration was the realization that founders do not find investors by looking at similar investors; they instead find investors by examining the previous investors of similar companies. This presented us with a nice property: similar users (founders/companies) were positive about similar products (investors). Our recommendation problem had now been reduced to the Netflix Prize~\cite{netflixpize} problem, opening up a large body of existing research.
+
+We have begin work on the second version of this tool, which includes an augmented spreadsheet-like interface, and a recommendation set that is seeded by asking the founder to identify similar companies that are more established. We have also build infrastructure for crawling and ingesting the large databases of information available on websites like Crunchbase~\cite{crunchbase} and Angelist~\cite{angelist}.
+
+Future work will involve building out a new signup flow for the tool that better reflects the data needed to seed recommendations, additional progress on the recommendation algorithms and techniques, and efforts to de-duplicate and standardize the information crawled from various sources.

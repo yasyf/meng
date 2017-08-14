@@ -1,0 +1,78 @@
+\section{Future Work}
+
+\subsection{FounderRank}
+
+Our proposal for the FounderRank project is to continue building a system which maps out a subset of the Internet as a graph, then filters and ranks the nodes to surface the most interesting nodes for a seed-stage venture fund.
+
+The plan is to first finish building the infrastructure for crawling and scraping the nodes in question. Currently, we start at the entrepreneurship sites of academic institutions, and create one graph per institution, but we would like to explore alternative root nodes, and combined graphs.
+
+Once we have crawled the subset of nodes we'd like to consider, the next challenge will be to adequately filter the graph, to remove noise and irrelevant nodes. We will continue our work website classification, leveraging the two methods described in the previous section. We will create baseline classifiers with a simple bag-of-words and Naive Bayes classifier, then evaluate the improvement rendered by distributed representations such as Paragraph Vectors, as well as one-shot classification attempts with convolutions.
+
+The classifiers we anticipate needing are as follows, although there may be more required as the work progresses.
+
+\begin{itemize}
+  \item a 4-way classifier indicating if a website represents a person, a company, a news site, or none of the above
+  \item a binary classifier indicating if a person is a founder, given their website
+  \item a binary classifier indicating if a company is a startup, given its website
+  \item a binary classifier indicating if a company is an investor, given its website
+\end{itemize}
+
+Leveraging these classifiers, we can shape our graph into the following levels.
+
+\begin{enumerate}
+  \item root nodes
+  \item founders and their startups
+  \item news and press sites and blogs
+\end{enumerate}
+
+The second level will be the nodes we care about surfacing, while the third level will be (in part) where authority is derived from.
+
+Once we have this graph, the goal will be to learn a ranking (per-graph) that successfully identifies interesting nodes to consider, where ``interesting'' is defined by the given examples. We will use inequalities between nodes as the training examples, which will be sourced from a combination of real world data from the venture firms we are working with, CrunchBase historic funding data, and some manual identification.
+
+Our strategy for learning the ranking will be to learn one ranking function per graph, using the GNN-based method identified earlier. The benefit of learning this function is that, though the neural net structure changes when we add nodes to the graph, the shared weights stay the same, so our technique will work on previously-unseen nodes.
+
+We will have to explore which features to use as the ``label'' of each node. This will require experimentation with features extracted from the page, and may also include some features derived from the graph (for example, we could include metrics of connectedness or centrality). Another path to explore for features are metrics derived from the news and press sites that reference the website in question, perhaps adapted from investor neighborhoods~\cite{2017arXiv170604229H}.
+
+Finally, we will build an interface to easily surface these nodes and collect human feedback on the rankings.
+
+% - one graph per uni. need to identify some training examples, could use df, cb, or manual, or something else. then save this and run it on graph over time. if graph changes, its ok. weights are the same, just need to rebuild the tf graph and sum some more things (more inputs, but same weights, since weights are shared by units)
+
+% Building block is f_w, which takes in my label, neighbor state (output from previous iteration), and neighbor label (concat all and have that number of units). then spread out into FCNN and narrow down to size of my new state. one of these for each neighbor (sharing weights), tf.sum on them after. output of that -> goes into net which has input units for the size of state, and one output (g_w), -> goes into other inputs as state
+
+\subsection{VCWiz}
+
+Our proposal for VCWiz is first to finish building the second version of the public-facing tool, which we will launch to help us collect data. This tool will be a research, discovery, and outreach organization tool, where seed-stage founders can learn about the investors they are considering, get recommendations for new investors, and track their outreach (with email integrations for easy updating of the system).
+
+Once the new tool is up and running, we will begin work on the sophisticated recommender system. Based on our research identified above, we will try out two models for recommendations, and then combine them into a hybrid model. In all cases, we will bootstrap the system by asking the founder to identify three companies similar to their own, which we will pull investor suggestions from.
+
+The first model is based on collaborative filtering, leveraging founder's insights and the discovery that similar founders often prefer similar investors. We will determine the best way to extract a ``rating'' from the data we have collected, including the outreach tracking data users will enter into the tool. Bootstrapping will happen by simply suggesting the investors of the identified similar companies, using those choices alongside imported investor targets to build a user profile. The challenge with this model will be the extreme sparsity in the data, as identified earlier. However, this is where most of the insights from our novel data set will be incorporated.
+
+The second model is a content-based filtering approach, leveraging our knowledge about investors and how to characterize them. Bootstrapping will happen by aggregating features of the identified similar companies (perhaps by averaging), building a target profile which is then updated as more data is collected. We will identify suggested investors via a k-Nearest Neighbors approach, as was detailed in \cite{stone2014computational}.
+
+In order to build a content-based model, we need to identify features to characterize both founders and investors. Many of the features we are considering can be automatically calculated, while a few will require user authorization or input.
+
+The features we are considering for startups and founders are as follows.
+
+\begin{itemize}
+  \item binary presence of industry tags (from CrunchBase or the founder)
+  \item features extracted from the time-series data of investor outreach interactions (such as mean response time)
+  \item binary ``Job IPO'', ``Job Acquired'', ``Executive IPO'', ``Executive Acquired'', ``Advisory IPO'', and ``Advisory Acquired'' from \cite{2017arXiv170604229H} (all sourced from CrunchBase)
+  \item ``investor neighborhood'', ``maximum IPO fraction'', and ``maximum acquisition fraction'' from \cite{2017arXiv170604229H}
+  \item fraction of the leadership that had previously founded a company before the given company was founded~\cite{2017arXiv170604229H}
+  \item ``number of companies affiliated'', `'`work overlap'', ``education overlap'', ``major overlap'', ``from top school''~\cite{2017arXiv170604229H}
+  \item ``major company similarity''~\cite{2017arXiv170604229H}, but taking into account the textual description of the startup as well as the sector(s)
+  \item mean `leadership age''~\cite{2017arXiv170604229H}
+  \item company age
+\end{itemize}
+
+The features we are considering for investors are as follows.
+
+\begin{itemize}
+  \item binary presence of startup industry tags (based on known existing investments)
+  \item binary industry preferences (explicitly published or from the Pitchbook data set)
+  \item aggregations (e.g. means) of the startup features above, from the portfolio of the investor
+\end{itemize}
+
+We will consider using imputation methods such as Soft-Impute~\cite{mazumder2010spectral} to fill our feature matrices in the event of insufficient data.
+
+Finally, we will combine the two models into a hybrid system. Methods to explore include the ``weighted'', ``mixed'', and ``cascade'' models from \cite{Burke2002}, as well as more complicated Bayesian methods (~\cite{DECAMPOS2010785}) of model combination, if time permits.
