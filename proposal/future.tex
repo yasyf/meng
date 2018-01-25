@@ -35,9 +35,11 @@ We will have to explore which features to use as the ``label'' of each node. Thi
 
 Finally, we will build an interface to easily surface these nodes and collect human feedback on the rankings.
 
-% - one graph per uni. need to identify some training examples, could use df, cb, or manual, or something else. then save this and run it on graph over time. if graph changes, its ok. weights are the same, just need to rebuild the tf graph and sum some more things (more inputs, but same weights, since weights are shared by units)
+% - one graph per uni. need to identify some training examples, could use df, cb, or manual, or something else. then save this and run it on graph over time. if graph changes, its ok. weights are the same, just need to rebuild the tf graph (or however we are doing iteration) and sum some more things (more inputs, but same weights, since weights are shared by units for every matrix-generating NN)
 
 % Building block is f_w, which takes in my label, neighbor state (output from previous iteration), and neighbor label (concat all and have that number of units). then spread out into FCNN and narrow down to size of my new state. one of these for each neighbor (sharing weights), tf.sum on them after. output of that -> goes into net which has input units for the size of state, and one output (g_w), -> goes into other inputs as state
+
+% NN doesn't even change when we add a new node - all it does it take in labels (old, new) and output a matrix which tells us how to transform state of neighbor for sum (to be our new state)
 
 \subsection{VCWiz}
 
