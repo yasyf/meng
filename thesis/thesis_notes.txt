@@ -1,0 +1,64 @@
+Titles:
+  - Improving the founder-investor matching process
+  - Improving equity and efficiency in the founder-investor matching process
+  - VCWiz: a platform to improve founder-investor matching
+  - VCWiz: a platform to improve equity and efficiency in founder-investor matching
+  - Using software to help startup founders find investors
+  - Improved tooling for startup founders seeking investments
+  - A Study on Fair and Fast Founder-Investor Matching
+  - A Software Platform for Fair and Fast Founder-Investor Matching
+  - The Financial Marriage Problem: Fast and Fair Matching of Startup Founders to Investors
+
+# Intro: what the goals are
+
+High-level overview: we are looking to improve the founder-investor matching process. This means making the process more efficient, but also more equitable / meritocratic. From the founder end, this means building improved tooling. From the investor end, it means exploring the building blocks of what makes a "good" founder, with a specific focus on ease of raising, since that's much easier to measure with the data we have. We have data-driven conclusions about the latter. Finally, we also explore some social reasons why founders engage with investors the way they do, looking at usage data on the platform, and surveys that were sent out (about tooling, intro requests, and privacy).
+
+- The goals of these experiments were to:
+  1. Determine the state of founder-investor matching today. What tools and metrics are used, what does the process look like, how could it be improved
+  2. Build and evaluate a tool to help founders match with their optimal investor (because they are more likely to use than investors)
+  3. Use the data from 3) to educate which metrics enhance the matching for both sides
+
+# 1. The state of founder-investor matching today
+
+  - Use some from proposal. Definitions. Goals and objective functions. Commonly used tools. Competitors. The early surveys. All the proposed ways to improve it. Why we picked the one we did.
+
+# 2. Tool to help match founders with investors
+
+  - VCWiz. What problem it solves, who the target audience is.
+  - Initial user interviews, v1 (screenshots) features, the feedback from it (hard to replace spreadsheets)
+  - Features that are included in the next version
+    - 3 parts: discovery (fancy filtering by all the different things), research (comprehensive, everything in one place), and CRM (outreach management with inbox syncing)
+  - Components
+    - User experience
+    - Frontend
+    - Backend
+    - Marketing / Launch
+    - Social experiment with intros
+  - Evaluation
+    - Metrics
+    - User feedback
+    - Future plans
+
+# 3. What can we learn from the data?
+  - Collected large, proprietary data set of email graphs based on headers
+    - What can this data tell us? If we use it as a proxy for the social graph, what does it indicate about the founder? Can we use this for better matching?
+  - Built a funding graph of the entire ecosystem
+    - Can we identify the best founders and investors with just public information? Does augmenting this graph with our personalized data help us learn about the foudners on the platform? Can we use this for better matching?
+  - (optional) Can we give backtestable recommendations?
+  - What did we learn about how users do and don't use the platform?
+
+## Facilitated Intros: Social Experiment
+  - What lead to this? What problem are we trying to solve?
+  - Why do the experiment?
+  - How are we measuring success?
+  - What happened?
+  - Why did it fail?
+    - Investors at top firms don't have time to triage another source of deals, and the platform did not provide an effective way for them to hand it off to others at their firm. Lesson from this is that for a new stream of data, destination in a firm should be customizable, and there should be a dashboard where people can collaborate.
+
+## Data Backend
+
+### Inferred Data
+
+#### Partners
+
+- How we guess which partner made which investment
