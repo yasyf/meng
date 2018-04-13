@@ -179,7 +179,6 @@ Finally, we refined the stages a tracked investor could fall into, based on feed
   - Passed
   - Not Interested
 
-
 #TODO: screenshots of v2
 
 Following the completion of the second iteration of VCWiz, we did another series of user tests, asking founders to focus specifically on the improvements over the first version.
@@ -208,15 +207,35 @@ Clicking through from any of the results in the filter view bring up a research 
 
 #### Outreach
 
-The outreach functionality of VCWiz is embedded in every screen, as well as having a decdicated dashboard. Every tool for research and discovery has buttons to add investors and firms to the VCWiz Tracker, a CRM which is synced throughout the platform. Founders see a contextual dropdown showing the status of an investor in their pipeline any time they are researching that investor or their peers. The conversations screen is a dashboard which shows a table-like view, contiaining the information that was previously put in spreadsheets. We used a table to strike the balance between giving founders an interface they were familiar with, and displaying the information in a sufficiently detailed way.
+The outreach functionality of VCWiz is embedded in every screen, as well as having a decdicated dashboard.
 
-- Features that are included in the next version
-    - 3 parts: discovery (fancy filtering by all the different things), research (comprehensive, everything in one place), and CRM (outreach management with inbox syncing)
+Every tool for research and discovery has buttons to add investors and firms to the VCWiz Tracker, a CRM which is synced throughout the platform. Founders see a contextual dropdown showing the status of an investor in their pipeline any time they are researching that investor or their peers. The conversations screen is a dashboard which shows a table-like view, contiaining the information that was previously put in spreadsheets. We used a table to strike the balance between giving founders an interface they were familiar with, and displaying the information in a sufficiently detailed way. The data in this table is populated and updated through an integration with the founder's email provider.
 
-Shortly after the public launch of this third version of VCWiz, we surveyed active founders on the platform to again calculate the NPS. This time, we received 117 responses, with an NPS of 0, a significant jump from the last version. 63% of users agreed that they would recommend VCWiz to a friend, up dramatically from 25% previously.
+In addition to merely tracking conversations, this version of VCWiz also overlays each screen containing details about an investor with a subset of the founder's email graph, showing them the shortest path(s) to the given investor in their network. This allows the founder to understand how likely they are to be able to reach an investor without a click.
 
+Shortly after the public launch of this third version of VCWiz on January 25th, 2018, we surveyed active founders on the platform to again calculate the NPS. This time, we received 117 responses, with an NPS of 0, a significant jump from the last version. 63% of users agreed that they would recommend VCWiz to a friend, up dramatically from 25% previously.
+
+#TODO: screenshots of v3
 
 ## Our Implementation
+
+### User Experience
+
+Founders find the VCWiz platform through one of our launch partners, or from search engines such as Google. We spent the months leading up to the launch generating research pages for every investor, firm, and company in our database.
+
+
+### Metrics
+
+At the time of writing, there are 421,946 VCWiz research pages indexed on Google. From these, there are roughly 7000 impressions per day, resulting in about 100 clicks to the site. Similar stats are seen on other major search engines. There are between 200 and 300 founders that actively use the site on a monthly basis, with around 1200 founders that have used the platform actively at least once since the launch. These founders visit 1000 investor profiles monthly, for an average of four investors per founder per month. The majority of sessions. Of these founders that have signed up, just over 50% of them have granted access to their email inboxes for the purpose of tracking conversations with investors, and contributing anonymous, aggregate graph data for the VCWiz platform. These founders send and receive an average of 33 emails with investors per month. When considering how deeply founders are engaging with the research component of the platform, we see that, after filtering out sessions which last less than 10 seconds, 20% of the sessions since launch lasted at least 10 minutes, with 5% lasting over 30 minutes. The majority of this time is spent on the research pages generated for investors and firms. Interestingly, while founders tend to focus on the pages related to investors, they often come in through the pages focusing on a given company: 37% of incoming search traffic is for a company page, with 30% going to an investor page, and 20% going to firm pages.
+
+  - Components
+    - User experience
+    - Frontend
+    - Backend (data sources, layout)
+    - Marketing / Launch
+    - Social experiment with intros
+    - Security and preventing abuse
+    - Performance
 
 References
 
