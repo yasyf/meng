@@ -6,6 +6,8 @@ Focus: exploring ways to better match founders and investors. On the founder end
 
 # Cleaning the graph
 
+#TODO: summarize this since it is included elsewhere:
+
 When importing a user's email graph, we first started with the naive approach of scanning every email, creating a node (if one did not already exist) per address, and creating outgoing edges every time one node sent an email to another. While this works when only importing emails once, the APIs at our disposal were imperfect, and so we had to start tracking a unique message identifier in our main database to ensure emails are imported at most once.
 
 There were also several heuristics we used to skip messages that were to mailing lists, as this added a lot of noise to the dataset. If the message meets any of the following criteria, it is logged and skipped. The full algorithm can be found at [1]. In these criteria, the recipients are defined as the union of the TO, CC, and BCC fields, and body is defined as the concatenation of the text and HTML sections of the message.

@@ -158,9 +158,9 @@ The second version of VCWiz featured a new recommendation engine, which first as
 
   ```
   def recommendations(founder):
-    investors = founder.company.competitors.flat_map(c => c.investors)
-    eligible = investors.filter(i => i.industries \cap founder.company.industries \neq \emptyset)
-    sorted = eligible.sort(i => [i.featured, |i.industries \cap founder.company.industries|, i.popularity])
+    investors <- founder.company.competitors.flat_map(c => c.investors)
+    eligible <- investors.filter(i => i.industries \cap founder.company.industries \neq \emptyset)
+    sorted <- eligible.sort(i => [i.featured, |i.industries \cap founder.company.industries|, i.popularity])
     return sorted
   ```
 
@@ -219,10 +219,93 @@ Shortly after the public launch of this third version of VCWiz on January 25th, 
 
 ## Our Implementation
 
-### User Experience
+### Onboarding
 
-Founders find the VCWiz platform through one of our launch partners, or from search engines such as Google. We spent the months leading up to the launch generating research pages for every investor, firm, and company in our database.
+Founders find the VCWiz platform through one of our launch partners, or from search engines such as Google. We spent the months leading up to the launch generating research pages for every investor, firm, and company in our database. These pages include comprehensive details on the entity in question, as described above, as well as an embedded view of all the VCs associated with that entity, and, if the user is signed in, all the personalization included in the platform.
 
+#TODO firm screenshot, cite https://vcwiz.co/firm/79/spark-capital
+#TODO techcrunch screenshot, cite https://techcrunch.com/2018/01/25/dorm-room-fund-has-built-a-crm-for-founders-raising-a-seed-round/
+
+After funneling users from their landing page to the main screen of the application, founders are able to filter, search, and explore lists of investors without creating an account. The site is fully functional from a discovery and research perspective, and about 80% of users are content to peruse the content without creating an account. If the founder decides to create an account, we walk them through a series of questions to gather more information about their startup.
+
+#TODO landing page screenshot
+
+The signup flow begins by asking for the domain of the company. Using this as a unique identifier, we are able to query both our internal database, as well as external services (such as the Clearbit Logo API [17]) to gather as much information as possible on the founder's startup. The client browser makes a request to an API backend on the VCWiz server which initiates these requests in parallel, and returns a joined \texttt{Company} model within a given timeout threshold. This information is used pre-fill many of the following fields, including the name, description, industries, and competitors of the company. The founder is given a chance to verify this information, as well as provide mandatory information on their ideal investor profile. Finally, the founder is requested to log in with their Google account, in order to provide an authenticated email and social profile. We chose to use an OAuth2 [18]-based login flow with an existing service provider to simplify the login experience, and to avoid having to store user credentals. Google was the platform of choice on account of it providing verified email address information to users, as well as to unify the authentication experience in the case that the founder also decides to provide API access to their email inbox (for the purpose of synchronising their coversations with investors).
+
+Providing access to their email inbox is strictly an opt-in feature, and the how the data is to be used is explicitly described. As a result of our surveys to founders in previous iterations of the prodcut, we found that it was necessary to have a plain-English description of our data use polcity. We guarantee to founders that no human will ever read the individual messages of their inbox, that only aggregate data will be used for purposes other than their personal dashboard, and that we will only use metadata from their emails (headers, sentiment, etc.).
+
+After signing up, the founder is presented with a brief set of video clips that introduce the functionality to them, including how to filter, search, and track investors. Following this, the site functions as it did before the founder signed up, with a few minor changes. Every screen with an investor has an integrated conversation tracker which shows the status of that investor, if any, in the founder's fundraise, as well as the email-based shortest intro path to that investor. The results of the filters are also personalized to the founder, based on the overlap in industries and location between each firm and the founder's startup. Signing up also unlocks the conversation tracker, with a preview of conversations on the main page, and a dedicated screen for updating and viewing the status of each individual conversation.
+
+#TODO: screenshots of intro, summary, and conversations
+
+### Ingesting User Data
+
+One of the major insights from previous iterations of VCWiz was that founders have a variety of different ways they create and interact with data about their fundraising process, and they aren't often willing to change those. Thus, the tool we built had to meet founders wherever they currently were, in order to get their conversation tracker on our platform caught up. We built three independent tools for letting the system know about ongoing conversation, in addition to the integrations in the research and discovery sections.
+
+The first (and easiest) way founders can import their conversations to the platform is to grant access to their Gmail inbox, either during the signup flow or when later prompted. This allows a regularly-scheduled job on our server to poll an API offered by Google [22], and import new messages according to the following pseudocode. A \texttt{history_id} parameter is cached in the \texttt{Founder} model to indicate the most recent thread fetched from Google, to avoid fetching duplicates in the future.
+
+  ```
+    def sync_inbox(founder):
+      for thread in fetch_threads(founder.address, founder.history_id):
+        messages <- thread.fetch_messages()
+        for message in messages:
+          if message.from == founder.address:
+            parse_outgoing(founder, message)
+          else:
+            parse_incoming(founder, message)
+        founder.history_id <- thread.id
+  ```
+
+Parsing messages follows the following algorithm, which also augments the founder's email-based graph with every email processed.
+
+  ```
+    def parse_message(message):
+      if check_if_bulk(message):
+        return
+      founder.graph.connect(message.address)
+      target_investor <- find_or_create_target_investor(founder, message)
+      if !target_investor:
+        return
+      if !target_investor.email:
+        target_investor.email <- message.address
+      target_investor.stage <- guess_stage(message)
+      create_new_email(founder, target_investor, message)
+  ```
+
+As can be seen from the algorithm, when importing a user's emails and creating their email graph, we first started with the naive approach of scanning every email, creating a node (if one did not already exist) per address, and creating outgoing edges every time one node sent an email to another. While this works when only importing emails once, the APIs at our disposal were imperfect. The \texttt{history_id} tracked from Google's API often expire, and imports must be repeated. Thus, we had to start tracking a unique message identifier in our own database to ensure emails are imported at most once.
+
+There were also several heuristics we used to skip messages that could be classified as bulk mail, as this added a lot of noise to the dataset. If the message meets any of the following criteria, it is logged and skipped. The full algorithm can be found at [23]. In these criteria, the recipients are defined as the union of the TO, CC, and BCC fields, and body is defined as the concatenation of the text and HTML sections of the message.
+
+  - There are more than 5 recipients
+  - The body contains a phrase often used in bulk mailings, such as "unsubscribe", "terms of use", or "view in your browser"
+  - The headers contain one of sereval common listserve headers, such as List-Unsubscribe and many vendor-specific ones
+  - The return path of the message includes a popular bulk email vendor
+  - The local component of the from address is that of a commonly-automated inbox, such as "noreply" or "info"
+  - The name of the sender includes common aliases, such as "support" or "payroll"
+  - The domain of the sender or any recipient is one that is common in transactional emails
+
+The second way founders can inform the system about ongoing conversations is to CC (or BCC) a special email address, which routes to a server which accepts the message and forwards the relevant metadata to an API endpoint on VCWiz. This metadata is parsed and the email is reconstructed, before being run through the same algorithms as above. This alternate, manual way of updating VCWiz via emails was added for the more privacy-consious founders on the platform, who wished to have the convenience of updates based on emails without handing over access to their entire inbox.
+
+The third and final ways founders can update the system in bulk is by uploading a existing spreadsheet of conversations. Our surveys revealed that the most commonly-used tool for tracking conversations with an investor was a spreadsheet (or spreadsheet-like tool), so providing an easy way to migrate those onto the platform was essential. Founders can export a CSV file from any spreadsheet-based tool and import it on the conversation tracker page of VCWiz. The server parses the rows out of the CSV, and uses both the format of the content of a column as well as it's header (based on the Levenshtein distance [24] of a given header from a list of common choices) to guess which columns correspond to which internal database columns of a \texttt{TargetInvestor}. This mapping is presented to the founder for verification, and then is used to import the rows as a background job.
+
+#TODO: screenshot of import
+
+### Security
+
+- rate limiting, CSRF keys
+
+### Performance and Caching
+
+#### External APIs
+  - ambiguity in parsing
+  - stoplight model
+
+
+### Production System
+
+  - Ubuntu-based servers on AWS, with heroku
+  - managed posgres, neo4j, redis, and memcached
+  - React [21]
 
 ### Metrics
 
@@ -236,6 +319,112 @@ At the time of writing, there are 421,946 VCWiz research pages indexed on Google
     - Social experiment with intros
     - Security and preventing abuse
     - Performance
+
+### Diagrams
+
+#### Models
+
+The main models in VCWiz are Company, Founder, Investor, Firm, and Investment, each of which are self-explanatory. (* note that in diagrams, Firm is referred to as Competitor for legacy reasons). Each of these models is backed by a similarly-named database table.
+
+The decision was made to have many \texttt{Company}s per \texttt{Founder}, as founders on the platform very often have started a company before. This leads to the denormalized \texttt{PrimaryCompany} model, which simply keeps track of which \texttt{Company} is the one a founder is currently leading. One current issue with the platform that results from this is that any founder can claim to be affiliated with a startup already in the system, whether or not this is true.
+
+Each founder can own many \texttt{TargetInvestor}s, which represent a conversation between a founder and an investor (or an investor on a founder's wishlist). \texttt{IntroRequest}s and \texttt{Email}s are then affiliated with a \texttt{TargetInvestor}.
+
+Tweets, news articles, and blog posts mentioning either an individual investor or entire firm are eached tracked by their own model. An \texttt{Entity} model that can be associated with any of these tracks mentions of extracted entities from the content, and is used for topic-based searching. In order to reduce noise in the selection of entities, we made the descion to only create an entity record if a given entity has an entry on Wikipedia [20].
+
+#TODO include hierarchy and content models, generated by [19]
+
+#### Routes
+
+The routing of VCWiz is split into the frontend application, resource paths which serve pre-compiled Javascript and CSS, and an internal API.
+
+The following endpoints serve the pages for the frontend VCWiz application, which is a React app. The last section contains the pages that are auto-generated for search engines.
+
+\begin{pre}
+  /login
+  /logout
+  /signup
+
+  /discover
+  /outreach
+  /filter
+  /search
+
+  /privacy
+  /terms
+  /founders/unsubscribe(/:token)
+
+  /firm/:id(/:slug)
+  /investor/:id(/:slug)
+  /company/:id(/:slug)
+  /list/:list(/:key/:value)
+\end{pre}
+
+These endpoints serve the pages that investors interact with on VCWiz. The first group is a React app which allows investors to claim their profile on the platform, and make edits to the information that is displayed about them. The second group are the pages which investors land on when accepting or rejecting an introduction request from a founder.
+
+\begin{pre}
+  /investors/token/:token
+  /investors/signup
+  /investors/settings
+  /investors/contacts
+  /investors/update_contacts
+
+  /intro/opt_in
+  /intro/decide
+  /intro/pixel/:token.png
+\end{pre}
+
+These endpoints comprise the internal API, which largely serves to allow the React apps which comprise the frontend to create, read, update, and destroy resources on the server.
+
+\begin{pre}
+  /api/v1/intros/:id/preview
+  /api/v1/intros/:id/confirm
+  /api/v1/intros
+  /api/v1/intros/:id
+  /api/v1/investors/:id/interactions
+  /api/v1/investors/:id/intro_paths
+  /api/v1/investors/:id/verify
+  /api/v1/investors/filter
+  /api/v1/investors/search
+  /api/v1/investors/fuzzy_search
+  /api/v1/investors/entities
+  /api/v1/investors/recommendations
+  /api/v1/investors/locations
+  /api/v1/investors/add
+  /api/v1/investors
+  /api/v1/investors/new
+  /api/v1/investors/:id/edit
+  /api/v1/investors/:id
+  /api/v1/companies/search
+  /api/v1/companies/query
+  /api/v1/companies/:id
+  /api/v1/competitors/:id/intro_paths
+  /api/v1/competitors/filter
+  /api/v1/competitors/filter_count
+  /api/v1/competitors/locations
+  /api/v1/competitors/intro_path_counts
+  /api/v1/competitors/lists
+  /api/v1/competitors/list/:list(/:key/:value)
+  /api/v1/competitors/:id
+  /api/v1/message/open
+  /api/v1/message/click
+  /api/v1/message/bounce
+  /api/v1/message/unsubscribe
+  /api/v1/message/demo
+  /api/v1/message
+  /api/v1/pubsub/generation
+  /api/v1/target_investors/import
+  /api/v1/target_investors/bulk_import
+  /api/v1/target_investors/poll/:id
+  /api/v1/target_investors
+  /api/v1/target_investors/new
+  /api/v1/target_investors/:id/edit
+  /api/v1/target_investors/:id
+  /api/v1/founder/disable_scanner
+  /api/v1/founder/event
+  /api/v1/founder/locations
+  /api/v1/founder
+\end{pre}
 
 References
 
@@ -255,3 +444,11 @@ References
 [14] https://www.hbs.edu/faculty/Pages/item.aspx?num=37618
 [15] https://dl-acm-org.libproxy.mit.edu/citation.cfm?id=2507882
 [16] https://hbr.org/2003/12/the-one-number-you-need-to-grow
+[17] https://clearbit.com/logo
+[18] https://tools.ietf.org/html/rfc6749
+[19] https://github.com/voormedia/rails-erd
+[20] https://www.wikipedia.org/
+[21] https://reactjs.org/
+[22] https://developers.google.com/gmail/api/
+[23] https://git.io/vxunk
+[24] http://adsabs.harvard.edu/abs/1966SPhD...10..707L
