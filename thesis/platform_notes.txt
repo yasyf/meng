@@ -290,6 +290,50 @@ The third and final ways founders can update the system in bulk is by uploading 
 
 #TODO: screenshot of import
 
+### Data Pipeline
+
+There are serveral sources of information used by the data pipeline in VCWiz, each of which is abstracted, normalized, and merged into the existing schema of the system.  Instead of attempting to mirror the structure of each API in the server code, a wrapper class (\texttt{ApiObject} [25]) was created, which abstracts away common structure in the external API endpoints accessed. This allows simple property-based access of the JSON objects returned, with automatic detection of arrays and types which need to be converted (such as dates). The general method for building up profiles of objects in VCWiz is to start with a base source of truth (often Crunchbase), then augment these objects with a variety of information streams, some of which are documented below.
+
+#### Crunchbase
+
+Through the Crunchbase Data Venture Program [11], we received access to the entire database of investors, firms, and companies on Crunchbase. Each \texttt{Company}, \texttt{Founder}, \texttt{Investor}, and \texttt{Firm} on VCWiz stores a unique Crunchbase identifier (\texttt{crunchbase_id} or \texttt{cb_id}), which allows changes on Crunchbase to be reflected in VCWiz models (when appropriate). Whenever an object with associations that have Crunchbase identifiers is updated, background jobs are initiated which attempt to fetch updates for each association. Furthermore, approximately once a month, a complete dump of the Crunchbase database is downloaded and imported (skipping over existing records).
+
+#### AngelList
+
+Each \texttt{Company}, \texttt{Founder}, \texttt{Investor}, and \texttt{Firm} also has a field for storing an AngelList [5] identifier. The AngelList API [26] is used to augment information on these objects when Crunchbase is ambiguous or incomplete. Through manual inspection, we found that AngelList's dataset often contains more information for companies which are so early-stage that they have not yet raised money from institutional investors, whereas Crunchbase focuses on venture-backed startups.
+
+#### Bing News Search API
+
+The Bing News Search API [27] is used to periodically check for previously-unseen news articles on a given investor. These news articles are imported and processed, which involves summarizing them, extracting entities from their bodies, and categorizing their sentiment. All of this information is saved to a \texttt{News} record, which is displayed to users on the research page for a \texttt{Investor}.
+
+#### Newsriver
+
+Newsriver [28] is a similar API to Bing News Search, and is also used to monitor for new press on an investor.
+
+#### Clearbit
+
+Clearbit [29] is a service which provides access to a dense graph of human profile information, with nodes that can be identified with an email address or social media profile. We use it to auto-fill parts of the profiles on VCWiz, both for founders and investors.
+
+#### Text Processing API
+
+We use the Text Processing API [30] for entity recognition and sentiment analysis of many pieces of text, including news articles and emails.
+
+#### Google Cloud Natural Language
+
+We use the Google Cloud Natural Language API [31] for the same reasons as the Text Processing API.
+
+#### Hunter
+
+Hunter [32] is a service which collects common email patterns on a per-domain basis to aid in guessing a person's email address given their name and domain. We use it to guess the emails of investors who have not signed up for the platform yet, when a founder requests an introduction to them.
+
+#### Twitter
+
+We use the APIs provided by Twitter [33] combined with the social media usernames reported by Clearbit to log recent tweets of every individual investor on the VCWiz platform. These tweets are displayed on the research page for the investor. Entities are extrated from these tweets, and are used to build a profile of the topics affiliated with an investor.
+
+#### Medium
+
+Medium [34] is a popular platform for blogging. When an investor has a profile on Medium, it is scraped regularly to identify new blog posts to display on the research page. Like tweets, entities are also extracted from blog posts for analysis.
+
 ### Security
 
 - rate limiting, CSRF keys
@@ -312,8 +356,7 @@ The third and final ways founders can update the system in bulk is by uploading 
 At the time of writing, there are 421,946 VCWiz research pages indexed on Google. From these, there are roughly 7000 impressions per day, resulting in about 100 clicks to the site. Similar stats are seen on other major search engines. There are between 200 and 300 founders that actively use the site on a monthly basis, with around 1200 founders that have used the platform actively at least once since the launch. These founders visit 1000 investor profiles monthly, for an average of four investors per founder per month. The majority of sessions. Of these founders that have signed up, just over 50% of them have granted access to their email inboxes for the purpose of tracking conversations with investors, and contributing anonymous, aggregate graph data for the VCWiz platform. These founders send and receive an average of 33 emails with investors per month. When considering how deeply founders are engaging with the research component of the platform, we see that, after filtering out sessions which last less than 10 seconds, 20% of the sessions since launch lasted at least 10 minutes, with 5% lasting over 30 minutes. The majority of this time is spent on the research pages generated for investors and firms. Interestingly, while founders tend to focus on the pages related to investors, they often come in through the pages focusing on a given company: 37% of incoming search traffic is for a company page, with 30% going to an investor page, and 20% going to firm pages.
 
   - Components
-    - User experience
-    - Frontend
+    - frontend (layout of code)
     - Backend (data sources, layout)
     - Marketing / Launch
     - Social experiment with intros
@@ -452,3 +495,13 @@ References
 [22] https://developers.google.com/gmail/api/
 [23] https://git.io/vxunk
 [24] http://adsabs.harvard.edu/abs/1966SPhD...10..707L
+[25] https://git.io/vpvib
+[26] https://api.angel.co/
+[27] https://azure.microsoft.com/en-us/services/cognitive-services/bing-news-search-api/
+[28] https://newsriver.io/
+[29] https://clearbit.com/
+[30] http://text-processing.com/docs/
+[31] https://cloud.google.com/natural-language/
+[32] https://hunter.io/
+[33] https://developer.twitter.com/en/docs
+[34] https://medium.com/
