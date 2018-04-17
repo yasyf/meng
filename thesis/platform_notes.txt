@@ -334,9 +334,21 @@ We use the APIs provided by Twitter [33] combined with the social media username
 
 Medium [34] is a popular platform for blogging. When an investor has a profile on Medium, it is scraped regularly to identify new blog posts to display on the research page. Like tweets, entities are also extracted from blog posts for analysis.
 
+#### Homepages
+
+The homepages of investors, firms, and founders are all scraped for entity extraction, similar to the blog posts and news articles above.
+
 ### Security
 
-- rate limiting, CSRF keys
+The dataset and internal API endpoints exposed by VCWiz present a large opportunity for abuse. The resources required to build and maintain the database of investors, firms and companies are considerable, and every other site which presents a similar dataset goes to great lengths to discourage web scraping and other illegitimate access. Often, sites will employ the services of a company such as Distil Networks [35], which uses a variety of Javascript-based methods to make it difficult or impossible to programatically get the HTML of a webpage. Since VCWiz exposes a JSON API to the public internet, it was necessary to take percautions against anything other than the VCWiz frontend accessing internal resources. Furthermore, additional measures were put in place to make sure no one could access a founder's data, other than that founder themselves.
+
+The security of the entire application is handled through a few efforts. All data is stored in a single database, with credentials stored as an environment variable on the web server. These credentials are rotated automatically on a regular basis. Any API keys or further credientials are also stored as environment variables, never recorded in code. User sessions are encrypted with a private key only held by the web servr, and serialized into client cookies. These sessions contain the primary key of the currently logged-in \texttt{Founder}, if any, and is used to ensure that no one can access a founder's data without authorization.
+
+When it comes to the API specifically, we want to prevent both unauthorized reads (of user or bulk data) and writes (that a user did not intend).
+
+Writes across founders are defended against with the measures described above. A common attack vector for an unauthorized write is a cross-site request forgery (CSRF). CSRF is when "a malicious site instructs a victim’s browser to send a request to an honest site, as if the request were part of the victim’s interaction with the honest site" [36]. In this case, a malicious site could send a request to a VCWiz API, impersonating the currently logged-in founder to, for example, request an introduction from an investor with arbitrary text. This could be very damaging for the founder, and so is addressed by embedding a request-specific key in the meta tags of each page. This key is parsed by the frontend application, and sent in a header to the API with every request. If the key is present, the request must be from a legitmate source. If it is absent or missing, the request is illegitimate and is rejected before being routed.
+
+Preventing read abuse of internal APIs is accomplished through a combination of expiring server grants to clients and rate-limiting. Whenever a non-API page is loaded on VCWiz, a timestamp is set in the encrypted user session. Whenever an API request is made, this session timestamp is compared to the current server time. If more than one hour has elapsed, the API request is reject with a \texttt{401 Unauthorized} status code. This ensures that the only clients who can make API requests are the ones representing active users on the website. Of course, there are times where this can result in a legitimate user being denied (because, for example, they left the page open and came back an hour later). In the cases where the API abstraction layer on the frontend receives a \texttt{401}, it simply triggers a refresh of the page, thereby refreshing the server grant. Since it would be possible to obtain a grant for malicious purposes, the API is also rate-limited by session identifier and IP address.
 
 ### Performance and Caching
 
@@ -350,6 +362,9 @@ Medium [34] is a popular platform for blogging. When an investor has a profile o
   - Ubuntu-based servers on AWS, with heroku
   - managed posgres, neo4j, redis, and memcached
   - React [21]
+
+
+### Filtering
 
 ### Metrics
 
@@ -505,3 +520,5 @@ References
 [32] https://hunter.io/
 [33] https://developer.twitter.com/en/docs
 [34] https://medium.com/
+[35] https://www.distilnetworks.com/
+[36] https://dl-acm-org.libproxy.mit.edu/citation.cfm?id=1455782
