@@ -106,15 +106,15 @@ The goal of the platform is to let the founder specify their preferences in any 
 
 ### Research
 
-After surfacing recommendations to the founder, the platform strives to be the single location with all the relevant information about the partners of a given venture firm. The goal is that the founder never has to leave VCWiz (or a site linked from VCWiz) in order to make a decision about an investor. To this end, in addition to the characteristics necessary for discovery, we collect and report several other pieces of information.
+After surfacing recommendations to the founder, the platform strives to be the single location with all the relevant information about the partners of a given venture firm. The goal is that the founder never has to leave VCWiz (or a site linked from VCWiz) in order to make a decision about an investor. To this end, in addition to the characteristics necessary for discovery, we collect and report several other pieces of information:
 
-  - the most recent investments of the firm
-  - the most recent investments of a given partner at the firm
-  - the firms that often invest alongside a firm ("co-investors")
-  - the specific industries that a partner focuses on investing in
-  - the topics a partner often discusses online
-  - links to online profiles and content created by the firm or a partner
-  - biographic and demographic information on a partner
+  - The most recent investments of the firm
+  - The most recent investments of a given partner at the firm
+  - The firms that often invest alongside a firm ("co-investors")
+  - The specific industries that a partner focuses on investing in
+  - The topics a partner often discusses online
+  - Links to online profiles and content created by the firm or a partner
+  - Biographic and demographic information on a partner
 
 ### Outreach
 
@@ -168,7 +168,19 @@ Another addition to the second version was an augmented spreadsheet interface, w
 
 In order to build up the VCWiz investor database, we started with a dataset imported from the Crunchbase Data Venture Program [11], then further augmented it with serveral additional sources. We will discuss our data pipeline in depth below.
 
-Finally, we refined the stages a tracked investor could fall into, based on feedback from founders who were currently fundraising.
+The venture firms in our database are now tagged with the stage of company they invest in, based on the latest fundraising round that has occured. These categories are defined (and ordered) as such.
+
+  - Accelerator
+  - Angel
+  - Pre-Seed
+  - Seed
+  - Series A
+  - Series B
+  - Venture
+
+N.B. These categories are not necessarily mutually exclusive. For example, an accelerator may indeed give a startup their pre-seed round. The category for "Venture" captures all growth-stage companies (Series C and later).
+
+Finally, we refined the stages a tracked investor could fall into, based on feedback from founders who were currently fundraising. The list below indicates the ordering over stages that is used throughout the platform.
 
   - My Wishlist
   - Asked for Intro
@@ -356,7 +368,6 @@ Preventing read abuse of internal APIs is accomplished through a combination of 
   - ambiguity in parsing
   - stoplight model
 
-
 ### Production System
 
   - Ubuntu-based servers on AWS, with heroku
@@ -364,7 +375,113 @@ Preventing read abuse of internal APIs is accomplished through a combination of 
   - React [21]
 
 
-### Filtering
+### Filtering & Searching
+
+#### Filtering
+
+The main filtering interface of VCWiz allows founders to display investors that match a set of criteria. We will detail each of those criteria before describing the algorithm used to filter. The logic behind the selection of criteria is to cover the majority of the ways founders describe their ideal investor: the stage the investor operates at, the industries that they invest in, the location they invest in, and their relationship to similar/competing companies (similar companies are generally a good sign, whereas directly competing companies might be prohibative).
+
+The first criteria is based on the stage of the company, as defined by it's latest funding round. It is a filter on the funding round a venture fund investests in, either as reported by the fund, or based on their past investments. Note that a fund can have multiple stages affiliated with it, as can a funding round of a company (often in the cases of ambiguity); when aggregating past investments, any stage which shows up at least half of the time is attributed to the fund. This criteria is always a logical \texttt{OR} when multiple are selected.
+
+The next criteria is the set of industries that a fund commonly invests in. Once again, these are preferrably self-reported, and there can be multiple associated with a fund (as well as an investor or a company). They are aggregated in the same was as the stage. The set of industries are fixed: there is no free-form option when filtering. The set of industries to display as options [37] was selected using the following algorithm, on all the companies in the Crunchbase data set. The goal is to select the set of industries that cover the entire set, with minimal overlap.
+
+  ```
+    def covering_industries(companies):
+      all_industries <- companies.flat_map(c => c.industries)
+      industry_options <- all_industries.unique().sort_by(i => all_industries.count(i))
+
+      selected <- set()
+      while companies.filter(c => c.industries \cap selected \neq \emptyset).count() > 0:
+        selected <- selected \cup industry_options.pop()
+
+      return selected
+  ```
+
+By default, when a founder selects multiple industries, the filter is a logical \texttt{OR} of these industries. However, there is an option which can be toggled to make this filter an \texttt{AND}, such that returned companies have to invest in \textit{all} the specified industries.
+
+The next criteria is based on a set of cities. By default, this filter returns firms which are based in the cities specified (firms have a single heaquarters, and an array of locations, which are both matched against). There is an option, however, to change this filter to instead return firms that have invested in \textit{startups} based in the specified city (each startup is affiliated with a single city).
+
+Another criteria to be matched against is a set of relevent startups. The founder can select this set from the database of companies VCWiz tracks internally. By default, this set restricts the returned firms to those who have invested in at least one of the specified companies. An option can be toggled which changes this filter to restrict to the set of firms that have invested in \textit{similar} companies, based on the industries of each company in the set.
+
+The final criteria to match investors against is a set of topics. In this case, a topic is anything found in the VCWiz knowledge graph, built up by extracting entities from the various data sources discussed elsewhere. This filter is a logical \texttt{OR}, and will return investors who often mention or discuss any of the given topics. In this case, we include a topic for an investor if that topic is mentioned at least 5\% of the time in content created by or mentioning the investor.
+
+Finally, here is a lone option to restrict the returned set of investors to those that operate solely in the US. This was a popular criteria for many founders on our platform.
+
+#### Searching
+
+In addition to filtering against any combination of the above criteria, founders can also filter investors based on the name of the firm or individual investor. This is implemented as a simple fuzzy string match on the \texttt{name} field of \texttt{Firm}, and the \texttt{first\_name} and \texttt{last\_name} fields of \texttt{Investor}.
+
+#### Sort
+
+Once VCWiz have generated the set of investors that match each filter and search query, it must decide the order in which to display the results. There is a custom ranking function which sorts the results, using each metric as the tie-breaker for the last.
+
+  1. If the topic filter is present: the number of investors in the firm which match the set of topics
+  2. The number of "featured" investors in the firm
+  3. If the industry filter is present: the number of intersecting industries between the firm and the query
+  4. If the city filter is present: the number of intersecting cities between the firm and the query
+  5. The number of founders on the platform who have initiated a conversation with the firm
+  6. The number of "verified" investors in the firm
+
+N.B. Any metric which does not have it's requirement met is simply ignored. "Featured" investors are those on the platform who have been hand-picked as high-quality investors. "Verified" investors are those who have completed their investor profile on VCWiz self-reported their characteristics.
+
+This sort acheives personalization by using the industries of the founder's startup and current location of the founder for the purpose of sorting, when the respective filters for those characteristics are not specified. Thus, if a founder specifies all the possible filters, they will get the same results that any other founder who does the same will. However, if the relevant filters are unspecified, information from the founder's profile will be used for ranking and displaying the results, giving a different ranking than some other founder.
+
+The interface displayed to the founder also allows for manual sorting of the results based on the natural ordering of a given column. If this overriding sort is provided, none of the above is used.
+
+#### Implementation
+
+The algorithm for displaying the results of this process [38] is simple.
+
+We start with every firm in the database, and filter out any that do not match the search terms provided by the founder. Often, the search term is given as a single query string. In this case, we treat this string as both the query for the firm name, as well as the investor name (the first word of the string is considered the query for the first name, and the remainder for the last name). Any individual investors who match have their firms added to the results.
+
+Following the search query, we apply every present filter to the remaining set of firms, narrowing down the result set each time.
+
+
+  ```
+    def recommendations(all_firms, founder, filters, search):
+      firms <- all_firms
+      investors <- firms.flat_map(f => f.investors)
+
+      if search:
+        first_name, last_name = extract_name_components(search)
+        investor_by_name <- investors.filter(i => i.first_name.contains(first_name) || i.last_name.contains(last_name))
+        firms_by_investor_name <- investor_by_name.map(i => i.firm)
+        firms_by_name <- firms.filter(f => f.name.contains(search))
+        firms <- firms_by_name \cup firms_by_investor_name
+
+      for filter in filters:
+        firms <- apply_filter(firms, filter)
+
+      sorted <- apply_ordering(firms, founder, filters)
+      return sorted
+  ```
+
+#### Display
+
+The results from the filtering and searching process are displayed in an infinitely-scrollable table to the founder, with the following columns.
+
+  1. The name and photo of the firm
+  2. The company stages the firm invests at
+  3. The headquarters of the firm
+  4. The number of investments the firm has made in the last calendar year ("pace")
+  5. The top three industries that the firm invests in
+  6. A drop-down to add or update the firm in the conversation tracker
+
+N.B. What founders really desire to see in the "stage" column is the average cheque size of the firm. However, this number is difficult if not impossible to calculate given the limited public data on investor contributions to a given fundraising round. Thus, the company stage is used as a proxy.
+
+The "pace" column is present to give the founder a sense of how active a given firm is. This was added by popular request after many founders found it difficult to determine whether or not a firm was still actively investing their current fund.
+
+#TODO results screenshot
+
+Each column (other than "industries") also provides a button for overriding the ranking function. This allows the founder to view the result set, sorted by only the data in the particular column. The "firm" and "location" columns are sorted lexicographically, the "pace" column numerically, and the "stage" and "track" columns by their inherently-defined orderings.
+
+In the case where a search query is specified, or the topic filter is used, it is valuable to not only surface not only the resulting firms, but the best-matching investor at each firm (e.g. if the search query matches the first name of a partner). In these cases, there is an additional, non-sortable column titled "Partner", which displays the name and photo of that best match.
+
+#TODO partner screenshot
+
+#### Initialization
+
+When a founder first completes the signup flow for VCWiz, they are presented with a page containing functional real-time filtering, according to the above. To ensure a positive first experience viewing the results of filters, we make a few assumptions, and initialize the founder's filters to what we beleive are sane defaults. We set the funding round filter to "Seed", to reflect the target user of the platform. The industry and relevant startups filters are pre-filled with the industry and competitors of the founder's startup, respectively. Finally, the location filter is set to the nearest "hub city", relative to the founder's current location (based on their IP address). A "hub city" is defined as a city that has at least 50 venture firm offices (as reported by VCWiz) within it.
 
 ### Metrics
 
@@ -522,3 +639,5 @@ References
 [34] https://medium.com/
 [35] https://www.distilnetworks.com/
 [36] https://dl-acm-org.libproxy.mit.edu/citation.cfm?id=1455782
+[37] https://git.io/vpTbj
+[38] https://git.io/vpkvd
