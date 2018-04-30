@@ -1,0 +1,57 @@
+\chapter{Recommender Experiments (might become future work)}
+
+Key idea: does adding info from the platform (personalized) make a difference?
+
+For ranking. Compare founder rank, learn the weights, etc. Does it actually add info?
+
+For recommendations: first start with crunchbase companies. Their actual investors are the ground truth. Test semi-random model, coinvestors of competitors investors, hand-written rules, recommender systems (item-based). Now add in the personalization. Use the coinvestors model as ground truth (we showed before it's pretty good, given the info we have). Does doing user-based recommendation with click data help at all? What about clustering based on founder rank! Suggest from similar cluster of industry, city, etc AND RANK
+
+
+\section{Reccommendation}
+
+- We have the ground-truth labels of who they talked to. How much of this can we get by:
+  - Suggesting investors of competitors?
+  - Manual sorting, take top N
+  - Train a recommender based on user features, (including FounderRank?) -- similar founders, who have they taken money from (with kNN). also try collaborative filtering.
+  - Train a recommender based on kNN on similar investors by taking the first few investors they talk to. How many do we need before we can accurately predict the rest?
+  - tran a ranking engine with CB data using the industry, founder features as the query, and the actual investors as the result, test it out on our founders, and also a test set of CB investors
+  - if there are correlations with FounderRank and InvestorRank, can we use those as features in the query engine, or in the manual sorting
+
+
+\section{Baseline}
+
+3 data sets?:
+
+- Founders on platform - start with this one:
+  - Try with actual investors
+  - If not enough data, use set of investors that invested in competitors, each with top 3 coinvestors, then sort it all and use that as the ranking. This bakes in our knowledge of venture, which we can explain.
+  - If using this, take out competitors from sort in filtering
+
+- Randomly sampled from Crunchbase
+
+- All competitors of founders from platform on CB
+
+\section{Filtering (With Custom Sort)}
+
+- Describe sort metrics
+- Add recency and velocity to sort
+- Add investorrank to sort, after trying without. hypothesis is that more connected investors are more likely to invest. try matching to founderrank percentile? low FR get low IR, high get high. Does this work, if optimizing for investment? Does this match reality? What does this say about venture? Is it good or bad?
+
+\section{Clustering}
+
+- metrics?
+
+\subsection{Do founders in the same community engage with similar investors?}
+
+- Across every community, what is the average percentage of members of a community that have considered a given investor? (eg. in each community, an investor was looked at in an average of 35% of the community). avg of avgs. each community, each investor, look at what % of community looked at that investor.
+
+\section{Item-Based Recommendation}
+
+\section{User-Based Recommendation}
+
+\section{Results}
+
+
+\subsubsection{Future Plans for VCWiz}
+
+\textbf{\#TODO}

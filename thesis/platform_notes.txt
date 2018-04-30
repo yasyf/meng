@@ -372,7 +372,8 @@ Preventing read abuse of internal APIs is accomplished through a combination of 
 
   - Ubuntu-based servers on AWS, with heroku
   - managed posgres, neo4j, redis, and memcached
-  - React [21]
+  - React [21], frontend frameworks, etc
+  - backend is rails, etc
 
 
 ### Filtering & Searching

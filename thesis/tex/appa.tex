@@ -1,0 +1,97 @@
+\chapter{VCWiz SQL Queries}
+
+\begin{lstlisting}[frame=single,language=SQL,basicstyle=\tiny,columns=fullflexible,label={vcwiz:sql:query},caption={Firm Filter Query}]
+SELECT
+  subquery.*,
+  firm_partners.partners AS partners,
+  firm_recent_investments.recent_investments AS recent_investments,
+  firm_coinvestors.coinvestors AS coinvestors
+FROM (
+  SELECT
+    distincted.*,
+    firm_velocities.velocity
+  FROM (
+    SELECT
+      DISTINCT ON (fullquery.id) fullquery.*
+    FROM (
+      SELECT
+        firms.*,
+        wo.rn
+      FROM (
+        SELECT
+          subquery.id,
+          row_number()
+          OVER (
+          ORDER BY
+            subquery.ti_sum DESC,
+            subquery.c_cnt DESC) AS rn
+        FROM (
+          SELECT
+            firms.id,
+            SUM(COALESCE(firm_investor_aggs.target_count, $1)) AS ti_sum,
+            COUNT(DISTINCT companies.id) FILTER (
+              WHERE companies.location = $2
+            ) AS c_cnt
+          FROM
+            firms
+            INNER JOIN investments ON investments.firm_id = firms.id
+            INNER JOIN companies ON companies.id = investments.company_id
+            INNER JOIN firm_investor_aggs ON firm_investor_aggs.firm_id = firms.id
+          WHERE (
+            firms.id IN (
+              (
+                  SELECT
+                    firms.id
+                  FROM
+                    firms
+                  WHERE (firms.location && $3)
+              )
+              UNION
+              ::~ (
+                SELECT
+                  firms.id
+                FROM
+                  firms
+                  INNER JOIN investments ON investments.firm_id = firms.id
+                  INNER JOIN companies ON companies.id = investments.company_id
+                WHERE (companies.location = $4)
+              )
+            )
+          )
+          GROUP BY
+            firms.id
+          ORDER BY
+            ti_sum DESC,
+            c_cnt DESC
+          LIMIT $5
+        ) AS subquery
+        LIMIT $6
+      ) AS wo
+      INNER JOIN firms
+      USING (id)
+    ) AS fullquery
+  ) AS distincted
+  LEFT OUTER JOIN firm_velocities ON firm_velocities.firm_id = distincted.id
+ORDER BY
+  rn OFFSET $7
+LIMIT $8) AS subquery
+  INNER JOIN firm_recent_investments ON firm_recent_investments.firm_id = subquery.id
+  INNER JOIN firm_coinvestors ON firm_coinvestors.firm_id = subquery.id
+  INNER JOIN firm_partners ON firm_partners.firm_id = subquery.id
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[frame=single,language=SQL,basicstyle=\tiny,columns=fullflexible,label={vcwiz:sql:view},caption={Denormalization of Individual Investor Properties}]
+SELECT
+  firms.id AS firm_id,
+  COALESCE(SUM(investors.target_investors_count), 0) AS target_count,
+  bool_or(COALESCE(investors.featured, false)) AS featured,
+  bool_or(COALESCE(investors.verified, false)) AS verified
+FROM firms
+  INNER JOIN investors ON investors.firm_id = firms.id
+GROUP BY firms.id
+\end{lstlisting}
+
+\clearpage
+\newpage
