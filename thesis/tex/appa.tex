@@ -1,6 +1,6 @@
-\chapter{VCWiz SQL Queries}
+\chapter{VCWiz Queries}
 
-\begin{lstlisting}[frame=single,language=SQL,basicstyle=\tiny,columns=fullflexible,label={vcwiz:sql:query},caption={Firm Filter Query}]
+\begin{lstlisting}[frame=single,language=SQL,basicstyle=\footnotesize,columns=fullflexible,label={vcwiz:sql:query},caption={Firm Filter Query}]
 SELECT
   subquery.*,
   firm_partners.partners AS partners,
@@ -82,7 +82,7 @@ LIMIT $8) AS subquery
 
 \newpage
 
-\begin{lstlisting}[frame=single,language=SQL,basicstyle=\tiny,columns=fullflexible,label={vcwiz:sql:view},caption={Denormalization of Individual Investor Properties}]
+\begin{lstlisting}[frame=single,language=SQL,basicstyle=\footnotesize,columns=fullflexible,label={vcwiz:sql:view},caption={Denormalization of Individual Investor Properties}]
 SELECT
   firms.id AS firm_id,
   COALESCE(SUM(investors.target_investors_count), 0) AS target_count,
@@ -91,6 +91,14 @@ SELECT
 FROM firms
   INNER JOIN investors ON investors.firm_id = firms.id
 GROUP BY firms.id
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single,basicstyle=\footnotesize,columns=fullflexible,caption={Intro Paths},label={vcwiz:cypher:intro}]
+MATCH (other:Investor), path = shortestPath((me)-[*1..4]-(other))
+WHERE id(me) = {founder_neo_id} AND id(other) = {investor_neo_id}
+RETURN path, reduce(count = 0, r IN relationships(path) | count + coalesce(r.count, 0)) AS total
+ORDER BY total DESC
+LIMIT 3;
 \end{lstlisting}
 
 \clearpage

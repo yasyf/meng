@@ -1,10 +1,6 @@
-%% This is an example first chapter.  You should put chapter/appendix that you
-%% write into a separate file, and add a line \include{yourfilename} to
-%% main.tex, where `yourfilename.tex' is the name of the chapter/appendix file.
-%% You can process specific files by typing their names in at the
-%% \files=
-%% prompt when you run the file main.tex through LaTeX.
 \chapter{Graph Experiments}
+
+\textbf{\#TODO: run these again}
 
 \textbf{TODO}: clean this chapter up, it's a total mess
 
@@ -24,6 +20,7 @@ the startup’s connections in the setting, reducing their distance to further p
 identify distances to prospective investors as part of our explanation of who will enter the round
 (match) in the Series A.7 \cite{pasquini2017matching}
 
+\cite{pasquini2017matching}: ``distance drives matching value and moderates preferences for experience and education'', ``distance can potentially outweigh their impact''
 
 \section{Cleaning the graph}
 
@@ -103,6 +100,14 @@ After interviewing many seed-stage firms to learn about what makes a founder suc
   2. Influence. How effectively can the founder effect change in and solicit aid from their peers? How likely are other founders to help this founder get connected?
   3. Access. How easily can the founder get in front of an arbitrary investor? How likely is an investor to respond to an inbound request from this founder?
 
+\textbf{TODO clean this up}
+
+When it comes to ranking nodes in a graph, there is a large body of literature to reference. The canonical starting point is of course PageRank~\cite{page1999pagerank}, which recursively estimates node importance by analyzing the importance of nodes which link to the node in question. HITS~\cite{kleinberg1999authoritative}, a simple algorithm which calculates authority and hub scores, is also commonly used. Several variations exist, included a Weighted Page Rank~\cite{xing2004weighted}. While these algorithms do a good job ranking nodes in a graph for search relevance, they don't necessarily capture desirable characteristics for interesting nodes in a venture context. It is unclear if there even exists a canonical ranking for nodes in a graph for venture, since desirable properties depend on the company.
+
+Thus, we look at learned graph node ranking algorithms. Strategies such as the Graph Neural Network (GNN)~\cite{scarselli2009graph} help neural nets directly process graphs, which has lead to the development of systems which use GNNs to rank web pages~\cite{scarselli2005graph}. Crucially, this algorithm does not require explicitly determining which factors are important for ranking, and can be learned from a small number of training examples in the form of inequalities. Further work has then been done extending the idea of GNNs, with gating and other modern enhancements~\cite{DBLP:journals/corr/LiTBZ15}.
+
+% /TODO
+
 Conveniently, there are three graph metrics which map directly to these properties.
 
   1. PageRank (CITE) is a measure of a node's importance in a graph. We use Normalized Page Rank (CITE) to be able to compare across changing graphs.
@@ -136,8 +141,8 @@ We set out to create a ranking system of founders on the VCWiz platform, based o
 (PLOTs are learnings)
 
 - Best metric, when available, is still aggregate funding of companies the founder has started (including current one)
-- Average sentiment of incoming emails from investors is surprsingly high-signal. (PLOT: sentimentvs \section{of well-respected investors)}
-- \section{of inbound investors is good, shows a lot of absolute interest}
+- Average sentiment of incoming emails from investors is surprsingly high-signal. (PLOT: sentimentvs \# of well-respected investors)
+- \# of inbound investors is good, shows a lot of absolute interest
 - Email outreach success rates are pretty noisy, as they  are skewed by founders who, for example, send a few emails to already-established connections, or are not the cofounder that sends a lof of emails (but is always cc'ed)
 - Number of investors that respond after being added to the founder's wishlists is the strongest signal for companies we have when they are raising
 
@@ -148,17 +153,17 @@ Create objective function from all this. Take the index (with ties) of the found
 - Aggregate Funding: 4
 - Average Sentiment Inbound: 3
 - Number responded after being added to wishlist: 2
-- \section{of inbounds: 1.5}
+- \# of inbounds: 1.5
 
 This gives a nice baseline, with some manual tweaking. Random sampling shows this as a solid baseline that aligns with our priors about venture.
 
-\subsection{Metrics from \cite{2017arXiv170604229H}}
+\subsection{Metrics from 2017arXiv170604229H}
 
 Use sum of (Job IPO, Job Acquired, Executive IPO, Executive Acquired, Advisory IPO, and Advisory Acquired). Why? Table 1 \cite{2017arXiv170604229H}. "We see that the top non-sector features are related to the past experience of the leadership (executive acquisition, executive IPO, advisory IPO, leadership age). The investor feature maximum acquisition fraction is also one of the top non-sector features. This suggests that companies with experienced and successful leadership and investors have increased drift which results in a higher exit probability."
 
 \subsection{Internal metrics}
 
-- Sentiment, number responded, \section{of inbounds ==> indictative of how the fundraise is going, best guess we have. Show some plots that support this.}
+- Sentiment, number responded, \# of inbounds ==> indictative of how the fundraise is going, best guess we have. Show some plots that support this.
 
 \subsection{Naive FounderRank}
 
@@ -285,7 +290,7 @@ Now add OUR founders to the platform. We don't have all this historic success da
 
 \section{InvestorRank}
 
-Given that the FounderRank metric seems indicative of a founder's ability to raise, and that raising is a crucial part of keeping a company alive, does ranking investors by the mean founder rank of the founders they've invested in give us a reasonable ranking of investors? Manually inspect it, also compare it to baseline, which can use features like \section{of exists, total follow-on raised, and total valuation at IPO sum.}
+Given that the FounderRank metric seems indicative of a founder's ability to raise, and that raising is a crucial part of keeping a company alive, does ranking investors by the mean founder rank of the founders they've invested in give us a reasonable ranking of investors? Manually inspect it, also compare it to baseline, which can use features like \# of exists, total follow-on raised, and total valuation at IPO sum.
 
 \textbf{TODO}: sort by baseline metrics.
 

@@ -1,0 +1,59 @@
+\chapter{Potential Products}
+\label{intro:products}
+
+We have spent time exploring possible tools that could be built to aid in various stages of the venture pipeline. Each tool is identified below, along with the motivation and a brief summary of the technical challenges involved.
+
+\section{Sourcing}
+
+We have identified two opportunities to do with sourcing, both on the outbound flow side.
+
+\subsubsection{A system to aggregate signals from founders and predict the intent to start a company}
+
+Founders often emit signals that indicate they are starting a new company, often long before they officially announce their new endeavor. These signals can be explicit (changing a job title on LinkedIn, or biography line on Twitter) or implicit (leaving a job, moving cities, or attending entrepreneurial events). In isolation, these signals are not strong, but in aggregate they can be strongly correlated with the intent to start a company.
+
+We see an opportunity for a system that monitors the social networks of a GP, identifying and aggregating potential signals. The technical challenges include linking seemingly-unrelated signals across networks and schemas, and inventing a ranking algorithm which can present the most likely potential founders given a set of signals. We would likely use these signals as machine learning features.
+
+\subsubsection{A system to discover and monitor promising out-of-network individuals and organizations}
+
+While there are a plethora of announcements and releases online which would indicate an investment-worth company has formed, humans are not capable of monitoring and filtering the wealth of information generated on the internet on an ongoing basis. Thus, a GP's sourcing abilities are largely limited to the founders they can discover in their network.
+
+We propose a system which treats the relevant information on the Internet as a connected, directed graph, which can be monitored and have its nodes ranked (as PageRank does for search engines). Every interesting community (such as educational institutions) could have its own independent graph, and the top-ranked nodes of each graph could be surfaced for easy human review. The technical challenges around this system include a lack of labeled training data (what constitutes an ``interesting'' node?) and the noisiness of the web (there are many sites linked from a community that contain irrelevant or even misleading information).
+
+\section{Analyzing}
+
+When is comes to analyzing, there are two major project proposal we considered.
+
+\subsubsection{A system to filter, categorize, and rank the companies in a venture pipeline}
+
+Many seed-stage funds suffer today from an overwhelming pipeline of startup companies to consider. There is considerable data available on these companies which seems to be correlated to how investment-worthy the company is at first glance. At the very least, the cheap filters applied by investors are mimicable through existing data (alma maters of founders, size of initial market, sentiment of partners after first meeting).
+
+We propose a system which uses the information associated with pipeline companies to categorize each company into buckets that predict how far in the pipeline the company will move, using these buckets to filter and prioritize the pipeline. This will be an online, semi-supervised clustering problem which receives constant feedback from partners. The technical challenges include identifying and extracting the relevant features (which may include leveraging NLP techniques on descriptions, pitch decks, and meeting notes), and finding a way to incorporate user feedback in a meaningful way. Evaluation methods are also difficult to formulate a priori.
+
+\subsubsection{A system to surface and summarize key trends and news in a given industry}
+
+Many hours of time is wasted at venture firms serially researching and identifying key facts and risks about both a company and its broader industry. This act of information extraction and summarization is well-suited for classic Natural Language Processing.
+
+We propose a system which ingests both internal data on the company at hand, as well as recent news and evergreen data sources (such as Wikipedia) and delivers a digest of key risks identified in the company (based on pitch decks and partner notes), as well as a one-pager on the given industry.
+
+\section{Supporting}
+
+Finally, with regards to portfolio support, there are two tools we considered building.
+
+\subsubsection{A system for the discovery of and supporting outreach to the optimal set of seed-stage investors}
+
+It is widely accepted in the venture industry that there is significant merit to a founder finding the ``right'' set of investors when raising money. Not only does the strategic focus of a firm and its network impact said firm's ability to help a company, but the particular focus of a partner within a firm can also influence whether or not a company even gets funded. There is strong empirical evidence that partners at venture firms do indeed specialize and focus on a very specific subset of companies~\cite{Stone:2013:EST:2541167.2507882}.
+
+Matching a founder to the most relevant partner at each firm, and the most realistic and appropriate firms at each funding stage, is a challenging problem for humans to tackle alone.
+
+We propose a hybrid recommender system which suggests relevant and strategic investors to founders, based on their company and ideal investor profile. This would follow the models laid out in recent literature on recommender systems~\cite{Burke2002}.
+
+Our tool would also provide an interface for planning and tracking the process of reaching out to these investors, as a way to collect structured training data for future iterations. Technical challenges here include building a sufficiently strong user experience so as to inspire trust in the tool, determining how to identify a user as features, and building a labeled database of investors and the founders they have backed.
+
+\subsubsection{A system to predict and propagate viral company news}
+
+As the number of companies in a seed-stage venture firm's portfolio grows, it becomes increasingly difficult for partners to keep track of the movements of each company. This makes it difficult to identify when a company is in the process of making a big press release (which the VC could support). Furthermore, there is no easy way for a VC to know the latest public change in each of their companies.
+
+We propose a tool to monitor the social media accounts of portfolio companies, summarizing news and sharing the posts that are estimated to be the most popular or viral. Text summarization is an open research problem that has several standardized solutions~\cite{textsummarization}, each of which can be tuned for the domain with manual feature engineering and additional rule-based systems. Estimating social media popularity and virality can be done with linear point-process models such as SEISMIC~\cite{seismic}, or more complex Bayesian models like the one presented in \cite{bayesiantweets}, which uses more features from the graph generated by the post and its shares. The biggest technical challenges here are around coaxing and tuning these algorithms to give sufficiently good results for our domain.
+
+\clearpage
+\newpage
