@@ -93,12 +93,18 @@ FROM firms
 GROUP BY firms.id
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single,basicstyle=\footnotesize,columns=fullflexible,caption={Intro Paths},label={vcwiz:cypher:intro}]
+\begin{lstlisting}[frame=single,basicstyle=\footnotesize,columns=fullflexible,caption={Finding Intro Paths},label={vcwiz:cypher:intro}]
 MATCH (other:Investor), path = shortestPath((me)-[*1..4]-(other))
 WHERE id(me) = {founder_neo_id} AND id(other) = {investor_neo_id}
 RETURN path, reduce(count = 0, r IN relationships(path) | count + coalesce(r.count, 0)) AS total
 ORDER BY total DESC
 LIMIT 3;
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single,basicstyle=\footnotesize,columns=fullflexible,caption={Removing Orphans},label={vcwiz:cypher:orphans}]
+MATCH (n:Person)
+WHERE NOT (n)--()
+DELETE n
 \end{lstlisting}
 
 \clearpage

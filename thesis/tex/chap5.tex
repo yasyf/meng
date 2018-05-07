@@ -2,111 +2,83 @@
 
 \textbf{\#TODO: run these again}
 
-\textbf{TODO}: clean this chapter up, it's a total mess
+As part of our research into more efficiently matching founder with investors, we sought to quantitatively demonstrate some of the commonly-accepted characteristics of fundraising. Furthermore, we wish to explore how we can leverage automated ranking systems to more approriately match companies with a source of funding. To do this, we ran various experiements on a social graph of founders, investors, and their mutual connections. This graph is built from the information provided by founders on the VCWiz platform.
 
-We can model the graph of founders, the investors and founders they email, and the third-parties they email, as a social graph. Our hypothesis is that this social graph is represenative of a founder's network in the startup world, and that from it we can infer the likelyhood of the founder to succeed.
+As discussed in the previous chapter, one of the features of VCWiz is a CRM for founders, which integrates with their inbox and scans (the headers of) all their emails back and forth with investors registered on the platform. As part of this optional integration, founders gave permission to have their aggregate email data used for research. As we scan these emails (filtering out any irrelevant ones, as described in Listing \ref{code:parse}), we build up a graph, where each node represents an individual (using their email as a unique key), and each edge represents an email connection between two nodes. Edges are directed: there exists an edge from node $i$ to node $j$ if and only if an email has been sent from email $e_i$ to email $e_j$. Edges have weights equal to the total such number of emails sent. These weights are ignored when doing manipulations and calculating graph metrics, unless explicitly specified.
 
-Focus: exploring ways to better match founders and investors. On the founder end that means better tools, on the investor end that means learning what are some of the characteristics about founders that let us predict their success.
+Our motivation for modeling the underlying graph for these experiments is as follows. The majority of pre-pitch and post-pitch communication when fundraising happens over email, and almost every introduction made to an investor on behalf of a founder is done by email as well. Furthermore, emails are often sent as follow-ups to in-person meetings (at networking events, etc.). Finally, email is the preferred medium for ongoing communication between and founder and their investors. Thus, by capturing the entirety of the email graph for the subset of founders and investors on our platform, we get an accurate picture of what relationships are at play.
 
-(Tie this back to other papers from the proposal.)
+\section{Experiments}
 
-\section{Motivation for exploring relationship between position in graph and fundraising success}
+We first summarize the experiments run, and the high-level results of these experiements. The remainder of this chapter will dive into the details of each one. The goal of these experiments is to better identify what correlates with a succesful fundraise, and how we can use this information to better match founders and investors, for the purpose of maximizing funding likelihood.
 
-We use this data to estimate the effects of network distance in the matches resulting from
-Series A financing rounds. Series A rounds are typically the second significant round a startup
-closes, following a Seed round.
-6 Investors entering the Seed round will typically expand greatly
-the startup’s connections in the setting, reducing their distance to further potential investors. We
-identify distances to prospective investors as part of our explanation of who will enter the round
-(match) in the Series A.7 \cite{pasquini2017matching}
+\textbf{\#TODO: summarize experiments and findings}
 
-\cite{pasquini2017matching}: ``distance drives matching value and moderates preferences for experience and education'', ``distance can potentially outweigh their impact''
+- Founder Graph Analysis
+- Predicting Fundraising Success with Graph Metrics
 
-\section{Cleaning the graph}
+It has long been supposed that the characteristics of a founder in his or her professional network can impact, and indeed predict, how successful a fundraising attempt will be. For the purposes of these experiments, we will define success as raising at least as much money as planned, from a founder's top pick of investors, in as short a time as possible. There is lots of annecdotal evidence to support these claims (\textbf{TODO cite a blog post or two}), and recently there has been statistical evidence as well. A 2017 study uses \textbf{TODO what is the data source?} data ``to estimate the effects of network distance in the matches resulting from Series A financing rounds'', and concludes that ``distance drives matching value and moderates preferences for experience and education''~\cite{pasquini2017matching}. We sought to verify and further elucidate this point with our graph data from VCWiz.
 
-\textbf{TODO}: summarize this since it is included elsewhere:
+\section{Preprocessing}
 
-When importing a user's email graph, we first started with the naive approach of scanning every email, creating a node (if one did not already exist) per address, and creating outgoing edges every time one node sent an email to another. While this works when only importing emails once, the APIs at our disposal were imperfect, and so we had to start tracking a unique message identifier in our main database to ensure emails are imported at most once.
+Before we could analyze the graph, we had to do some preprocessing. The first step was of course to build the graph. We followed the steps in Section \ref{vcwiz:ingesting} (p. \pageref{vcwiz:ingesting}) to import each founder's emails, adding nodes and edges to a global graph as described above. Any messages skipped in the processing phase do not have their addresses added to the graph. We added several additional rules for messages to skip based on analyzing intermediate graphs for outliers (for example, nodes which had significantly higher than average in-degrees or out-degrees).
 
-There were also several heuristics we used to skip messages that were to mailing lists, as this added a lot of noise to the dataset. If the message meets any of the following criteria, it is logged and skipped. The full algorithm can be found on Github \footnote{https://git.io/vxunk}. In these criteria, the recipients are defined as the union of the TO, CC, and BCC fields, and body is defined as the concatenation of the text and HTML sections of the message.
+Once the graph is set up, there is one last preprocessing step that must occur. Often, there are founders who sign up for the platform, but never interact with any of the email-related features. Their nodes still get added to the graph, but are orphans that have no neighbors. These nodes can slow down metric calculations uncessarily, and make analysis harder, so we first filter them out using the Cyper query in Listing \ref{vcwiz:cypher:orphans}.
 
-- There are more than 5 recipients
-- The body contains a phrase often used in bulk mailings, such as "unsubscribe", "terms of use", or "view in your browser"
-- The headers contain one of sereval common listserve headers, such as List-Unsubscribe and many vendor-specific ones
-- The return path of the message includes a popular bulk email vendor
-- The local component of the from address is that of a commonly-automated inbox, such as "noreply" or "info"
-- The name of the sender includes common aliases, such as "support" or "payroll"
-- The domain of the sender or any recipient is one that is common in transactional emails
+The final step is to label each node in the graph. Every node is labeled as a \texttt{Person}, with known investors and founders being labeled as \texttt{Investor} and \texttt{Founder} respectively. These two labels are mutually exclusive. In the case a node could be labeled as both an \texttt{Investor} and \texttt{Founder}, it is treated as a investor if the person is currently employed by an institutional investment firm, and a founder otherwise.
 
-We found many of these heuristics by looking at the outliers of old graphs (for example, nodes which had an in-degree or out-degree which was an order of magnitude larger than the average), and adding rules to prevent them from being added to future graphs when neccesary.
+\section{Founder Graph Analysis}
 
-Finally, there are many users who sign up, and never connect their email inboxes. Thus, we clean the graph by filtering out orphan nodes.
+Before diving into our main experiments, we did some analysis of the basic graph that was built up in the last section. At the time of writing, the VCWiz email graph has 216,774 individual nodes, with 726 verified founders and 789 verified investors.
 
-MATCH (n:Person)
-WHERE NOT (n)--()
-DELETE n
+\subsection{Connectivity}
 
-\section{Graph Analysis}
-
-At the time of writing, the VCWiz Email Graph contains 216,774 individual nodes, with 726 verified founders and 789 verified investors.
-
-If we look at just the founders on the platform, we see an interesting trend.
-
-MATCH (n:Founder)--(c:Founder)
-WITH n, count(*) as connections
-RETURN avg(connections), stdev(connections),max(connections), min(connections)
-
-avg(connections)  stdev(connections)  max(connections)  min(connections)
-5.494824016563148 11.800092926355513  167 1
+Looking at just the subgraph of verified founders, we see that each node has a mean of $5.5$ neighbors, indicating that the founders on the platform often know other founder on the platform. This is consistent with the real-world behaviour of early-stage founders, who often communicate with a clique of other similar-stage founders and share resources such as tools. Indeed, it is possible that this connectivity is the result of founders spreading the word about the tool to their peers. An interesting observation here is that though these founders are not as professionally isolated as those who would benefit most from using the tool, they are perfectly set up to use the network-based functionality of VCWiz, such as Intro Paths.
 
 \subsection{Communities}
 
-The average founder on the platform is connected by email to five others, which implies that though the target audience for the tool was isolated founders who lack resource, the actual users we reached are at least connected to other founders on the platform.
+In order to determine how much of the connectivity present is the result of founders sharing the tool with peers, we performed a connectivity analysis. If it turns out that the communities of the graph are isolated globally but strongly connected locally, it would support our hypothesis. Using LPA \textbf{TODO: acronym} \cite{2007PhRvE..76c6106R}, we can section the graph into partitions by \textbf{TODO: summarize method}.
 
-This connectivity might be the result of founders spreading word of the platform to their friends. Thus, we ran a connectivity analysis to determine if these communities in the graph were isolated globally but connected locally.
+Upon paritioning the founder graph, we find that there are 584 communities, with an average of 1.2 founders per community. Our model of the founder community on the platform was not accurate.
 
-MATCH (n:Founder)
-RETURN n.partition, count(*)
+An interesting finding is that the few most-populous communities are easily recognizable, after which there is a long tail of independent communities with only one or two founders. The three top communities found by LPA are Dorm Room Fund Partners, Dorm Room Fund Portfolio Companies, and YCombinator Portfolio Companies. Given that both of these organizations helped influence this work, it is not surprising to find these communities.
 
-MATCH (n:Founder)
-WITH n.partition AS partition, count(*) AS ct
-RETURN avg(ct)
+We also ran an alternative connectivity analysis, using the Louvain Method (\textbf{CITE}). This revealed another significant community of founders: Student Founders at UC Berkeley. However, the remainder of the communities still appear to be insignificant.
 
-However, there are not many distinct communities in the founder graph, with LPA \cite{2007PhRvE..76c6106R} showing that there are 584 communities with an average of 1.2 founders per community.
+\subsection{Propensity to Investors}
 
-MATCH (n:Founder)
-RETURN n.partition, count(*) AS ct
-ORDER BY ct DESC
-LIMIT 10
+We sought to answer the question of whether or not the community and neighborhood of a founder's node can predict their propensity to engage with certain investors. However, using graph structure alone, we lack sufficient signal to predict anything. We will later revisit this question, taking into account additional node metrics and founder characteristics.
 
-MATCH (n:Founder{partition:421})
-RETURN n
+\section{Predicting Fundraising Success with Graph Metrics}
 
-There are a few easily-recognizable communities of at least 20 founders that LPA discovered, such as the investors of Dorm Room Fund, and the portfolio companies of Dorm Room Fund, both of which make sense given their affiliation to the sponsoring organizion of this work. Heirarchical techniques such as the Louvain Method render a few more, such as student founders at UC Berkeley.
+We would like to explore whether or not linear combinations of simple graph metrics can predict fundraising success. We first will define our metrics, and their intuitive meaning within the context of fundraising.  We hypothesize that the metrics which correspond to commonly-accepted key factors to a foudner's ability to fundraise in venture capital will be highly correlated with our definition of success. We will attempt to validate this hypothesis with our email graph, as well as analyze which factors are indeed the most important.
 
-In both cases however, the rest of the communities seem to be insignificant. Thus the answer to whether or not founders spread word of the tool to their friends seems to be no.
+\subsection{FounderRank}
 
-We sought to answer the question of whether or not the community a founder is in can tell us about their engagement with specific investors, but the graph data alone was not sufficient to answer this. We will later explore founder clusters using user-provided data.
+We wish to score nodes based on graph metrics in an email graph of fundraising relationships. To do this, we first need to define a single scoring function which captures our goals. Thus we introduce FounderRank.
 
-\section{FounderRank}
+FounderRank is a metric in the range $[0, 1]$ that quickly communicates the strength of a founder in the global fundraising graph of founders, investors, and their mutual connections (i.e. the VCWiz Email Graph). A strong node is able to rapidly spread the word about their startup, start conversations with relevant and desirable investors, and convince investors to invest in them. These abilities are cruical for fundraising, which is in turn crucial for the survival of a startup.
 
-The goal of FounderRank is to create a metric in the range [0, 1] that quickly communicates the quality of a startup founder's social graph. Given the graph of connections to other founders, investors, and third-party individuals (i.e. the VCWiz Email Graph), we wish to determine how difficult it will be for the founder to spread the word about their startup, and start conversations with relevant investors, two factors which are crucial to the success of the company (CITE).
+Note that we are currently evaluating how well a founder can fundraise conditioned on them knowing who they would like to fundraise from. We are not tackling the issue of discovering investors, which we have touched on in the previous chapter, and will explore further in the next.
 
-Within the context of venture capital, we assume that the goal of a founder is to successfully start as many conversations with relevant investors as they can. We will later tackle the issue of how to find relevant investors. Here, we assume the founder has already identified said investors.
+\subsubsection{Core Characteristics}
 
-After interviewing many seed-stage firms to learn about what makes a founder successful at the early stage, three intuitive properties of their social graph emerged, each of which is crucial to the founder accomplishing their goal. This does not take into account other properties of the founder that were often raised, such as their expertise in the relevant domain, and how well they collaborate with others.
+A combination of existing studies and our own interviews with numerous seed-stage firms reveals three intuitive proprties of a founder's node in a professional or social graph which are desirable when fundraising: \textbf{importance}, \textbf{influence}, and \textbf{access}. Note that these characteristics do not take into account factors such as domain expertise, personality, and pedigree, all of which will also contribute to a successful fundraise. We are focusing exclusively on network properties for this experiment.
 
-  1. Importance. How crucial is the founder to their ecosystem? How much impact have they had to date? How risky is it to not invest in this founder?
-  2. Influence. How effectively can the founder effect change in and solicit aid from their peers? How likely are other founders to help this founder get connected?
-  3. Access. How easily can the founder get in front of an arbitrary investor? How likely is an investor to respond to an inbound request from this founder?
+The first characteristic is \textbf{importance}. Importance looks at how crucial a founder is in his or her own ecosystem. In efficient professional information networks, we see that ``needs are diagnosed and [the entrepreneur] is passed round the system until [he or she] gathers the necessary information and advice.''~\cite{BIRLEY1985107}. The more crucial a founder is to a domain, the more access to information he or she will have. Thus, founders who have more importance are likely to be seen as a less risky investment, increasing the chances an investor responds positively to a fundraising proposal.
 
-\textbf{TODO clean this up}
+The second characteristic is \textbf{influence}. Influence captures how effectively a founder can effect change in their ecosystem and solicit aid from their peers. In other words, how likely are other founders to help this founder? A study on interorganizational net
+works of young companies found supporting evidence to the fact that ``third parties rely on the prominence of the affiliates of those companies to make judgments about their quality''~\cite{10.2307/2666998}. Founders who have high influence can leverage this to convince investors to give them funds.
 
-When it comes to ranking nodes in a graph, there is a large body of literature to reference. The canonical starting point is of course PageRank~\cite{page1999pagerank}, which recursively estimates node importance by analyzing the importance of nodes which link to the node in question. HITS~\cite{kleinberg1999authoritative}, a simple algorithm which calculates authority and hub scores, is also commonly used. Several variations exist, included a Weighted Page Rank~\cite{xing2004weighted}. While these algorithms do a good job ranking nodes in a graph for search relevance, they don't necessarily capture desirable characteristics for interesting nodes in a venture context. It is unclear if there even exists a canonical ranking for nodes in a graph for venture, since desirable properties depend on the company.
+The third characteristic is \textbf{access}. This is the notion of how well a founder can get in front of the investors of their choice. The more directly connected a founder is to an abritrary investor, the more likely that investor is to respond to an inbound request (either via an introduction or cold) for funding. Additionally, a high degree of access means a founder has many options to chose from when it comes to starting conversations with investors. This follows from the more general finding that proximity in a graph to providers of valuable resources gives a node access to many viable alternatives\cite{10.2307/3069443}. This can be valuable when a founder's top choice of investor does not work out, which is often the case.
 
-Thus, we look at learned graph node ranking algorithms. Strategies such as the Graph Neural Network (GNN)~\cite{scarselli2009graph} help neural nets directly process graphs, which has lead to the development of systems which use GNNs to rank web pages~\cite{scarselli2005graph}. Crucially, this algorithm does not require explicitly determining which factors are important for ranking, and can be learned from a small number of training examples in the form of inequalities. Further work has then been done extending the idea of GNNs, with gating and other modern enhancements~\cite{DBLP:journals/corr/LiTBZ15}.
+\subsubsection{Graph Metrics}
 
-% /TODO
+To quantitatively evaluate the impact of each of these characteristics, and measure their predictive capability, we need to find graph metrics which correspond to each.
+
+For \textbf{importance}, we selected PageRank~\cite{page1999pagerank}, the canonical
+
+When it comes to ranking nodes in a graph, there is a large body of literature to reference. The canonical starting point is of course PageRank~\cite{page1999pagerank}, which recursively estimates node importance by analyzing the importance of nodes which link to the node in question.
 
 Conveniently, there are three graph metrics which map directly to these properties.
 
@@ -124,7 +96,7 @@ We set out to create a ranking system of founders on the VCWiz platform, based o
 - Money raised in current round
   - Good when enough time has passed that the amount they raised would have been made public
 - Money raised in previous rounds
-  - Good indicator of "repeat founder", consider making binary
+  - Good indicator of ``repeat founder'', consider making binary
 - Intros made
   - Not good, because not enough people used the functionality. It was an experiment. See results.
 - number of investors responded
@@ -159,7 +131,7 @@ This gives a nice baseline, with some manual tweaking. Random sampling shows thi
 
 \subsection{Metrics from 2017arXiv170604229H}
 
-Use sum of (Job IPO, Job Acquired, Executive IPO, Executive Acquired, Advisory IPO, and Advisory Acquired). Why? Table 1 \cite{2017arXiv170604229H}. "We see that the top non-sector features are related to the past experience of the leadership (executive acquisition, executive IPO, advisory IPO, leadership age). The investor feature maximum acquisition fraction is also one of the top non-sector features. This suggests that companies with experienced and successful leadership and investors have increased drift which results in a higher exit probability."
+Use sum of (Job IPO, Job Acquired, Executive IPO, Executive Acquired, Advisory IPO, and Advisory Acquired). Why? Table 1 \cite{2017arXiv170604229H}. ``We see that the top non-sector features are related to the past experience of the leadership (executive acquisition, executive IPO, advisory IPO, leadership age). The investor feature maximum acquisition fraction is also one of the top non-sector features. This suggests that companies with experienced and successful leadership and investors have increased drift which results in a higher exit probability.''
 
 \subsection{Internal metrics}
 
@@ -198,7 +170,7 @@ p-test: null hypothesis is that correlation between rankings is 0. p gives proba
 Loss functions for using FR as a feature, operating on score:
 
 - Metrics which directly measure the loss of the founder's strength, as determined by the baseline score
-  - RMSE (precedent for doing this in \cite{said2014comparative}, "A common practice with recommender systems is to evaluate their performance through error metrics such as RMSE (root mean squared error)" \cite{Cremonesi:2010:PRA:1864708.1864721})
+  - RMSE (precedent for doing this in \cite{said2014comparative}, ``A common practice with recommender systems is to evaluate their performance through error metrics such as RMSE (root mean squared error)''~\cite{Cremonesi:2010:PRA:1864708.1864721})
   - all the ones in here \cite{Gunawardana:2009:SAE:1577069.1755883}
   - MAE, which gives us the average absolute distance between the score and the ideal score from our baseline
 
@@ -253,7 +225,7 @@ PR and closeness: $r^2$ is 0.3916, very close to the optimal weighting of all th
 
 Since $r^2$ doesn't change much by adding betweenness, it doesn't explain any additional variance, and its highly correlated with the combo of the other two. This is because it is already so highly correlated with PR (0.913), and somewhat correlated to closeness (0.512).
 
-Takeaway: goal is to predict ability to raise based on just graph metrics. emphasis on getting the "best" founders right, as lower-ranking founders are more noisy. thus, we evaluate based on Spearman's rho and NDCG. using only closeness (access) gets us almost all the way to the best we can do (rho=0.690, ndcg=0.375), except that is misses some of the top founders that we should be more certain about. Adding in PageRank (importance) solves this, as it is the best at capturing the founders near the top (rho=0.574, ndcg=0.527). Some of the "best" founders have such a high PR (such high importance) that it compensates for a lower relative closeness (access). Adding betweenness (influence) to this set of features doesn't change much, because it is highly correlated to PR (importance) (r=0.913), and somewhat correlated to closeness (access) (r=0.512). Ultimately we achieve a Spearman rank correlation (comparing the ranking from just graph metrics to the "ground-truth" ranking) of 0.677 with a p-value of 7.28e-77 (effectively 0), and a Normalized Discounted Cumulative Gain of 0.533. This model has an $r^2$ of 0.391, and most of that comes from closeness (adding PR is only 12.8\% increase in $r^2$ == ability to explain variance). Thus we can see that influence is captured by importance, which has an impact on ability to raise, but really it is access which dictates this component of a founder's success.
+Takeaway: goal is to predict ability to raise based on just graph metrics. emphasis on getting the ``best'' founders right, as lower-ranking founders are more noisy. thus, we evaluate based on Spearman's rho and NDCG. using only closeness (access) gets us almost all the way to the best we can do (rho=0.690, ndcg=0.375), except that is misses some of the top founders that we should be more certain about. Adding in PageRank (importance) solves this, as it is the best at capturing the founders near the top (rho=0.574, ndcg=0.527). Some of the ``best'' founders have such a high PR (such high importance) that it compensates for a lower relative closeness (access). Adding betweenness (influence) to this set of features doesn't change much, because it is highly correlated to PR (importance) (r=0.913), and somewhat correlated to closeness (access) (r=0.512). Ultimately we achieve a Spearman rank correlation (comparing the ranking from just graph metrics to the ``ground-truth'' ranking) of 0.677 with a p-value of 7.28e-77 (effectively 0), and a Normalized Discounted Cumulative Gain of 0.533. This model has an $r^2$ of 0.391, and most of that comes from closeness (adding PR is only 12.8\% increase in $r^2$ == ability to explain variance). Thus we can see that influence is captured by importance, which has an impact on ability to raise, but really it is access which dictates this component of a founder's success.
 
 This conclusion further motivates the work we've done on the VCWiz platform, where one stated goal was to increase access to investors for founders. This conclusion implies that increasing such access would be high-impact, even for those less-well-known founders who have less influence and importance in the ecosystem.
 
@@ -266,7 +238,7 @@ Notes:
 - Building up ranking graph, we have to add links in both directions, VC to founder and founder to VC, otherwise no PR ever goes to the investors
 - We decide to build up the whole social graph of startups. Invested, cofounded, and co-invested. Use this as the second data set to compare to.
 - Dataset size: 288,720 founders. 92,843 investors. 57,131 investments.
-- Just sorting by number of exits, we see a lot of founders who are now investors. This makes sense, founders who take a company from start to "finish" are often what venture firms are looking for in terms of experience.
+- Just sorting by number of exits, we see a lot of founders who are now investors. This makes sense, founders who take a company from start to ``finish'' are often what venture firms are looking for in terms of experience.
 - Settled on the following baseline, which takes into account that founders who have raised large amounts of capital are more trusted by VCs to take on more money in the future, but that this not nearly as important as the number of times a founder has either lead a company to a successful exit, or participated in such a company (either as an employee or an advisor)
 
 - Affiliated Exits: 4
