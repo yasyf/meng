@@ -37,7 +37,7 @@ Looking at just the subgraph of verified founders, we see that each node has a m
 
 \subsection{Communities}
 
-In order to determine how much of the connectivity present is the result of founders sharing the tool with peers, we performed a connectivity analysis. If it turns out that the communities of the graph are isolated globally but strongly connected locally, it would support our hypothesis. Using LPA \textbf{TODO: acronym} \cite{2007PhRvE..76c6106R}, we can section the graph into partitions by \textbf{TODO: summarize method}.
+In order to determine how much of the connectivity present is the result of founders sharing the tool with peers, we performed a connectivity analysis. If it turns out that the communities of the graph are isolated globally but strongly connected locally, it would support our hypothesis. Using Label Propagation (LPA)~\cite{2007PhRvE..76c6106R}, we can section the graph into partitions by flooding the nodes with labels: assigning each node an initial label and propagating these labels with a set of rules until distinct communities evolve.
 
 Upon paritioning the founder graph, we find that there are 584 communities, with an average of 1.2 founders per community. Our model of the founder community on the platform was not accurate.
 
@@ -53,9 +53,146 @@ We sought to answer the question of whether or not the community and neighborhoo
 
 We would like to explore whether or not linear combinations of simple graph metrics can predict fundraising success. We first will define our metrics, and their intuitive meaning within the context of fundraising.  We hypothesize that the metrics which correspond to commonly-accepted key factors to a foudner's ability to fundraise in venture capital will be highly correlated with our definition of success. We will attempt to validate this hypothesis with our email graph, as well as analyze which factors are indeed the most important.
 
+\subsection{Baseline Ranking}
+
+In order to evaluate our scoring function based on simple graph metrics, we need a baseline to compare against. In the absense of a quantitative baseline scoring function, we hand-crafted a baseline ranking, incorporating our knowledge of venture capital, and the results of the research cited thus far. We will breifly document the process of exploring features for this baseline before defining the actual scoring function.
+
+Below are the features that were considered for the function, and our evaluation of each one for inclusion.
+
+\subsubsection{Total funding of current round}
+
+When available, the total amout of money raised in the current round is an excellend indicator of fundraising success, as it is normally the goal of the founder to raise as much money as possible, up to some internal maximum. This metric should definetly be included in the scoring function. Unfourtunately, for many founders on the platform who are currently attempting to raise their seed rounds of funding, there might not yet be any money raised.
+
+\subsubsection{Total funding of previous rounds}
+
+As referenced earlier in Section \ref{chap3:tool} (p. \pageref{chap3:tool}), the First Round Capital 10 Year Project \cite{first-round-10-years} indicated much higher fundraising success rates for repeat founders. In this case, having raised money either in a previous round for the same company, or for a previous company, would give a founder the credibility and experience necessary to improve their chances for their current fundraise. We experimented including both this number, when available, as well as a binary feature indicating that this number is nonzero. Ultimately, we decided to use the raw number, as variations in this metric are significant.
+
+\subsubsection{Number of intro requests accepted}
+
+While it would be useful to include a metric capturing a founder's success rate when requesting cold introductions on the VCWiz platform, there is simply not enough information for the metric we report to be indicative of anything. This follows from our earlier analysis (Section \ref{chap4:introrequests}) on why this feature saw very little usage.
+
+\subsubsection{Number of interested investors}
+
+A metric which is indicative of global investor interest in a company is the number of investors who have exchanged multiple emails with the founder during the timeframe of the raise. While these investors may or may not end up investing, the fact that they were interested enough to email several times is a strong signal that the founder will have options to select from when it comes time to close the round.
+
+\subsubsection{Fraction of investors who respond}
+
+A similar metric to the last is the percentage of investors who have emailed a founder back after the founder has initiated contact with them (either directly or through an introduction). A high value here indicates that the founder and their company are compelling enough to garner investor interest, and will have several options to select from when fundraising is over. It's also indiative of a founder's ability to reach out to investors who are a good fit for the startup.
+
+\subsubsection{Average response time per investor}
+
+The average time an investor takes to respond to a founder's email would be indicative of the investor's excitment for the founder, if all such communication happened over email and was captured by the platform. However, many founders are not using the email integrations of VCWiz, and many more will have the most crucial conversations by phone or in-person. This can create outliers which heavily skew the average and add a burdensome level of noise. Thus, this feature will not be included.
+
+\subsubsection{Length of fundraising period}
+
+A strong fundraise (based on our earlier criteria) is one which results in sufficient dollars being raised, in the shortest amount of time possible. Thus, the amount of time spent fundraising should be a high-signal feature. However, we observed a pattern of utilization which makes this feature problematic. As founders reach the stage of their fundraising where they are pitching venture firms and finalizing the details of the deal, they often stop using the VCWiz platform, as they are now working with a sufficiently small number of investors. As a result, it is very difficult for us to estimate when a fundraise is over, and we do not have accurate data for this feature.
+
+\textbf{TODO: plot, averaged over all founders who raised, of email volume vs percentage of target investors who have decided one way or another, to show that email volume decreases as most investors have decided}
+
+\subsubsection{Average sentiment of investors}
+
+Intuitively, a high positive sentiment from an investor in an email is one feature of many that indicates an affinity, and a strong relationship. Looking at the data on VCWiz, strong sentiment is often associated with a pre-existing relationship, often from a previous company. Thus, while it is a noisy source of data, it should be included in our ranking function.
+
+\textbf{TODO: plot, across all founders who raised on the platform, average sentiment of incoming emails vs total money raised}
+
+\textbf{TODO: plot, across all founders who raised on the platform, average sentiment of incoming emails vs number of interested featured investors}
+
+\textbf{TODO: consider normalizing against average sentiment of each investor globally}
+
+\medskip
+
+\subsubsection{Evaluation}
+
+After evaluating each of the above metrics, we drew the following conclusions. The best metric, when available, is the aggregate funding the founder has raised to date, across any company. This is the sum of the two funding-related features above. Following this, average sentiment is a good proxy for founders who have raised no money but are actively engaged in conversations. The number of interested investors is also a good proxy during the fundraise, as it represents absolute interest. The email outreach success rate (fraction of investors who respond) tends to be too noisy, as it is skewed by high-profile founders who send a very small number of emails, to already-established connections. However, the number of investors who respond after being added to a wishlist on VCWiz is a very strong signal, as it indicates no prior relationship.
+
+\subsubsection{Ranking Function}
+
+To create a ranking function from these features, we calculate a weighted sum of sort indexes for each founder, and use the position of this score in the list of all scores as the rank. We use ranks, not absolute values, across features to account for differences in scale.
+
+We demonstrate the scoring function in Equation \ref{eq:baseline}, where $S_{m, f}$ gives the sort index for founder $f$ when the founders are sorted by metric $m$, and $W$ is the set of (metric, weight) pairs. The final ordering of the baseline is the set of fouders, sorted by this score, in ascending order (a lower score represents a higher-ranked founder).
+
+\begin{equation}
+\label{eq:baseline}
+  score(f) := \sum_{(m, w) \in F} S_{m, f} * w
+\end{equation}
+
+\noindent The weights we use are found in Figure \ref{fig:baseline:weights}.
+
+\begin{figure}[ht]
+\begin{tabular}{c | c}
+\textbf{Feature}           & \textbf{Weight} \\\hline
+Aggregate Funding          & 4 \\\hline
+Average Inbound Sentiment  & 3 \\\hline
+\# Responded From Waitlist & 2 \\\hline
+\# Interested              & 1.5
+\end{tabular}
+\centering
+\caption{Baseline Weights}
+\label{fig:baseline:weights}
+\end{figure}
+
+This baseline, while not defensible as a ground-truth ranking for rigorous statistics, is built on sane assumptions about fundraising and venture capital. Random sampling indicates that the results are aligned with expert expectations. We will use this baseline to compare and evaluate our numerical methods for ranking, but acknowledge that it is not a perfect ranking according to the criteria we defined.
+
+\subsection{Evaluation}
+
+The next step is to define how to evaluate other ranking functions against our baseline. There are many options for evaluating ranking functions. We will discuss the options before justifying our selection. For mathematical definitions of each evaluation metric independent of our use case, we refer the reader to Section 3.2 of \cite{DBLP:journals/corr/abs-0704-3359}. These ranking functions are often used to score a permutation $\pi$ of documents given a document-set, query tuple $(D, q)$. In this case, we assume $q$ is the fixed query of founders which are most likely to succeed at fundraising, and $D$ is our list of founders.
+
+In selecting the evaluation criteria, we imagine two relevant use-cases for our ranking functions. The first is to display a sorted list of founders to an interested party, such as an investor. The second is to use this ranking as a feature in a later process, such as enhanced matching between founders and investors (which we will explore in the next chapter).
+
+Winner Takes All (WTA) and Mean Reciprocal Rank (MRR) are often used when displaying results based on a ranking, but both assume there is only \textit{one} top-ranked document. This does not align with either of our uses cases, so we discard them.
+
+Discounted Cumulative Gain (DCG) takes the sum of \textit{relevances} of each founder in the ranked list (where the relevance in our case is $N - r$, with $N$ being the total number of founders, and $r$ being the rank of that founder in the baseline), weighting each founder by how early it appears in the list. We therefore get a score which increases as we put the highest-ranked founders near the start of the list, but penalizes incorrect ordering of later founders less and less. In other words, this is a metric of relative regret. This aligns well with our first use case, and provides some useful, though imperfect, information for our second.
+
+Normalized Discounted Cumulative Gain (NDCG) simply normalizes the DCG against the number of founders in the list, so the metric can be compared across lists of different size.
+
+Precision@n is another metric which gives preference to the top results, in this case explicitly only considering the top $n$. This metric is simply the fraction of founders in the top $n$ results that are also in the top $n$ founders of the baseline. It is a quick, useful way of evaluating a ranking for our first use case.
+
+Root-Mean-Square Error (RMSE) is a very common error function for recommender systems (\cite{Cremonesi:2010:PRA:1864708.1864721})) which measures the differences (errors) in ranking for every founder in the list. It works very well for our second use case.
+
+Mean Absolute Error (MAE) is another common error function, which measures the average absolute distance between a ranking and the ranking of the baseline.
+
+Kendall's rank correlation coefficient ($\tau$) measures the ordinal association between the two lists of founders, and is often used to report on the correlation between to rankings. It roughly measures the agreement in rank over all pairs of items.
+
+Spearman's rank correlation coefficient ($\rho$) is another measure of rank correlation. It measures the direction of association in rank between the two lists of founders.
+
+We decided to use NDCG, Precision@n (for various values of $n$) for evaluating the quality of the rankings for the purposes of recommendation, $\tau$ and $\rho$ for calculating the rank correlation with the baseline, and RMSE and MAE for scoring the ranking as a feature to later processes. Figure \ref{fig:evaluation:formulas} shows the formulas we use for each, where $N$ is the number of founders in the list, $B$ is the baseline, $X$ is the ranking being evaluated, $R_i$ is the founder in the $i$-th position of ranking $R$, $\text{rg}(f)$ gives the rank of founder $f$ in the baseline, and $\text{sc}(R, f)$ gives the \textit{score} of founder $f$ under ranking $R$. Each ranking that we will be evaluatng has a scoring function, which is in the range $[0, 1]$ for each founder. For the baseline, we assign scores by simply scaling the rank to be in this range.
+
+\begin{figure}[ht]
+\begin{equation}
+  \begin{array}{c >{$\displaystyle}Sc<{$}}
+    \text{\textbf{Metric}} & \text{\textbf{Forumla}} \\
+    \text{DCG}(X) & \sum_{i=1}^{N} \frac{2^{N - \text{rg}(X_i)} - 1}{\log_2{i + 1}} \\
+    \text{NDCG}(X) & \frac{\text{DCG}(X)}{\text{DCG}(B)} \\
+    \text{Precision}(X, n) & \frac{|X_{0:n} \bigcap B_{0:n}|}{n} \\
+    \tau(X) & \frac{\sum_{i=1,j=1,j \neq i}^N \text{conc}(i, j, X)}{N (N - 1)} \\
+    \rho(X) & 1 - \frac{6 \cdot \sum_{i=1}^N \text{drg}^2(X, B, i, i)}{N (N^2 - 1)} \\
+    \text{RMSE}(X) & \sqrt{\frac{\sum_{i=1}^N \big(\text{dsc}(X, B, X_i)\big)^2}{N}} \\
+    \text{MAE}(X) & \frac{\sum_{i=1}^N \big|\text{dsc}(X, B, X_i)\big|}{N}
+  \end{array}
+\end{equation}
+
+\begin{align*}
+ \text{drg}(X, Y, i, j) &:= \text{rg}(X_i) - \text{rg}(Y_j) \\
+ \text{dsc}(X, Y, f) &:= \text{sc}(X, f) - \text{sc}(Y, f) \\
+ \text{conc}(X, i, j) &:= \text{sign}\big(\text{drg}(X, X, i, j)\big) \cdot \text{sign}\big(\text{drg}(B, B, i, j)\big)
+\end{align*}
+
+\centering
+\caption{Evaluation Criteria}
+\label{fig:evaluation:formulas}
+\end{figure}
+
+Finally, we must define our null hypothesis, so that we can provide $p$-values for our rank correlations. In this case, the null hypothesis is that the correlation between the baseline and the ranking in question is 0. Thus, $p$ gives the probability that the two uncorrelated rankings would give them same rank correlation metric value.
+
+--
+
+Get these for the baseline. Use rank scaled to 0-1 as the relevance.
+Then, treat it as a linear regression problem, with the sole goal of learning the weights on the three metrics, to see which is most important. Write up conclusions from that, compare RMSE of naive and weighted.
+Then, see if we can use these three features in other ways, to try to get the best ranking possible, given the labels from the baseline. Use a couple of the fancy methods from \footnote{\url{https://en.wikipedia.org/wiki/Learning_to_rank}}.
+
 \subsection{FounderRank}
 
-We wish to score nodes based on graph metrics in an email graph of fundraising relationships. To do this, we first need to define a single scoring function which captures our goals. Thus we introduce FounderRank.
+We now shift our focus to ranking founders maed on the information we collected on the VCWiz platform. We wish to score nodes based on graph metrics in an email graph of fundraising relationships. To do this, we first need to define a single scoring function which captures our goals. Thus we introduce FounderRank.
 
 FounderRank is a metric in the range $[0, 1]$ that quickly communicates the strength of a founder in the global fundraising graph of founders, investors, and their mutual connections (i.e. the VCWiz Email Graph). A strong node is able to rapidly spread the word about their startup, start conversations with relevant and desirable investors, and convince investors to invest in them. These abilities are cruical for fundraising, which is in turn crucial for the survival of a startup.
 
@@ -67,8 +204,7 @@ A combination of existing studies and our own interviews with numerous seed-stag
 
 The first characteristic is \textbf{importance}. Importance looks at how crucial a founder is in his or her own ecosystem. In efficient professional information networks, we see that ``needs are diagnosed and [the entrepreneur] is passed round the system until [he or she] gathers the necessary information and advice.''~\cite{BIRLEY1985107}. The more crucial a founder is to a domain, the more access to information he or she will have. Thus, founders who have more importance are likely to be seen as a less risky investment, increasing the chances an investor responds positively to a fundraising proposal.
 
-The second characteristic is \textbf{influence}. Influence captures how effectively a founder can effect change in their ecosystem and solicit aid from their peers. In other words, how likely are other founders to help this founder? A study on interorganizational net
-works of young companies found supporting evidence to the fact that ``third parties rely on the prominence of the affiliates of those companies to make judgments about their quality''~\cite{10.2307/2666998}. Founders who have high influence can leverage this to convince investors to give them funds.
+The second characteristic is \textbf{influence}. Influence captures how effectively a founder can effect change in their ecosystem and solicit aid from their peers. In other words, how likely are other founders to help this founder? A study on interorganizational networks of young companies found supporting evidence to the fact that ``third parties rely on the prominence of the affiliates of those companies to make judgments about their quality''~\cite{10.2307/2666998}. Founders who have high influence can leverage this to convince investors to give them funds.
 
 The third characteristic is \textbf{access}. This is the notion of how well a founder can get in front of the investors of their choice. The more directly connected a founder is to an abritrary investor, the more likely that investor is to respond to an inbound request (either via an introduction or cold) for funding. Additionally, a high degree of access means a founder has many options to chose from when it comes to starting conversations with investors. This follows from the more general finding that proximity in a graph to providers of valuable resources gives a node access to many viable alternatives\cite{10.2307/3069443}. This can be valuable when a founder's top choice of investor does not work out, which is often the case.
 
@@ -76,107 +212,27 @@ The third characteristic is \textbf{access}. This is the notion of how well a fo
 
 To quantitatively evaluate the impact of each of these characteristics, and measure their predictive capability, we need to find graph metrics which correspond to each.
 
-For \textbf{importance}, we selected PageRank~\cite{page1999pagerank}, the canonical
+For \textbf{importance}, we selected PageRank~\cite{page1999pagerank}, the canonical starting point for ranking nodes in graphs. PageRank recursively evaluates node importance by analyzing the importance of nodes which link to the node in question. It is a widely-accepted measure of node imporance. We use a normalized PageRank~\cite{berberich2007comparing}, which accounts for the number of nodes and structure of the graph.
 
-When it comes to ranking nodes in a graph, there is a large body of literature to reference. The canonical starting point is of course PageRank~\cite{page1999pagerank}, which recursively estimates node importance by analyzing the importance of nodes which link to the node in question.
+For \textbf{influence}, we selected Betweenness Centrality~\cite{10.2307/3033543}. Betweenness Centrality is the count of the number of shortest paths (over all pairs of nodes) that pass through the node in question. The rationale is that if a node is on the intro path for a pair of people, that node has influence over that pair, as it can control whether or not the introduction is made. This makes the assumption that every communication request goes along the shortest path, which is not perfectly accurate, but is sufficient for our purposes.
 
-Conveniently, there are three graph metrics which map directly to these properties.
+For \textbf{access}, we selected Closeness Centrality~\cite{FREEMAN1978215}. The Closeness Centrality of a node is inversely proportional to the node's distance from every other node. Thus, this metric measures how ``close'' a node is to the other nodes in the graph, based on shortest-path lengths, normalized for the number of nodes in the graph. The rationale is that if a node can access every other node in the graph, on average, via a short path, the node must have better access than a node that must use longer paths. Once again, this assumes that the length of the shortest path between nodes is the determiner of connection strength. Based on the data presented and cited thus fair, this is a fair assumption.
 
-  1. PageRank (CITE) is a measure of a node's importance in a graph. We use Normalized Page Rank (CITE) to be able to compare across changing graphs.
-  2. Betweenness Centrality (CITE) is a measure of a node's influence, based on the number of shortest paths that flow through it.
-  3. Closeness Centrality (CITE) is a measure inverse to the sum of a node's distance from every other node in the graph.
+To use these metrics, we take the pre-processed graph above, and calculate the raw metric value for each node. We then normalize it as specified above, and finally scale it to be in the range $[0, 1]$. We now have a number which represents the metric for a node, relative to the other nodes in the graph, and on a standard scale. Note that we do not yet specify how to combine these metrics, we are simply calculating them.
 
-To use these three metrics, we first do the same pre-processing described above. We then calculate the raw metric for each node, adjust it as necessary to account for changing graphs, and finally scale the metric to be in the range of [0, 1], based on the global min and max of that metric in the graph. This gives us a number which represents the metric relative to the other nodes in the graph.
+\subsubsection{Naive FounderRank}
 
-The naive version of FounderRank simply averages these three metrics for every node. We also experimented with a weighted version of FounderRank, by attempting to learn the coefficient of each metric based on the successes of the founders in our dataset.
+We now begin to explore ways to combine these three selected graph metric to produce a scoring function that we can compare against our baseline. The Naive FounderRank (NFR) method simply averages these three numbers, per node, to arrive at a score in $[0, 1]$.
 
-We set out to create a ranking system of founders on the VCWiz platform, based on the data we have collected, in order to evaluate our later work.
+The first observation we made when trying to rank the founders based on NFR is that our rankings totally missed founders on the platform who are not currently fundraising, but who are known to be repeat founders who have successfully fundraised in the past. THis was a result of our email graph only spanning the last year. Relationships in the venture capital world take years to build up, and we were not evaluating them over a large enough timeframe. Thus, we re-built our graph to incorporate the last five years of data, which gave us a much more comprehensive view of the ecosystem.
 
-\subsection{Evaluation (notes on trying each metric as part of our baseline)}
-- Money raised in current round
-  - Good when enough time has passed that the amount they raised would have been made public
-- Money raised in previous rounds
-  - Good indicator of ``repeat founder'', consider making binary
-- Intros made
-  - Not good, because not enough people used the functionality. It was an experiment. See results.
-- number of investors responded
-  - looking at the number of unique investors that have exhanged emails with the founder gives a pretty good signal
-- \% of investors responded
-  - looking at fraction of targets which have emailed back, and fraction of incoming to outgoing is high signal (if greater than one, they are in high demand)
-- Average time of response per investor
-  - looking at average response time from investors doesn't quite work, as it doesn't take into account phone calls, in-person etc
-- Time fundraising (proxy by use of platform? or when email volume went down?)
-  - Once founders get to pitch stage, they no longer use the platform, as things are happening in real life. We notice a sharp decline in usage near the end, as it no longer becomes necessary to track that many conversations (PLOT: number of emails vs percentage that are decided). Closing the loop happens automatically with email tracking sometimes, but is far from perfect.
-- average sentiment of investor in emails
-  - Helps identify founders with strong relations, often corresponding to past exists (PLOT: average sentiment, highest first vs money raised total), but can be noisy
+The below observations and conclusions are all drawn from this new graph, with up to five years of email data from 558 founders.
 
-(PLOTs are learnings)
 
-- Best metric, when available, is still aggregate funding of companies the founder has started (including current one)
-- Average sentiment of incoming emails from investors is surprsingly high-signal. (PLOT: sentimentvs \# of well-respected investors)
-- \# of inbound investors is good, shows a lot of absolute interest
-- Email outreach success rates are pretty noisy, as they  are skewed by founders who, for example, send a few emails to already-established connections, or are not the cofounder that sends a lof of emails (but is always cc'ed)
-- Number of investors that respond after being added to the founder's wishlists is the strongest signal for companies we have when they are raising
 
-\subsection{Baseline}
+--
 
-Create objective function from all this. Take the index (with ties) of the founder along each metric, and take a weighted average. Note that we are using the weighted average of ranks, not absolute values, so we account for differences in scale.
 
-- Aggregate Funding: 4
-- Average Sentiment Inbound: 3
-- Number responded after being added to wishlist: 2
-- \# of inbounds: 1.5
-
-This gives a nice baseline, with some manual tweaking. Random sampling shows this as a solid baseline that aligns with our priors about venture.
-
-\subsection{Metrics from 2017arXiv170604229H}
-
-Use sum of (Job IPO, Job Acquired, Executive IPO, Executive Acquired, Advisory IPO, and Advisory Acquired). Why? Table 1 \cite{2017arXiv170604229H}. ``We see that the top non-sector features are related to the past experience of the leadership (executive acquisition, executive IPO, advisory IPO, leadership age). The investor feature maximum acquisition fraction is also one of the top non-sector features. This suggests that companies with experienced and successful leadership and investors have increased drift which results in a higher exit probability.''
-
-\subsection{Internal metrics}
-
-- Sentiment, number responded, \# of inbounds ==> indictative of how the fundraise is going, best guess we have. Show some plots that support this.
-
-\subsection{Naive FounderRank}
-
-Now, with naively using the graph metrics we discussed above, how well can we rank these founders? How indicative of founder quality is the founder's email graph? Goal is to rank these so an analyst would only have to triage the top N.
-
-First observation is that using Naive FR without any investment info misses the people we know are good, repeat founders, but may not be actively raising at the moment. Our email graph only goes back 1 year/2 years, and in this time, good founders who can easily get capital will probably just raise based on personal relationships, and put their head down and work. They won't be actively fundraising, which means we won't see as much email activity. This implies that using social graph metrics to track the quality of the founder requires looking back across all history, and/or that it is more useful for new founders when there is not much signal.
-
-- evaluate -> papers
-
-Reference \cite{DBLP:journals/corr/abs-0704-3359}, use the criteria of MRR, DCG, and Precision@n, RMSE. We use metrics of relative regret (such as DCG or P@n), as per \cite{DBLP:journals/corr/abs-0704-3359}, in order to capture the relative importance of the earlier results.
-
-These metrics matter if we want to simply present the best few founders. However, when using FounderRank as a feature for later models, the rankings matter throughout the list, not just at the top. For this, we use metrics such as RMSE or Kendall Tau.
-
-The ranking functions are often used to score a permutation $\pi$ over a document-set, query tuple $(D, q)$. In this case, we assume $q$ is the fixed query of best founder, as defined above.
-
-Loss Functions from \cite{DBLP:journals/corr/abs-0704-3359} (for first goal, of presenting best founders), operating on rank/relevance (== rank in baseline):
-
-WTA and MRR: only make sense when we care about the top document, here we care about the top N that are triagable by a human, say, 10
-DCG: takes into account the whole ranking, discounting later ones. Use the numerical rank (largest is best) in the baseline as the relevance. Depends on the labels $y$ (baseline), but these are fixed, so its ok.
-Precision@n (\# correct / n): takes into account the number of correct documents in the top N, without taking into account order.
-
-Use DCG, and Precision@n.
-
-Loss functions for using FR as a feature, operating on rank/relevance:
-
-- Rank correlation such as tau and rho, which measure the loss from the ranking implied by the baseline scores
-  - tau: measures the agreement (or disagreement) in rank over all pairs
-  - rho: measures the direction of association in rank between the two lists
-
-p-test: null hypothesis is that correlation between rankings is 0. p gives probability that two uncorrelated rankings would have this correlation metric value.
-
-Loss functions for using FR as a feature, operating on score:
-
-- Metrics which directly measure the loss of the founder's strength, as determined by the baseline score
-  - RMSE (precedent for doing this in \cite{said2014comparative}, ``A common practice with recommender systems is to evaluate their performance through error metrics such as RMSE (root mean squared error)''~\cite{Cremonesi:2010:PRA:1864708.1864721})
-  - all the ones in here \cite{Gunawardana:2009:SAE:1577069.1755883}
-  - MAE, which gives us the average absolute distance between the score and the ideal score from our baseline
-
-Get these for the baseline. Use rank scaled to 0-1 as the relevance.
-Then, treat it as a linear regression problem, with the sole goal of learning the weights on the three metrics, to see which is most important. Write up conclusions from that, compare RMSE of naive and weighted.
-Then, see if we can use these three features in other ways, to try to get the best ranking possible, given the labels from the baseline. Use a couple of the fancy methods from \footnote{\url{https://en.wikipedia.org/wiki/Learning_to_rank}}.
 
 Order: baseline, naive, weighted, fancy.
 Get [m1, m2, m3, 0-1 output] to use in python for these.
@@ -230,6 +286,11 @@ Takeaway: goal is to predict ability to raise based on just graph metrics. empha
 This conclusion further motivates the work we've done on the VCWiz platform, where one stated goal was to increase access to investors for founders. This conclusion implies that increasing such access would be high-impact, even for those less-well-known founders who have less influence and importance in the ecosystem.
 
 \subsection{FounderRank + Investments}
+
+\subsection{Metrics from 2017arXiv170604229H}
+
+Use sum of (Job IPO, Job Acquired, Executive IPO, Executive Acquired, Advisory IPO, and Advisory Acquired). Why? Table 1 \cite{2017arXiv170604229H}. ``We see that the top non-sector features are related to the past experience of the leadership (executive acquisition, executive IPO, advisory IPO, leadership age). The investor feature maximum acquisition fraction is also one of the top non-sector features. This suggests that companies with experienced and successful leadership and investors have increased drift which results in a higher exit probability.''
+
 
 For founders on the platform, edges implied by a prior investment turn up most of the time in the email logs. For founders off the platform however, we have no access to their email graph. If we use amount raised, metrics from \cite{2017arXiv170604229H} (sum of Job IPO, Job Acquired, Executive IPO, Executive Acquired, Advisory IPO, and Advisory Acquired) as a crude estimate for success, and the same 3 graph metrics, but in the funding graph, as our ranking features, do we see similar results?
 
