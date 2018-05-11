@@ -1,61 +1,46 @@
-\chapter{Future Work}
+\chapter{Conclusion}
 
+\section{Future Work}
 
-Recommender Experiments
-Key idea: does adding info from the platform (personalized) make a difference?
+\subsection{VCWiz}
 
-- Cluster founders, based on industry, founderrank, location, etc. is there any similarity in the investors they target? do certain investors stand out? do all their investors have something in common? take the set of investors they all talked to, average certain metrics.
+On the VCWiz platform, there are several high-demand features which founders have requested repeatedly. In a survey...
 
-For ranking. Compare founder rank, learn the weights, etc. Does it actually add info?
+\textbf{TODO: summarize other features requested in survey, like LI import}
 
-For recommendations: first start with crunchbase companies. Their actual investors are the ground truth. Test semi-random model, coinvestors of competitors investors, hand-written rules, recommender systems (item-based). Now add in the personalization. Use the coinvestors model as ground truth (we showed before it's pretty good, given the info we have). Does doing user-based recommendation with click data help at all? What about clustering based on founder rank! Suggest from similar cluster of industry, city, etc AND RANK
+% Popular investors in your community (let people join communities)
+% Cofounder login
 
+\subsection{FounderRank}
 
-\section{Reccommendation}
+While we have examined the relationship between founder and investors in social graphs, we have isolated the ranking and scoring of these two sets of individuals. There are several opportunities to join these two paths of experimentation, including explicitly exploring how the ranks of the founders an investor has invested in correlate with the rank of the investor, and vice-versa.
 
-- We have the ground-truth labels of who they talked to. How much of this can we get by:
-  - Suggesting investors of competitors?
-  - Manual sorting, take top N
-  - Train a recommender based on user features, (including FounderRank?) -- similar founders, who have they taken money from (with kNN). also try collaborative filtering.
-  - Train a recommender based on kNN on similar investors by taking the first few investors they talk to. How many do we need before we can accurately predict the rest?
-  - tran a ranking engine with CB data using the industry, founder features as the query, and the actual investors as the result, test it out on our founders, and also a test set of CB investors
-  - if there are correlations with FounderRank and InvestorRank, can we use those as features in the query engine, or in the manual sorting
+\subsubsection{Clustering}
 
+The rank assigned to a founder (or investor) is an indicator of their social characteristics, which might make it a useful feature when clustering individuals. One hypothesis to test in the future is that investors prefer to invest in founder who have a similar relative rank to themselves. If this is true, and investors have an affinity to similarly-ranked founders, then it would be prudent to show founders investors of a comparable rank in a tool such as VCWiz, so as to maximize their chances of an investment being made.
 
-\section{Baseline}
+\subsubsection{Recommender Systems}
 
-3 data sets?:
+The experiments to date with data generated from founders on VCWiz has focused on scoring and ranking founders and investors. However, there is another, related application of this data in recommender systems. The crucial hypothesis to test is that adding data from the platform on which investors founders are clicking on, reaching out to, and interacting with increases the quality of recommendations over classic techniques.
 
-- Founders on platform - start with this one:
-  - Try with actual investors
-  - If not enough data, use set of investors that invested in competitors, each with top 3 coinvestors, then sort it all and use that as the ranking. This bakes in our knowledge of venture, which we can explain.
-  - If using this, take out competitors from sort in filtering
+One could test this hypothesis by beginning with a classic item-based recommender system, trained on features extracted from the investor's profile, as well as InvestorRank. This model could be evaluated against a simple baseline, which suggests the co-investors of a startup's competitors as the recommended investors. The performance of this model could then be compared against a hybrid model, which adds a user-based layer that is trained on the click and outreach data of founders on the VCWiz platform.
 
-- Randomly sampled from Crunchbase
+\section{Summary of Contributions}
 
-- All competitors of founders from platform on CB
+In this thesis, we have presented two major contributions. The first is VCWiz, a tool which aspires to aid founders in finding and connecting with seed investors. The second is a series of experiments centered around FounderRank, a method of ranking founders based on their likelihood of a successful fundraise.
 
-\section{Filtering (With Custom Sort)}
+\subsection{VCWiz}
 
-- Describe sort metrics
-- Add recency and velocity to sort
-- Add investorrank to sort, after trying without. hypothesis is that more connected investors are more likely to invest. try matching to founderrank percentile? low FR get low IR, high get high. Does this work, if optimizing for investment? Does this match reality? What does this say about venture? Is it good or bad?
+Through the process of designing and implementing VCWiz, we identified and enumerated three major areas, each with several opportunities, where software tools could improve the investor-founder matching process. We surveyed a group of seed-stage founders and discovered that existing tools for investor discover, research, and outreach were isolated, lacking in functionality, or not practical to use. To address this, we built three iterations of a holistic fundraising tool.
 
-\section{Clustering}
+The first iteration of the tool revealed the high bar for functionality and ease of use when it comes to replacing household tools like spreadsheets. The second iteration's feedback focused on the need for a platform to be comprehensive and customizable. The third iteration, which is currently live and in use by hundreds of founders, has proven that there are opportunities to make early-stage investing easier and more manageable to a diverse range of startup founders. The feedback and data from this tool have shown that VCWiz does indeed accomplish its goals of making fundraising more efficient, and more accessible.
 
-- metrics?
+The VCWiz Email Graph, collected from the founders on the platform, serves as the basis for the study described in this thesis.
 
-\subsection{Do founders in the same community engage with similar investors?}
+\subsection{FounderRank}
 
-- Across every community, what is the average percentage of members of a community that have considered a given investor? (eg. in each community, an investor was looked at in an average of 35\% of the community). avg of avgs. each community, each investor, look at what \% of community looked at that investor.
+Using the VCWiz Email Graph, we explored the structure and interactions of a graph of seed-stage founders from a variety of backgrounds and pedigrees. We identified that there are three important social characteristics of a founder when fundraising: importance, influence, and access. We identified three graph metrics that correspond to the three characteristics: PageRank, Betweenness Centrality, and Closeness Centrality.
 
-\section{Item-Based Recommendation}
+With a linear regression, we showed that the optimal linear combination of these three graph metrics can explain about 40\% of the variance found in a hand-crafted baseline ranking of founders, with a rank correlation of $0.68$. Furthermore, we identified access as the most important characteristic a founder can have when fundraising, followed by their importance. Influence, as proxied by Betweenness Centrality, has a near-perfect correlation with importance, and provides very little information when ranking founders.
 
-\section{User-Based Recommendation}
-
-\section{Results}
-
-
-\subsubsection{Future Plans for VCWiz}
-
-\textbf{\#TODO}
+\textbf{TODO: summarize other experiments as we finish them}
