@@ -13,15 +13,15 @@ On the VCWiz platform, there are several high-demand features which founders hav
 
 \subsection{FounderRank}
 
-While we have examined the relationship between founder and investors in social graphs, we have isolated the ranking and scoring of these two sets of individuals. There are several opportunities to join these two paths of experimentation, including explicitly exploring how the ranks of the founders an investor has invested in correlate with the rank of the investor, and vice-versa.
+While we have examined the relationship between founder and investors in social graphs, we have yet to rank and score the two sets of nodes jointly. There are several opportunities to explore the efficacy of this technique, including explicitly exploring how the scores of the founders that an investor has funded correlate with the rank of the investor, and vice-versa.
 
 \subsubsection{Clustering}
 
-The rank assigned to a founder (or investor) is an indicator of their social characteristics, which might make it a useful feature when clustering individuals. One hypothesis to test in the future is that investors prefer to invest in founder who have a similar relative rank to themselves. If this is true, and investors have an affinity to similarly-ranked founders, then it would be prudent to show founders investors of a comparable rank in a tool such as VCWiz, so as to maximize their chances of an investment being made.
+The rank assigned to a founder (or investor) is an indicator of their social characteristics, which might make it a useful feature when clustering individuals. One hypothesis to test in the future is that investors prefer to invest in founders who have a similar relative rank to themselves. If this is true, and investors have an affinity to similarly-ranked founders, then it would be prudent to show founders investors of a comparable rank in a tool such as VCWiz, so as to maximize their chances of an investment being made.
 
 \subsubsection{Recommender Systems}
 
-The experiments to date with data generated from founders on VCWiz has focused on scoring and ranking founders and investors. However, there is another, related application of this data in recommender systems. The crucial hypothesis to test is that adding data from the platform on which investors founders are clicking on, reaching out to, and interacting with increases the quality of recommendations over classic techniques.
+The experiments to date with data generated from founders on VCWiz has focused on scoring and ranking founders and investors. However, there is another, related application of this data in recommender systems. The crucial hypothesis to test is that incorporating data from the platform increases the quality of recommendations over classic techniques. This information includes attention-based features, such as which investors are clicked on, reached out to, and interacted with.
 
 One could test this hypothesis by beginning with a classic item-based recommender system, trained on features extracted from the investor's profile, as well as InvestorRank. This model could be evaluated against a simple baseline, which suggests the co-investors of a startup's competitors as the recommended investors. The performance of this model could then be compared against a hybrid model, which adds a user-based layer that is trained on the click and outreach data of founders on the VCWiz platform.
 
