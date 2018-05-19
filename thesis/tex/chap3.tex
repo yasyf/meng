@@ -2,9 +2,9 @@
 
 \section{Motivation}
 
-The culmination of our research and interviews with founders and investors was the proposal of VCWiz, a three-part platform geared towards helping first-time founders better research, discover, and outreach their optimal seed investors. The focus on seed-stage companies reflected the industry opinion that early-stage venture was an insider's game, where as later rounds of funding were more dependent on quantitative metrics around the companies growth, traction, and success. In the spirit of making venture more accessible and efficient, we chose to focus on first-time founders, who do not necessarily have the connections and tribal knowledge that makes their more experienced counterparts so much more likely to succeed.
+The culmination of our research and interviews with founders and investors was the proposal of VCWiz, a three-part platform geared towards helping first-time founders better research, discover, and reach out to their optimal seed investors. The focus on seed-stage companies reflected the industry opinion that early-stage venture was an insider's game, where as later rounds of funding were more dependent on quantitative metrics around the companies growth, traction, and success. In the spirit of making venture more accessible and efficient, we chose to focus on first-time founders, who do not necessarily have the connections and tribal knowledge that makes their more experienced counterparts so much more likely to succeed.
 
-We conducted a series of user interviews (N = 21) to determine which aspects of the platform would be most crucial, and what functionality the first version of this application should contain. The interviews were conducted across the spectrum of experience, from first-time student founders to industry veterans, based in New York, Boston, and San Francisco, and working on everything from novel social networks to machine learning-powered drug discovery. We also consulted with several reputable investors at top-tier firms such as First Round Capital and General Catalyst.
+We conducted a series of user interviews (N = 21) to determine which aspects of the platform would be most crucial, and what functionality the first version of this application should contain. The interviews were conducted across a spectrum of experience, from first-time student founders to industry veterans, based in New York, Boston, and San Francisco, and working on everything from novel social networks to machine learning-powered drug discovery. We also consulted with several reputable investors at top-tier firms such as First Round Capital and General Catalyst.
 
 We can summarize our user interview feedback into the following three feature buckets.
 
@@ -14,13 +14,13 @@ Founders often complain that it is difficult to discover the set of investors th
 
 \subsection{Research}
 
-Once an eligible set of venture firms has been found, the burden on the founder only increases. In addition to figuring out the specific constraints mentioned above, each firm has preferences that may or may not align with the founder's vision for the company. Furthermore, in today's markets, where capital is widely available and there are many similar sources of capital, venture firms are fighting to differentiate themselves to founders, adding another degree of freedom to the ranking function each founder must internally maintain. ``The evidence suggests that VCs' `extra‐financial' value may be more distinctive than their functionally equivalent financial capital''~\cite{doi:10.1111/j.1540-6261.2004.00680.x}, but what exactly the extra-financial value of a firm is can often be difficult to uncover without a meeting or phone call. A vast increase in the number of new seed-stage funds being started further exacerbates the problem: venture research firm CBInsights claims that ``the number of funds closed in 2014 was nearly 100\% more than 2013''~\cite{cbinsights-research-barbell}.
+Once an eligible set of venture firms has been found, the burden on the founder only increases. In addition to figuring out the specific constraints mentioned above, each firm has preferences that may or may not align with the founder's vision for the company. Furthermore, in today's markets, where capital is widely available and there are many similar sources of capital, venture firms are fighting to differentiate themselves to founders, adding another degree of freedom to the ranking function each founder must internally maintain. ``The evidence suggests that VCs' `extra-financial' value may be more distinctive than their functionally equivalent financial capital''~\cite{doi:10.1111/j.1540-6261.2004.00680.x}, but what exactly the extra-financial value of a firm is can often be difficult to uncover without a meeting or phone call. A vast increase in the number of new seed-stage funds being started further exacerbates the problem: venture research firm CBInsights claims that ``the number of funds closed in 2014 was nearly 100\% more than 2013''~\cite{cbinsights-research-barbell}.
 
-A separate concern from the selection of the venture firm is the selection of the General Partner within the firm. Our data shows that there are an average of 4.68 partners per venture firm, with several other associates and supporting staff on the investment team. Each person often has an area of expertise and a type of company they prefer to consider, as well as a particular way to engaging with the companies they support. However, as before, there is no easy way to tell which parters prefer which industries or business models, making the selection process for founders laborious at best, and arbitrary in the average case.
+A separate concern from the selection of the venture firm is the selection of the General Partner within the firm. Our data shows that there are an average of 4.68 partners per venture firm, with several other associates and supporting staff on the investment team. Each person often has an area of expertise and a type of company they prefer to consider, as well as a particular way to engaging with the companies they support. However, as before, there is no easy way to tell which partners prefer which industries or business models, making the selection process for founders laborious at best, and arbitrary in the average case.
 
 \subsection{Outreach}
 
-The final major burden for founders who have identified and researched their ideal (seed) investors is to find a way to get connected to each one. It's commonly accepted in the industry that a so-called ``warm introduction'', that is, a direct introduction from someone who personally knows the investor, is the best way to start a conversation with a VC. Indeed, this is corroborated by the data. It has been shown that ``direct ties are strongly and positively related to the probability of investment''~\cite{doi:10.1287/mnsc.48.3.364.7731}, in support of the hypothesis that ``investors are more likely to invest in new ventures when they have a previously established direct tie to the entrepreneur than when they do not''~\cite{doi:10.1287/mnsc.48.3.364.7731}. The further removed a founder is in the global social graph from an investor, the less chance they will be able to get a direct introduction, and the lower the likelihood of investment. However, for many first-time founders, it is simply impossible to get a direct introduction at all. The problem then shifts to finding the best ``intro path'' to a given investor, or barring that, sending the ``cold'' email which maximizes the chance the investor will consider taking a meeting. This process is often ad-hoc and confusing.
+The final major burden for founders who have identified and researched their ideal (seed) investors is to find a way to get connected to each one. It's commonly accepted in the industry that a so-called ``warm introduction'' (a direct introduction from someone who personally knows the investor) is the best way to start a conversation with a VC. Indeed, this is corroborated by the data. It has been shown that ``direct ties are strongly and positively related to the probability of investment''~\cite{doi:10.1287/mnsc.48.3.364.7731}, in support of the hypothesis that ``investors are more likely to invest in new ventures when they have a previously established direct tie to the entrepreneur than when they do not''~\cite{doi:10.1287/mnsc.48.3.364.7731}. The further removed a founder is in the global social graph from an investor, the less chance they will be able to get a direct introduction, and the lower the likelihood of investment. However, for many first-time founders, it is simply impossible to get a direct introduction at all. The problem then shifts to finding the best ``intro path'' to a given investor, or barring that, sending the ``cold'' email which maximizes the chance the investor will consider taking a meeting. This process is often ad-hoc and confusing.
 
 \section{Existing Solutions}
 \label{vcwiz:existing}
@@ -29,7 +29,7 @@ Several solutions exist which solve one or many of the problems discussed above,
 
 \subsubsection{Crunchbase}
 
-Crunchbase \footnote{https://crunchbase.com} is an online database of companies, their founders, and the investors that back them. It was created ``to be the master record of data on the world’s most innovative companies''~\cite{doi:10.1287/mnsc.48.3.364.7731}, and is largely used as the first place founders go to learn more about a startup's investors. While the database is very comprehensive (and indeed was use to seed the database for VCWiz), it has historically been cumbersome to navigate, and the founders we interviewed found it to be a poor choice for discovery, though an excellent first step for research.
+Crunchbase is an online database of companies, their founders, and the investors that back them. It was created ``to be the master record of data on the world's most innovative companies''~\cite{doi:10.1287/mnsc.48.3.364.7731}, and is largely used as the first place founders go to learn more about a startup's investors. While the database is very comprehensive (and indeed was use to seed the database for VCWiz), it has historically been cumbersome to navigate, and the founders we interviewed found it to be a poor choice for discovery, though an excellent first step for research.
 
 The database offered through the Crunchbase Data Venture Program \footnote{https://about.crunchbase.com/partners/venture-program/} was used to seed the VCWiz investor database.
 
@@ -68,9 +68,9 @@ The set of features and tools offered by Foundersuite were used as the starting 
 
 The first step towards improving the founder-investor matching process is better tooling for both ends. Since founders are often the individual initiating an interaction, it makes sense to first focus on founders. After reviewing the existing solutions, and the feedback of founders as above, it's clear that there is an opportunity for a product which is sufficiently comprehensive yet much more accessible (with respect to cost and usability).
 
-Fundraising can look very different at different stages of a company's life. While raising a pre-seed or seed round can entail leveraging a network to meet and impress sufficient investors until (at least) on decides to invest, later rounds of funding (e.g. Series A or B) are more predicated on the quantifiable traction of the company. Thus, a lot of the tools above are most impactful for seed-stage founders.
+Fundraising can look very different at different stages of a company's life. While raising a pre-seed or seed round can entail leveraging a network to meet and impress sufficient investors until (at least) one decides to invest, later rounds of funding (e.g. Series A or B) are more predicated on the quantifiable traction of the company. Thus, a lot of the tools above are most impactful for seed-stage founders.
 
-The process of fundraising also looks very different for the subset of founders that are so-called serial entrepreneurs: having raised money from institutional investors in the past means a founder no longer necessarily has the issue of discovering who they should take money from. Furthermore, ``entrepreneurs with a track record of success are much more likely to succeed than first-time entrepreneurs''~\cite{gompers2010performance}. Research on retail businesses shows that indeed, even outside of technology, ``prior business experience increases the longevity of the next business opened''~\cite{doi:10.1086/683820}. Indeed, the investing side of the equation also believes this. Data from the First Round Capital 10 Year Project \cite{first-round-10-years} indicates that ``repeat founders’ initial valuations tended to be over 50\% higher'' than those of first-time founders.
+The process of fundraising also looks very different for the subset of founders that are so-called serial entrepreneurs: having raised money from institutional investors in the past means a founder no longer necessarily has the issue of discovering who they should take money from. Furthermore, ``entrepreneurs with a track record of success are much more likely to succeed than first-time entrepreneurs''~\cite{gompers2010performance}. Research on retail businesses shows that indeed, even outside of technology, ``prior business experience increases the longevity of the next business opened''~\cite{doi:10.1086/683820}. Indeed, the investing side of the equation also believes this. Data from the First Round Capital 10 Year Project \cite{first-round-10-years} indicates that ``repeat founders' initial valuations tended to be over 50\% higher'' than those of first-time founders.
 
 Thus, in order to maximize the impact we have on the equity and efficiency of the founder-investor matching process, we opted to design a tool geared towards first-time founders, who are raising their first (seed) rounds. The tool has discovery, research, and outreach components, borrowing interfaces and functionality from the best of the above-discussed tools. We call our new tool VCWiz. VCWiz went through three iterations, each substantially changing the functionality and interface according to feedback solicited from users. We will first discuss the first iteration of VCWiz.
 
@@ -118,12 +118,12 @@ In addition to simply tracking conversations, VCWiz offers two tools for initiat
 
 \subsubsection{Design}
 
-The first step in building the first version of VCWiz was to spent time talking to 21 teams of startup founders, going through well-known accelerators such as Y Combinator\footnote{http://www.ycombinator.com/} (``one of the oldest and top-rated incubator/accelerator programs in the country''~\cite{stross2013launch}). This occurred in June of 2017. The goal was to capture these founders right as they were about to begin raising their seed (initial) rounds of funding. They all identified a need for personalized suggestions of investors. Our initial idea was to collect information from each founder on their ideal investor (characterizing investors and firms with features such as industry, check size, and location), and generate suggestions from a cluster of similar investors (using an item-based k-nearest neighbors model, as in \cite{Stone:2013:EST:2541167.2507882}). With this in hand, we build the first iteration of the VCWiz application.
+The first step in building the first version of VCWiz was to spent time talking to 21 teams of startup founders, each going through a well-known accelerator such as Y Combinator\footnote{http://www.ycombinator.com/} (``one of the oldest and top-rated incubator/accelerator programs in the country''~\cite{stross2013launch}). This occurred in June of 2017. The goal was to capture these founders right as they were about to begin raising their seed (initial) rounds of funding. They all identified a need for personalized suggestions of investors. Our initial idea was to collect information from each founder on their ideal investor (characterizing investors and firms with features such as industry, check size, and location), and generate suggestions from a cluster of similar investors (using an item-based k-nearest neighbors model, as in \cite{Stone:2013:EST:2541167.2507882}). With this in hand, we built the first iteration of the VCWiz application.
 
-The first version of VCWiz collected a founder's ideal investor profile (based on the characteristics identified above), as well as basic company information, before taking them to a screen of recommendations. The founder had the option to add any of the recommended investors to a list of ``target investors'' to begin tracking them, and was then taken to the main card-based view of the app. This view presented a series of stages.
+User authentication for the VCWiz platform is handled by Google (Figure \ref{screenshots:v1:login}). The first version of VCWiz collected a founder's ideal investor profile (Figure \ref{screenshots:v1:signup}), as well as basic company information, before taking them to a screen of recommendations. The founder had the option to add any of the recommended investors to a list of ``target investors'' to begin tracking them, and was then taken to the main card-based view of the app (Figure \ref{screenshots:v1:conversations}). This view presented a series of stages.
 
 \begin{itemize}
-  \item Waiting for Into
+  \item Waiting for Intro
   \item Waiting for Response
   \item Need to Respond
   \item Interested
@@ -131,25 +131,6 @@ The first version of VCWiz collected a founder's ideal investor profile (based o
 \end{itemize}
 
 Investor cards, which showed summaries of a partner at a firm, alongside community notes on both the partner and firm, could be moved between stages through dynamic buttons, which captured the transitions between stages. At this time, data collected on platform usage was not leveraged, save for sorting the recommendations for new users by popularity in the existing user base.
-
-\begin{figure}[ht]
-  \centering
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/v1/login.png}
-    \caption*{Login Screen}
-  \end{minipage}\hfill
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/v1/signup.png}
-    \caption*{Signup Screen}
-  \end{minipage}\hfill
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/v1/track.png}
-    \caption*{Conversations}
-  \end{minipage}
-\end{figure}
 
 \subsubsection{Feedback}
 
@@ -173,11 +154,17 @@ The second version of VCWiz was started in July of 2017. It featured a new recom
 def recommendations(founder):
   investors $\gets$ founder.company.competitors.flat_map(c => c.investors)
   eligible $\gets$ investors.filter(i => i.industries $\cap$ founder.company.industries $\neq$ $\emptyset$)
-  sorted $\gets$ eligible.sort_by(i => [i.featured, |i.industries $\cap$ founder.company.industries|, i.popularity])
+  sorted $\gets$ eligible.sort_by(i => [
+    i.featured,
+    |i.industries $\cap$ founder.company.industries|,
+    i.popularity
+  ])
   return sorted
 \end{lstlisting}
 
-Another addition to the second version was an augmented spreadsheet interface, which looks and feels like a spreadsheet, but auto-completes information about investors based on a VCWiz investor database. Once sufficient information had been entered on an investor into a row of the sheet to uniquely identify one record in the database, the remaining fields were filled. This gave the founders an experience they were comfortable with, with the power and ease of use they expected to justify switching tools.
+The interface for these investor recommendations is shown in Figure \ref{screenshots:v2:recs} (p. \pageref{screenshots:v2:recs}).
+
+Another addition to the second version was an augmented spreadsheet interface (show in in Figure \ref{screenshots:v2:conversations}), which looks and feels like a spreadsheet, but auto-completes information about investors based on a VCWiz investor database. Once sufficient information had been entered on an investor into a row of the sheet to uniquely identify one record in the database, the remaining fields were filled. This gave the founders an experience they were comfortable with, with the power and ease of use they expected to justify switching tools.
 
 In order to build up the VCWiz investor database, we started with a dataset imported from the Crunchbase Data Venture Program, then further augmented it with several additional sources. We will discuss our data pipeline in depth below.
 
@@ -212,20 +199,6 @@ Finally, we refined the stages a tracked investor could fall into, based on feed
 \end{itemize}
 \end{multicols}
 
-\begin{figure}[ht]
-  \centering
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/v2/recommendations.png}
-    \caption*{Investor Recommendations}
-  \end{minipage}\hfill
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/v2/track.png}
-    \caption*{Conversation Tracker}
-  \end{minipage}
-\end{figure}
-
 \subsubsection{Feedback}
 
 Following the completion of the second iteration of VCWiz, we did another series of user tests, asking founders to focus specifically on the improvements over the first version.
@@ -246,11 +219,11 @@ We will first give an overview of the features of the third and final iteration 
 
 \subsubsection{Discovery}
 
-VCWiz's initial screen contains an interface to filter and search for investors, by all the characteristics discussed previously, as well as by name and more novel metrics, such as topics often discussed. There are also options to constrain and modify the filters, such as changing a filter from a logical OR to a logical AND. In addition to the filtering and searching, there are curated lists of investors that meet specific criteria, ordered by popularity, and selectively shown to founders based on characteristics of their startup.
+VCWiz's initial screen contains an interface to filter and search for investors (Figure \ref{screenshots:v3:filter}), by all the characteristics discussed previously, as well as by name and more novel metrics, such as topics often discussed. There are also options to constrain and modify the filters, such as changing a filter from a logical OR to a logical AND. In addition to the filtering and searching, there are curated lists of investors that meet specific criteria, ordered by popularity, and selectively shown to founders based on characteristics of their startup (Figure \ref{screenshots:v3:lists}).
 
 \subsubsection{Research}
 
-Clicking through from any of the results in the filter view bring up a research screen which displays comprehensive information on both a firm, as well as every partner at that firm. Every piece of information mentioned in interviews by founders as being useful is included in this view, including but not limited to biographies, social media links, recent investments, press mentions, blog posts and tweets, favorite topics to talk about, industries often invested in, and common co-investors.
+Clicking through from any of the results in the filter view bring up a research screen (Figure \ref{screenshots:v3:research}) which displays comprehensive information on both a firm, as well as every partner at that firm. Every piece of information mentioned in interviews by founders as being useful is included in this view, including but not limited to biographies, social media links, recent investments, press mentions, blog posts and tweets, favorite topics to talk about, industries often invested in, and common co-investors.
 
 \subsubsection{Outreach}
 
@@ -266,19 +239,6 @@ Shortly after the public launch of this third version of VCWiz on January 25th, 
 
 \begin{figure}[ht]
   \centering
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/v3/filter.png}
-    \caption*{Filter \& Search}
-  \end{minipage}\hfill
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/v3/investor.png}
-    \caption*{Investor Research}
-  \end{minipage}\hfill
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/v3/lists.png}
-    \caption*{Curated Firm Lists}
-  \end{minipage}
+  \includegraphics[width=\textwidth]{vcwiz/onboarding/landing.png}
+  \caption*{VCWiz Landing Page}
 \end{figure}

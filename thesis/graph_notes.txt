@@ -289,7 +289,7 @@ We use this data to estimate the effects of network distance in the matches resu
 Series A financing rounds. Series A rounds are typically the second significant round a startup
 closes, following a Seed round.
 6 Investors entering the Seed round will typically expand greatly
-the startup’s connections in the setting, reducing their distance to further potential investors. We
+the startup's connections in the setting, reducing their distance to further potential investors. We
 identify distances to prospective investors as part of our explanation of who will enter the round
 (match) in the Series A.7
 

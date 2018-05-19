@@ -8,54 +8,21 @@ The final platform incorporated all the feedback from previous iterations, and w
 
 \subsection{Onboarding}
 
-Founders find the VCWiz platform through one of our launch partners (such as TechCrunch\footnote{\url{https://techcrunch.com/2018/01/25/dorm-room-fund-has-built-a-crm-for-founders-raising-a-seed-round/}}), or from search engines such as Google. We spent the months leading up to the launch generating research pages for every investor, firm, and company in our database. These pages include comprehensive details on the entity in question, as described above, as well as an embedded view of all the VCs associated with that entity, and, if the user is signed in, all the personalization included in the platform.
-
 \begin{figure}[ht]
   \centering
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/onboarding/firm.png}
-    \caption*{Spark Capital Firm Page}
-  \end{minipage}\hfill
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/onboarding/techcrunch.png}
-    \caption*{Launch on TechCrunch}
-  \end{minipage}
+  \includegraphics[width=\textwidth]{vcwiz/onboarding/techcrunch.png}
+  \caption*{Launch on TechCrunch}
 \end{figure}
+
+Founders find the VCWiz platform through one of our launch partners (such as TechCrunch\footnote{\url{https://techcrunch.com/2018/01/25/dorm-room-fund-has-built-a-crm-for-founders-raising-a-seed-round/}}), or from search engines such as Google. We spent the months leading up to the launch generating research pages for every investor, firm, and company in our database (Figure \ref{screenshots:v3:onboarding}). These pages include comprehensive details on the entity in question, as described above, as well as an embedded view of all the VCs associated with that entity, and, if the user is signed in, all the personalization included in the platform.
 
 After funneling users from their landing page to the main screen of the application, founders are able to filter, search, and explore lists of investors without creating an account. The site is fully functional from a discovery and research perspective, and about 80\% of users are content to peruse the content without creating an account. If the founder decides to create an account, we walk them through a series of questions to gather more information about their startup.
 
-\begin{figure}[ht]
-  \includegraphics[width=0.45\textwidth]{vcwiz/onboarding/landing.png}
-  \centering
-  \caption*{VCWiz Landing Page}
-\end{figure}
-
 The signup flow begins by asking for the domain of the company. Using this as a unique identifier, we are able to query both our internal database, as well as external services (such as the Clearbit Logo API \footnote{https://clearbit.com/logo}) to gather as much information as possible on the founder's startup. The client browser makes a request to an API backend on the VCWiz server which initiates these requests in parallel, and returns a joined \texttt{Company} model within a given timeout threshold. This information is used pre-fill many of the following fields, including the name, description, industries, and competitors of the company. The founder is given a chance to verify this information, as well as provide mandatory information on their ideal investor profile. Finally, the founder is requested to log in with their Google account, in order to provide an authenticated email and social profile. We chose to use an OAuth2 \cite{hardt2012oauth}-based login flow with an existing service provider to simplify the login experience, and to avoid having to store user credentials. Google was the platform of choice on account of it providing verified email address information to users, as well as to unify the authentication experience in the case that the founder also decides to provide API access to their email inbox (for the purpose of synchronizing their conversations with investors).
 
-Providing access to their email inbox is strictly an opt-in feature, and the how the data is to be used is explicitly described. As a result of our surveys to founders in previous iterations of the product, we found that it was necessary to have a plain-English description of our data use policy. We guarantee to founders that no human will ever read the individual messages of their inbox, that only aggregate data will be used for purposes other than their personal dashboard, and that we will only use metadata from their emails (headers, sentiment, etc.).
+Providing access to their email inbox is strictly an opt-in feature, and how the data will be used is explicitly described. As a result of our surveys to founders in previous iterations of the product, we found that it was necessary to have a plain-English description of our data use policy. We guarantee to founders that no human will ever read the individual messages of their inbox, that only aggregate data will be used for purposes other than their personal dashboard, and that we will only use metadata from their emails (headers, sentiment, etc.).  We allow ourselves to use features based on the body of the email, such as sentiment, provided they cannot be used to reconstruct a representation of the body.
 
-After signing up, the founder is presented with a brief set of video clips that introduce the functionality to them, including how to filter, search, and track investors. Following this, the site functions as it did before the founder signed up, with a few minor changes. Every screen with an investor has an integrated conversation tracker which shows the status of that investor, if any, in the founder's fundraise, as well as the email-based shortest intro path to that investor. The results of the filters are also personalized to the founder, based on the overlap in industries and location between each firm and the founder's startup. Signing up also unlocks the conversation tracker, with a preview of conversations on the main page, and a dedicated screen for updating and viewing the status of each individual conversation.
-
-\begin{figure}[ht]
-  \centering
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/onboarding/intro.png}
-    \caption*{Tutorial}
-  \end{minipage}\hfill
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/onboarding/summary.png}
-    \caption*{Conversation Summary}
-  \end{minipage}\hfill
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{vcwiz/onboarding/conversations.png}
-    \caption*{Conversation Tracker}
-  \end{minipage}
-\end{figure}
+After signing up, the founder is presented with a brief set of video clips that introduce the functionality to them (Figure \ref{screenshots:onboarding:intro}), including how to filter, search, and track investors. Following this, the site functions as it did before the founder signed up, with a few minor changes. Every screen with an investor has an integrated conversation tracker which shows the status of that investor, if any, in the founder's fundraise, as well as the email-based shortest intro path to that investor. The results of the filters are also personalized to the founder, based on the overlap in industries and location between each firm and the founder's startup. Signing up also unlocks the conversation tracker, with a preview of conversations on the main page (Figure \ref{screenshots:onboarding:summary}), and a dedicated screen for updating and viewing the status of each individual conversation (Figure \ref{screenshots:onboarding:conversations}).
 
 \subsection{Ingesting User Data}
 \label{vcwiz:ingesting}
@@ -108,13 +75,7 @@ There were also several heuristics we used to skip messages that could be classi
 
 The second way founders can inform the system about ongoing conversations is to CC (or BCC) a special email address, which routes to a server which accepts the message and forwards the relevant metadata to an API endpoint on VCWiz. This metadata is parsed and the email is reconstructed, before being run through the same algorithms as above. This alternate, manual way of updating VCWiz via emails was added for the more privacy-conscious founders on the platform, who wished to have the convenience of updates based on emails without handing over access to their entire inbox.
 
-The third and final ways founders can update the system in bulk is by uploading a existing spreadsheet of conversations. Our surveys revealed that the most commonly-used tool for tracking conversations with an investor was a spreadsheet (or spreadsheet-like tool), so providing an easy way to migrate those onto the platform was essential. Founders can export a CSV file from any spreadsheet-based tool and import it on the conversation tracker page of VCWiz. The server parses the rows out of the CSV, and uses both the format of the content of a column as well as it's header (based on the Levenshtein distance \cite{1966SPhD...10..707L} of a given header from a list of common choices) to guess which columns correspond to which internal database columns of a \texttt{TargetInvestor}. This mapping is presented to the founder for verification, and then is used to import the rows as a background job.
-
-\begin{figure}[ht]
-  \includegraphics[width=0.45\textwidth]{vcwiz/import/columns.png}
-  \centering
-  \caption*{Spreadsheet Import}
-\end{figure}
+The third and final ways founders can update the system in bulk is by uploading a existing spreadsheet of conversations. Our surveys revealed that the most commonly-used tool for tracking conversations with an investor was a spreadsheet (or spreadsheet-like tool), so providing an easy way to migrate those onto the platform was essential. Founders can export a CSV file from any spreadsheet-based tool and import it on the conversation tracker page of VCWiz. The server parses the rows out of the CSV, and uses both the format of the content of a column as well as it's header (based on the Levenshtein distance \cite{1966SPhD...10..707L} of a given header from a list of common choices) to guess which columns correspond to which internal database columns of a \texttt{TargetInvestor}. This mapping is presented to the founder for verification (Figure \ref{screenshots:import:columns}), and then is used to import the rows as a background job.
 
 \subsection{Filtering \& Searching}
 
@@ -155,7 +116,7 @@ In addition to filtering against any combination of the above criteria, founders
 
 \subsubsection{Sort}
 
-Once VCWiz have generated the set of investors that match each filter and search query, it must decide the order in which to display the results. There is a custom ranking function which sorts the results, using each metric as the tie-breaker for the last.
+Once VCWiz has generated the set of investors that match each filter and search query, it must decide the order in which to display the results. There is a custom ranking function which sorts the results, using each metric as the tie-breaker for the last.
 
 \begin{enumerate}
   \item If the topic filter is present: the number of investors in the firm which match the set of topics
@@ -203,7 +164,7 @@ def filter_and_search(all_firms, founder, filters, search):
 
 \subsubsection{Display}
 
-The results from the filtering and searching process are displayed in an infinitely-scrollable table to the founder, with the following columns.
+The results from the filtering and searching process are displayed in an infinitely-scrollable table to the founder (Figure \ref{screenshots:filtering:results}), with the following columns.
 
 \begin{enumerate}
   \item The name and photo of the firm
@@ -218,21 +179,9 @@ N.B. What founders really desire to see in the ``stage'' column is the average c
 
 The ``pace'' column is present to give the founder a sense of how active a given firm is. This was added by popular request after many founders found it difficult to determine whether or not a firm was still actively investing their current fund.
 
-\begin{figure}[ht]
-  \includegraphics[width=0.45\textwidth]{vcwiz/filtering/results.png}
-  \centering
-  \caption*{Filter Results}
-\end{figure}
-
 Each column (other than ``industries'') also provides a button for overriding the ranking function. This allows the founder to view the result set, sorted by only the data in the particular column. The ``firm'' and ``location'' columns are sorted lexicographically, the ``pace'' column numerically, and the ``stage'' and ``track'' columns by their inherently-defined orderings.
 
-In the case where a search query is specified, or the topic filter is used, it is valuable to not only surface not only the resulting firms, but the best-matching investor at each firm (e.g. if the search query matches the first name of a partner). In these cases, there is an additional, non-sortable column titled ``Partner'', which displays the name and photo of that best match.
-
-\begin{figure}[ht]
-  \includegraphics[width=0.45\textwidth]{vcwiz/filtering/partner.png}
-  \centering
-  \caption*{Filter Results with Partner Column}
-\end{figure}
+In the case where a search query is specified, or the topic filter is used, it is valuable to not only surface not only the resulting firms, but the best-matching investor at each firm (e.g. if the search query matches the first name of a partner). In these cases, there is an additional, non-sortable column titled ``Partner'', which displays the name and photo of that best match (Figure \ref{screenshots:filtering:partner}).
 
 \subsubsection{Initialization}
 
@@ -245,9 +194,7 @@ One experimental part of the final VCWiz platform was the ability for founders t
 
 The motivation behind this was to standardize the format and medium of ``cold'' intro requests in the venture community. As discussed earlier, there is both qualitative and quantitative data supporting the use of mutual connections to make introductions when reaching out to investors. This is corroborated by the results of our experiments on the VCWiz graph, which indicate that how central a founder is in the global social graph of startups and venture capital is highly correlated with how easily a founder will raise money. However, sometimes this is simply not an option. In this case, founders resort to ad-hoc, unsolicited emails to investors, leveraging myriad folklore tactics to increase the chances of a response. This is a frustrating experience for both parties: investors are deluged with a stream of unwanted pitches, mixed haphazardly into their daily business, while founders are disappointed that their carefully-crafted custom email gets lumped in with the bulk email another founder sent to 1000 investors.
 
-We attempted to solve this problem by providing a tool for founders to send a templated introduction request, which looks identical each time (save for a customizable blurb), to an investor. The investor's email address is never initially revealed to the founder. Instead, a request email is sent by the VCWiz platform to the investor, containing an automatically-generated dossier on the founder and their startup (from the information provided at signup). The investor can respond to this automated email with a simple ``yes'' or ``no'', and only in the case of an affirmative response is a second email sent from the platform, connecting the founder and the investor.
-
-\textbf{\#TODO: images of request screen, email with options, eventual intro if they say yes}
+We attempted to solve this problem by providing a tool for founders to send a templated introduction request, which looks identical each time (save for a customizable blurb), to an investor (Figure \ref{screenshots:intro:request}). The investor's email address is never initially revealed to the founder. Instead, a request email is sent by the VCWiz platform to the investor, containing an automatically-generated dossier on the founder and their startup (from the information provided at signup). The investor can respond to this automated email with a simple ``yes'' or ``no'', and only in the case of an affirmative response is a second email sent from the platform, connecting the founder and the investor.
 
 While many investors agreed that using an automated third-party such as VCWiz was preferable to founders directly sending countless emails and followups, there was significant doubt that such a platform would be adopted to such a degree that it could be considered a success. As it turns out, these concerns were well-founded. When we launched the feature, we were tracking a funnel of four success metrics:
 
@@ -272,9 +219,7 @@ Only 13 investors responded to the investor survey, but the overwhelming respons
 
 \subsection{Intro Paths}
 
-Founders who have shared their email graph with VCWiz can see their ``Intro Path'' to any given investor on the platform. The goal of displaying these paths (and the length of that path as investor's distance from the founder) is to assist founders in planning who can make an introduction for them (so as to avoid the problem discussed above).
-
-\textbf{\#TODO: image of intro path modal}
+Founders who have shared their email graph with VCWiz can see their ``Intro Path'' to any given investor on the platform (Figure \ref{screenshots:intro:path}). The goal of displaying these paths (and the length of that path as investor's distance from the founder) is to assist founders in planning who can make an introduction for them (so as to avoid the problem discussed above).
 
 This path is calculated by running a standard single-pair shortest-path algorithm between the founder's node and the investor's node. If multiple paths are found, the paths are ranked by the strength of the connections they represent (based on the sum of the frequencies of emails between nodes on the path), and the top three are returned. The Cypher script run on our Neo4j database instance to accomplish this has been reproduced in Listing \ref{vcwiz:cypher:intro} (p. \pageref{vcwiz:cypher:intro}).
 
@@ -337,11 +282,11 @@ We use the Google Cloud Natural Language API \footnote{https://cloud.google.com/
 
 \subsubsection{Hunter}
 
-Hunter \footnote{https://hunter.io/} is a service which collects common email patterns on a per-domain basis to aid in guessing a person's email address given their name and domain. We use it to guess the emails of investors who have not signed up for the platform yet, when a founder requests an introduction to them.
+Hunter \footnote{https://hunter.io/} is a service which collects common email patterns on a per-domain basis to aid in guessing a person's email address given their name and domain. When a founder requests an introduction to an investor who has not yet signed up for the platform, we use Hunter to guess their email.
 
 \subsubsection{Twitter}
 
-We use the APIs provided by Twitter \footnote{https://developer.twitter.com/en/docs} combined with the social media usernames reported by Clearbit to log recent tweets of every individual investor on the VCWiz platform. These tweets are displayed on the research page for the investor. Entities are extrated from these tweets, and are used to build a profile of the topics affiliated with an investor.
+We use the APIs provided by Twitter \footnote{https://developer.twitter.com/en/docs} combined with the social media usernames reported by Clearbit to log recent tweets of every individual investor on the VCWiz platform. These tweets are displayed on the research page for the investor. Entities are extracted from these tweets, and are used to build a profile of the topics affiliated with an investor.
 
 \subsubsection{Medium}
 
@@ -368,7 +313,7 @@ The security of the entire application is handled through a few efforts. All dat
 
 When it comes to the API specifically, we want to prevent both unauthorized reads (of user or bulk data) and writes (that a user did not intend).
 
-Writes across founders are defended against with the measures described above. A common attack vector for an unauthorized write is a cross-site request forgery (CSRF). CSRF is when ``a malicious site instructs a victim’s browser to send a request to an honest site, as if the request were part of the victim’s interaction with the honest site''~\cite{Barth:2008:RDC:1455770.1455782}. In this case, a malicious site could send a request to a VCWiz API, impersonating the currently logged-in founder to, for example, request an introduction from an investor with arbitrary text. This could be very damaging for the founder, and so is addressed by embedding a request-specific key in the meta tags of each page. This key is parsed by the frontend application, and sent in a header to the API with every request. If the key is present, the request must be from a legitimate source. If it is absent or missing, the request is illegitimate and is rejected before being routed.
+Writes across founders are defended against with the measures described above. A common attack vector for an unauthorized write is a cross-site request forgery (CSRF). CSRF is when ``a malicious site instructs a victim's browser to send a request to an honest site, as if the request were part of the victim's interaction with the honest site''~\cite{Barth:2008:RDC:1455770.1455782}. In this case, a malicious site could send a request to a VCWiz API, impersonating the currently logged-in founder to, for example, request an introduction from an investor with arbitrary text. This could be very damaging for the founder, and so is addressed by embedding a request-specific key in the meta tags of each page. This key is parsed by the frontend application, and sent in a header to the API with every request. If the key is present, the request must be from a legitimate source. If it is absent or missing, the request is illegitimate and is rejected before being routed.
 
 Preventing read abuse of internal APIs is accomplished through a combination of expiring server grants to clients and rate-limiting. Whenever a non-API page is loaded on VCWiz, a timestamp is set in the encrypted user session. Whenever an API request is made, this session timestamp is compared to the current server time. If more than one hour has elapsed, the API request is reject with a \texttt{401 Unauthorized} status code. This ensures that the only clients who can make API requests are the ones representing active users on the website. Of course, there are times where this can result in a legitimate user being denied (because, for example, they left the page open and came back an hour later). In the cases where the API abstraction layer on the frontend receives a \texttt{401}, it simply triggers a refresh of the page, thereby refreshing the server grant. Since it would be possible to obtain a grant for malicious purposes, the API is also rate-limited by session identifier and IP address.
 
@@ -402,9 +347,16 @@ A blog post detailing the full marketing efforts to launch VCWiz can be found on
 
 \subsection{Metrics}
 
-At the time of writing, there are 421,946 VCWiz research pages indexed on Google. From these, there are roughly 7000 impressions per day, resulting in about 100 clicks to the site. Similar stats are seen on other major search engines. There are between 200 and 300 founders that actively use the site on a monthly basis, with around 1200 founders that have used the platform actively at least once since the launch. These founders visit 1000 investor profiles monthly, for an average of four investors per founder per month. The majority of sessions. Of these founders that have signed up, just over 50\% of them have granted access to their email inboxes for the purpose of tracking conversations with investors, and contributing anonymous, aggregate graph data for the VCWiz platform. These founders send and receive an average of 33 emails with investors per month.
+At the time of writing, there are 421,946 VCWiz research pages indexed on Google. From these, there are roughly 7000 impressions per day, resulting in about 100 clicks to the site. Similar stats are seen on other major search engines. Figure \ref{fig:acquisition} shows the top sources of new users. There are between 200 and 300 founders that actively use the site on a monthly basis, with around 1200 founders that have used the platform actively at least once since the launch. These founders visit 1000 investor profiles monthly, for an average of four investors per founder per month. The majority of sessions. Of these founders that have signed up, just over 50\% of them have granted access to their email inboxes for the purpose of tracking conversations with investors, and contributing anonymous, aggregate graph data for the VCWiz platform. These founders send and receive an average of 33 emails with investors per month.
 
 When considering how deeply founders are engaging with the research component of the platform, we see that, after filtering out sessions which last less than 10 seconds, 20\% of the sessions since launch lasted at least 10 minutes, with 5\% lasting over 30 minutes. The majority of this time is spent on the research pages generated for investors and firms. Interestingly, while founders tend to focus on the pages related to investors, they often come in through the pages focusing on a given company: 37\% of incoming search traffic is for a company page, with 30\% going to an investor page, and 20\% going to firm pages.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{vcwiz/stats/channels.png}
+  \caption{User Acquisition Channels}
+  \label{fig:acquisition}
+\end{figure}
 
 \subsection{Feedback}
 
@@ -412,9 +364,7 @@ Over the course of the months following the launch of VCWiz, we have done severa
 
 One piece of feedback from a founder stands out in particular, and has been reproduced below.
 
-\textbf{TODO: get full Marc quote}
-
 \begin{quote}
-VCWiz was very helpful in our fundraising journey. It made it easier for us to XXX. Through it we ended up finding relevant investors and overall it made closing our seed round XXX.
+VCWiz was very helpful in our fundraising journey. Through it we discovered several relevant investors that weren't on our radar, and we ended up building a robust target investor list that expedited our process.
 \end{quote}
 

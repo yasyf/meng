@@ -435,9 +435,9 @@ reserved.\par\permission}}
 \newbox\@titlesupervisor 	\newbox\@abstractsupervisor
 
 \def\supervisor#1#2{\setbox\@titlesupervisor\vbox
-  {\unvbox\@titlesupervisor \vskip 10pt% plus 1fil minus 1fil
+  {\unvbox\@titlesupervisor \vskip 1.25\baselineskip
   \def\baselinestretch{1}\large
-  \signature{Certified by}{#1 \\ #2 \\ Thesis Supervisor}}
+  \signature{Certified by}{#1, #2 \\ Thesis Supervisor}}
   \setbox\@abstractsupervisor\vbox{\unvbox\@abstractsupervisor
   \vskip\baselineskip \def\baselinestretch{1}\@normalsize
   \par\noindent Thesis Supervisor: #1 \\ Title: #2}}
@@ -455,10 +455,13 @@ by\par
 \par
 \@prevdegrees
 \par
-\choosecase{Submitted to the} \choosecase{\@department} \\
-\choosecase{in partial fulfillment of the requirements for the}
-\choosecase{\@degreeword}
-\choosecase{of}
+{
+  \normalsize
+  \choosecase{Submitted to the} \choosecase{\@department} \\
+  \choosecase{in partial fulfillment of the requirements for the}
+  \choosecase{\@degreeword}
+  \choosecase{of}
+}
 \par
 \choosecase{\@degree}
 \par
