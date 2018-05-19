@@ -4,12 +4,21 @@
 
 \subsection{VCWiz}
 
-On the VCWiz platform, there are several high-demand features which founders have requested repeatedly. In a survey...
+On the VCWiz platform, there are several high-demand features which founders have requested repeatedly. In a survey of 118 founders, the most requested features were:
 
-\textbf{TODO: summarize other features requested in survey, like LI import}
+\begin{itemize}
+  \item Importing and syncing intro paths from LinkedIn in addition to email
+  \item Supporting Microsoft Outlook for email syncing
+  \item Per-investor notes across communities of founders
+  \item Shared accounts for co-founders to share
+  \item A faster, more responsive filtering interface
+  \item Incentives for investors to respond to Intro Requests
+  \item Custom CRM columns
+  \item More angel investors in the database
+  \item Information on why an investor made a given investment
+\end{itemize}
 
-% Popular investors in your community (let people join communities)
-% Cofounder login
+Future work would include evaluating and implementing these features, as well as continuing to find creative data sources for aggregating more information on investors. Performance is another opportunity for future improvement: the average API request involving a filter operation takes about one second.
 
 \subsection{FounderRank}
 
@@ -42,5 +51,7 @@ The VCWiz Email Graph, collected from the founders on the platform, serves as th
 Using the VCWiz Email Graph, we explored the structure and interactions of a graph of seed-stage founders from a variety of backgrounds and pedigrees. We identified that there are three important social characteristics of a founder when fundraising: importance, influence, and access. We identified three graph metrics that correspond to the three characteristics: PageRank, Betweenness Centrality, and Closeness Centrality.
 
 With a linear regression, we showed that the optimal linear combination of these three graph metrics can explain about 40\% of the variance found in a hand-crafted baseline ranking of founders, with a rank correlation of $0.68$. Furthermore, we identified access as the most important characteristic a founder can have when fundraising, followed by their importance. Influence, as proxied by Betweenness Centrality, has a near-perfect correlation with importance, and provides very little information when ranking founders.
+
+By running similar processes over the graph of public funding data, we discovered that there is not sufficient information in the relationships of venture investments alone to predict fundraising success. However, this graph does contain information which can better inform rankings of founders when used to augment a social graph such as the VCWiz Email Graph. Doing so increases the rank correlation defined above non-trivially.
 
 \textbf{TODO: summarize other experiments as we finish them}
