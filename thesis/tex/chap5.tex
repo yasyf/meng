@@ -59,11 +59,28 @@ We can test this by plotting weekly email volume over the percentage of ``commit
 
 As show in Figure \ref{fig:patterns:email}, we see a similar pattern, but not exactly what was expected. The volume of emails sent in the early stages of the round are not as high as we believed them to be, indicating there are minimal emails back-and-forth while the first investors are diligencing and deliberating over a company. Additionally, the email volume peaks when around 70\% of the investors are committed. Our best explanation for this is that the majority of the coordination around closing the round happens with the lead investor(s), including clarification and negotiation of the fine points. Following this, the remaining investors largely fall in line without much delay. We believe founders are engaging in these discussion with the lead(s) before all the investors have committed.
 
+\subsubsection{Fundraising Timeframe}
+
+Fundraising is a notoriously time-consuming activity. The oft-quoted timeline for raising a seed round is 90 to 120 days of engaging investors in direct solicitation for investment, with countless months leading up to this of building relationship building. It's difficult to find quantitative reports of fundraising timeframes, so we analyzed the average length of a seed fundraising attempt on VCWiz.
+
+We measure the period of fundraising by defining the start as the first time an investor is added to a founder's wishlist, and the end as the last time a wishlist investor's status is updated. Based on this definition, founders on VCWiz spend an average of 107 days actively fundraising. Figure \ref{fig:patterns:fundraising} shows the distribution of weeks spent fundraising across all founders on the platform.
+
+It is important to note that this method of calculating the fundraising period is not perfect. As shown in Figure \ref{fig:patterns:email}, much of the communication near the end of a round happens over non-email channels. Therefore, VCWiz might have a delayed or inaccurate view of the status of the round in the tail end of fundraising. This can skew the calculation of the period send date.
+
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{founder_rank/email_over_decided.png}
-  \caption{Weekly Email Volume over \% Comitted Investors}
-  \label{fig:patterns:email}
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{founder_rank/email_over_decided.png}
+    \caption{Email Volume over \% Committed}
+    \label{fig:patterns:email}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{founder_rank/weeks_hist.png}
+    \caption{\# Weeks Fundraising}
+    \label{fig:patterns:fundraising}
+  \end{minipage}
 \end{figure}
 
 \section{Baseline Ranking}
@@ -104,27 +121,33 @@ The average time an investor takes to respond to a founder's email would be indi
 
 \subsubsection{Length of fundraising period}
 
-A strong fundraise (based on our earlier criteria) is one which results in sufficient dollars being raised, in the shortest amount of time possible. Thus, the amount of time spent fundraising should be a high-signal feature: a short fundraise alone is not indicative of success, but assuming success, shorter fundraise times are better.
-
-% Unfortunately, we observed a pattern of utilization which makes this feature problematic. As founders reach the stage of their fundraising where they are pitching venture firms and finalizing the details of the deal, they often stop using the VCWiz platform, as they are now working with a sufficiently small number of investors. Furthermore, much of the communication happens over non-email channels, as shown in Figure \ref{fig:patterns:email}. As a result, it is very difficult for us to estimate when a fundraise is over, and we do not have accurate data for this feature.
+A strong fundraise (based on our earlier criteria) is one which results in sufficient dollars being raised, in the shortest amount of time possible. Thus, the amount of time spent fundraising should be a high-signal feature: a short fundraise alone is not indicative of success, but assuming success, shorter fundraise times are better. However, our method of calculating the fundraising period is error-prone: if a founder stops using the platform, or is unsuccessful in closing their round, we will not account for this. For this reason, we omit this feature.
 
 \textbf{TODO: use this feature?}
 
 \subsubsection{Average sentiment of investors}
 
-Intuitively, a high positive sentiment from an investor in an email is one feature of many that indicates an affinity, and a strong relationship. Looking at the data on VCWiz, strong sentiment is often associated with a pre-existing relationship, often from a previous company. Thus, while it is a noisy source of data, it should be included in our ranking function.
+Intuitively, a high positive sentiment from an investor in an email indicates an affinity, and a strong relationship. Looking at the data on VCWiz, strong sentiment is often associated with a pre-existing relationship, often from a previous company. However, it is a very noisy source of data. Figures \ref{fig:sentiment:raised} shows the average sentiment of an incoming email during fundraising over the total money eventually raised, across all founders on the platform. Figure \ref{fig:sentiment:interested} shows the average sentiment over the number of featured investors who expressed interest in a startup during its fundraise. In both cases, we see that sentiment is a meaningless metric. We do not use this metric in our ranking function.
 
-\textbf{TODO: plot, across all founders who raised on the platform, average sentiment of incoming emails vs total money raised}
-
-\textbf{TODO: plot, across all founders who raised on the platform, average sentiment of incoming emails vs number of interested featured investors}
-
-\textbf{TODO: consider normalizing against average sentiment of each investor globally}
-
-\textbf{TODO: maybe don't use this one?}
+\begin{figure}[ht]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{founder_rank/sentiment_over_funding.png}
+    \caption{Sentiment over Money Raised}
+    \label{fig:sentiment:raised}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{founder_rank/sentiment_over_interested.png}
+    \caption{Sentiment over \# Interested}
+    \label{fig:sentiment:interested}
+  \end{minipage}
+\end{figure}
 
 \subsection{Evaluation}
 
-After evaluating each of the above metrics, we drew the following conclusions. The best metric, when available, is the aggregate funding the founder has raised to date, across any company. This is the sum of the two funding-related features above. Following this, average sentiment is a good proxy for founders who have raised no money but are actively engaged in conversations. The number of interested investors is also a good proxy during the fundraise, as it represents absolute interest. The email outreach success rate (fraction of investors who respond) tends to be too noisy, as it is skewed by high-profile founders who send a very small number of emails, to already-established connections. However, the number of investors who respond after being added to a wishlist on VCWiz is a very strong signal, as it indicates no prior relationship.
+After evaluating each of the above metrics, we drew the following conclusions. The best metric, when available, is the aggregate funding the founder has raised to date, across any company. This is the sum of the two funding-related features above. Following this, the number of interested investors is a good proxy during the fundraise, as it represents absolute interest. The email outreach success rate (fraction of investors who respond) tends to be too noisy, as it is skewed by high-profile founders who send a very small number of emails, to already-established connections. However, the number of investors who respond after being added to a wishlist on VCWiz is a very strong signal, as it indicates success with no prior relationship.
 
 \subsection{Ranking Function}
 
@@ -143,9 +166,8 @@ We demonstrate the scoring function in Equation \ref{eq:baseline}, where $S_{m, 
 \begin{tabular}{c | c}
 \textbf{Feature}           & \textbf{Weight} \\\hline
 Aggregate Funding          & 4 \\\hline
-Average Inbound Sentiment  & 3 \\\hline
-\# Responded From Waitlist & 2 \\\hline
-\# Interested              & 1.5
+\# Interested Investors    & 3 \\\hline
+\# Responded From Waitlist & 2
 \end{tabular}
 \centering
 \caption{Baseline Weights}
