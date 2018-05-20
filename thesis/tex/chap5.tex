@@ -1,7 +1,6 @@
 \chapter{Graph Experiments}
 
-\textbf{\#TODO: run these again}
-\textbf{\#TODO: copy metrics from plots}
+\textbf{\#TODO: run these again with latest data, update numbers}
 
 As part of our research into more efficiently matching founder with investors, we sought to quantitatively demonstrate some of the commonly-accepted characteristics of fundraising. Furthermore, we wish to explore how we can leverage automated ranking systems to more appropriately match companies with a source of funding. To do this, we ran various experiments on a social graph of founders, investors, and their mutual connections. This graph is built from the information provided by founders on the VCWiz platform.
 
@@ -97,9 +96,9 @@ When available, the total amount of money raised in the current round is an exce
 
 \subsubsection{Total funding of previous rounds}
 
-As referenced earlier in Section \ref{chap3:tool} (p. \pageref{chap3:tool}), the First Round Capital 10 Year Project \cite{first-round-10-years} indicated much higher fundraising success rates for repeat founders. In this case, having raised money either in a previous round for the same company, or for a previous company, would give a founder the credibility and experience necessary to improve their chances for their current fundraise. We experimented including both this number, when available, as well as a binary feature indicating that this number is nonzero. Ultimately, we decided to use the raw number, as variations in this metric are significant.
+As referenced earlier in Section \ref{chap3:tool} (p. \pageref{chap3:tool}), the First Round Capital 10 Year Project \cite{first-round-10-years} indicated much higher fundraising success rates for repeat founders. In this case, having raised money either in a previous round for the same company, or for a previous company, would give a founder the credibility and experience necessary to improve their chances for their current fundraise.
 
-\textbf{TODO: weight by average round size for the industry}
+We experimented including both this number, when available, as well as a binary feature indicating that this number is nonzero. Ultimately, we decided to use the numeric feature, as variations in this metric are significant. Instead of using the raw number, we scale the amount raised for a given startup by the average round size of the industry the company operates in. This accounts for different capital requirements across industries: having raised \$5M for a social media company conveys much more credibility than the same amount for a biotechnology company.
 
 \subsubsection{Number of intro requests accepted}
 
@@ -122,8 +121,6 @@ The average time an investor takes to respond to a founder's email would be indi
 \subsubsection{Length of fundraising period}
 
 A strong fundraise (based on our earlier criteria) is one which results in sufficient dollars being raised, in the shortest amount of time possible. Thus, the amount of time spent fundraising should be a high-signal feature: a short fundraise alone is not indicative of success, but assuming success, shorter fundraise times are better. However, our method of calculating the fundraising period is error-prone: if a founder stops using the platform, or is unsuccessful in closing their round, we will not account for this. For this reason, we omit this feature.
-
-\textbf{TODO: use this feature?}
 
 \subsubsection{Average sentiment of investors}
 
