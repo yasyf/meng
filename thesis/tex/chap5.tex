@@ -1,6 +1,7 @@
 \chapter{Graph Experiments}
 
 \textbf{\#TODO: run these again}
+\textbf{\#TODO: copy metrics from plots}
 
 As part of our research into more efficiently matching founder with investors, we sought to quantitatively demonstrate some of the commonly-accepted characteristics of fundraising. Furthermore, we wish to explore how we can leverage automated ranking systems to more appropriately match companies with a source of funding. To do this, we ran various experiments on a social graph of founders, investors, and their mutual connections. This graph is built from the information provided by founders on the VCWiz platform.
 
@@ -20,7 +21,7 @@ We would like to explore whether or not linear combinations of simple graph metr
 
 Before we could analyze the graph, we had to do some preprocessing. The first step was of course to build the graph. We followed the steps in Section \ref{vcwiz:ingesting} (p. \pageref{vcwiz:ingesting}) to import each founder's emails, adding nodes and edges to a global graph as described above. Any messages skipped in the processing phase do not have their addresses added to the graph. We added several additional rules for messages to skip based on analyzing intermediate graphs for outliers (for example, nodes which had significantly higher than average in-degrees or out-degrees).
 
-Once the graph is set up, there is one last preprocessing step that must occur. Often, there are founders who sign up for the platform, but never interact with any of the email-related features. Their nodes still get added to the graph, but are orphans that have no neighbors. These nodes can slow down metric calculations unnecessarily, and make analysis harder, so we first filter them out using the Cyper query in Listing \ref{vcwiz:cypher:orphans}.
+Once the graph is set up, there is one last preprocessing step that must occur. Often, there are founders who sign up for the platform, but never interact with any of the email-related features. Their nodes still get added to the graph, but are orphans that have no neighbors. These nodes can slow down metric calculations unnecessarily, and make analysis harder, so we first filter them out using the Cypher query in Listing \ref{vcwiz:cypher:orphans}.
 
 The final step is to label each node in the graph. Every node is labeled as a \texttt{Person}, with known investors and founders being labeled as \texttt{Investor} and \texttt{Founder} respectively. These two labels are mutually exclusive. In the case a node could be labeled as both an \texttt{Investor} and \texttt{Founder}, it is treated as a investor if the person is currently employed by an institutional investment firm, and a founder otherwise.
 
@@ -45,6 +46,25 @@ We also ran an alternative connectivity analysis, using the Louvain Method~\cite
 \subsection{Propensity to Investors}
 
 We sought to answer the question of whether or not the community and neighborhood of a founder's node can predict their propensity to engage with certain investors. However, using graph structure alone, we lack sufficient signal to predict anything. We will later revisit this question, taking into account additional node metrics and founder characteristics.
+
+\subsection{Patterns}
+
+The profile data collected by VCWiz, when joined with the founder's email history, offers a unique opportunity to validate commonly-held assumptions in venture. We test a few of these hypotheses below.
+
+\subsubsection{Email Volume}
+
+The classic pattern of communication when fundraising is as follows. At the start, the founder has a very high frequency of outgoing emails, as they reach out to and/or get introductions to investors. At this stage, the founder is fighting to stay relevant, and will be following up often. Once the investors show interest and begin engaging the founder, the majority of communication happens over phone calls and in-person pitches, resulting in a decreased email volume. Finally, as the round begins to close and investors begin to commit, we expect email volume to increase again, reaching a peak as the founder pushes for final decisions and coordinates acquiring the funds.
+
+We can test this by plotting weekly email volume over the percentage of ``committed investors'' (investors who have decided to make an investment). For email volume, we specifically use the percentage of the total emails sent during the fundraise that were sent in the given week. Fitting a third-degree polynomial to this data should show a relatively high volume to start, a sharp decline as a few investors commit, and a gradual increase as the fraction of decided investors approaches $1$.
+
+As show in Figure \ref{fig:patterns:email}, we see a similar pattern, but not exactly what was expected. The volume of emails sent in the early stages of the round are not as high as we believed them to be, indicating there are minimal emails back-and-forth while the first investors are diligencing and deliberating over a company. Additionally, the email volume peaks when around 70\% of the investors are committed. Our best explanation for this is that the majority of the coordination around closing the round happens with the lead investor(s), including clarification and negotiation of the fine points. Following this, the remaining investors largely fall in line without much delay. We believe founders are engaging in these discussion with the lead(s) before all the investors have committed.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{founder_rank/email_over_decided.png}
+  \caption{Weekly Email Volume over \% Comitted Investors}
+  \label{fig:patterns:email}
+\end{figure}
 
 \section{Baseline Ranking}
 
@@ -84,9 +104,11 @@ The average time an investor takes to respond to a founder's email would be indi
 
 \subsubsection{Length of fundraising period}
 
-A strong fundraise (based on our earlier criteria) is one which results in sufficient dollars being raised, in the shortest amount of time possible. Thus, the amount of time spent fundraising should be a high-signal feature. However, we observed a pattern of utilization which makes this feature problematic. As founders reach the stage of their fundraising where they are pitching venture firms and finalizing the details of the deal, they often stop using the VCWiz platform, as they are now working with a sufficiently small number of investors. As a result, it is very difficult for us to estimate when a fundraise is over, and we do not have accurate data for this feature.
+A strong fundraise (based on our earlier criteria) is one which results in sufficient dollars being raised, in the shortest amount of time possible. Thus, the amount of time spent fundraising should be a high-signal feature: a short fundraise alone is not indicative of success, but assuming success, shorter fundraise times are better.
 
-\textbf{TODO: plot, averaged over all founders who raised, of email volume vs percentage of target investors who have decided one way or another, to show that email volume decreases as most investors have decided}
+% Unfortunately, we observed a pattern of utilization which makes this feature problematic. As founders reach the stage of their fundraising where they are pitching venture firms and finalizing the details of the deal, they often stop using the VCWiz platform, as they are now working with a sufficiently small number of investors. Furthermore, much of the communication happens over non-email channels, as shown in Figure \ref{fig:patterns:email}. As a result, it is very difficult for us to estimate when a fundraise is over, and we do not have accurate data for this feature.
+
+\textbf{TODO: use this feature?}
 
 \subsubsection{Average sentiment of investors}
 
@@ -97,6 +119,8 @@ Intuitively, a high positive sentiment from an investor in an email is one featu
 \textbf{TODO: plot, across all founders who raised on the platform, average sentiment of incoming emails vs number of interested featured investors}
 
 \textbf{TODO: consider normalizing against average sentiment of each investor globally}
+
+\textbf{TODO: maybe don't use this one?}
 
 \subsection{Evaluation}
 
