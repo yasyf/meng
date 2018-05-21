@@ -3,12 +3,13 @@
 \section{Venture Capital}
 
 \subsection{Definitions}
+\label{ch2:definitions}
 
 A venture firm, or VC, is composed of a central pool of capital, contributed by individuals or organizations known as Limited Partners (LPs). This pool is managed by individuals known as General Partners (GPs), who are compensated for their work both with a fraction of the pool (the management fee) as well as a fraction of the returns on their investments (the carry).
 
 In our simplified model, the sole goal of a VC is to trade capital from the pool for equity in companies that will later either enter public markets (via an Initial Public Offering, or IPO) or get acquired by another company. These liquidation events allow the VC to sell their equity for more than the original purchase price. Thus, the success of a VC is measured by the realized capital gains that are accrued when they sell equity in a now-public investment, and the objective function they optimize for is the expected value of this gain over all their investments. We will define efficiency for investors as the time investment per rate of return: the number of hours the GPs must work in order to achieve a given internal rate of return (IRR). With respect to matching investors with founders, we define efficiency as the aggregate number of hours spent by all involved parties on reaching a consensus on investment.
 
-Founders are the other end of a venture transaction. We define founders as the individuals who start and incorporate a new business (startup). In this thesis, we will focus on seed-stage founders, or founders who are raising their first round of money from institutional investors. Efficiency for founders with respect to fundraising is simply defined as the number of hours it takes to receive venture funding above a given threshold, as defined by the size of the round. Equity (in the context of fundraising) is defined as how easily a founder can establish a connection with an investor with the intent of proposing an investment, regardless of their race, gender, socioeconomic background, or educational pedigree.
+Founders are the other end of a venture transaction. We define founders as the individuals who start and incorporate a new business (startup). In this thesis, we will focus on seed-stage founders, or founders who are raising their first round of money from institutional investors. Efficiency for founders with respect to fundraising is simply defined as the number of hours it takes to receive venture funding above a given threshold, as defined by the size of the round. Equitability (in the context of fundraising) is defined as how easily a founder can establish a relationship with an investor with the intent of proposing an investment, regardless of their race, gender, socioeconomic background, or educational pedigree.
 
 For more background on venture capital and the ongoing economic research in the field of venture capital, we refer the reader to \cite{venture-survey}.
 
@@ -38,15 +39,23 @@ When incorporating the founder perspective, the process of sourcing becomes an e
 
 The process of analyzing and doing due diligence on startups is how the GPs of a firm decide whether or not to invest. This can include reviewing the product, financials, and traction of the startup, in addition to doing research on the founders and broader industry at hand.
 
-The lowest-hanging fruit in this process is automatically filtering, categorizing, and ranking pipeline items. Investors are currently limited to exploring a set of companies that they can feasibly learn everything about. As a result, they reject many companies on the basis of cheap filters and pattern-matching historic successes. The problem of clustering and raking companies can be modeled as a supervised, structured problem, leveraging both historic successes as well as past misses.
+The lowest-hanging fruit in this process is automatically filtering, categorizing, and ranking pipeline items. Investors are naturally limited to exploring a finite set of companies at any given time. As a result, they reject many companies on the basis of cheap filters (such as a lack of academic pedigree) and pattern-matching historic successes. The problem of clustering and raking companies can be modeled as a supervised, structured problem, leveraging both historic successes as well as past misses.
 
 \subsubsection{Supporting}
 
-Providing what is known as ``portfolio support'' is how venture firms attempt to ensure the companies they invest in survive long enough to realize a liquidation event (thereby allowing the VCs to cash out). This encompasses everything from advising the founders, to making key introductions, to helping the company raise further funds, to helping publicize important announcements. There are several opportunities to build workflow automation tools that remove some of the burden of time on the investor in carrying out these tasks.
+Providing what is known as ``portfolio support'' is how venture firms attempt to ensure the companies they invest in survive long enough to realize a liquidation event (thereby allowing the VCs to cash out). This encompasses everything from advising the founders, to making key introductions, helping the company raise further funds, and helping publicize important announcements. There are several opportunities to build workflow automation tools that remove some of the burden of time on the investor in carrying out these tasks.
 
-\section{Evaluation Criteria}
+\section{Evaluation of Opportunities}
 
-To evaluate the above opportunities, we first lay out our criteria. The goal of our proposed solution is to increase efficiency and equity, as defined above, for both founders and investors. In order to accomplish this, we decided that our solution must:
+To evaluate these opportunities for automation, we first justify and present our criteria.
+
+\subsection{Diversity in Venture}
+
+There has been a great deal of attention recently on the issue of diversity and equality in the venture capital world, with many studies concluding that groups such as women and under-represented minorities are less likely to succeed in fundraising due to biases against them. For example, one study out of the Kauffman Centre for Entrepreneurial Leadership finds that it ``may be harder for female entrepreneurs to make the connection, to get in the door, or gain attention for their deal'', as ``women are outside the formal, predominately male venture capital network''~\cite{doi:10.1080/13691060118175}. In building this tool, we strive to use technology to fight these biases, rather than perpetuate them.
+
+\subsection{Evaluation Criteria}
+
+The goal of our proposed solution is to increase efficiency and equitability, as defined in Section \ref{ch2:definitions}, for both founders and investors. In order to accomplish this, we decided that our solution must:
 
 \begin{itemize}
   \item Shorten the aggregate time spent by both parties to achieve a successful match
@@ -54,8 +63,6 @@ To evaluate the above opportunities, we first lay out our criteria. The goal of 
   \item Not be tied to a specific institution
   \item Combat existing biases in fundraising patterns
 \end{itemize}
-
-There has been a great deal of attention recently on the issue of diversity and equality in the venture capital world, with many studies concluding that groups such as women and under-represented minorities are less likely to succeed in fundraising due to biases against them. For example, one study out of the Kauffman Centre for Entrepreneurial Leadership finds that it ``may be harder for female entrepreneurs to make the connection, to get in the door, or gain attention for their deal'', as ``women are outside the formal, predominately male venture capital network''~\cite{doi:10.1080/13691060118175}. In building this tool, we strive to use technology to fight these biases, rather than perpetuate them.
 
 \section{Matching Founders to Investors}
 \label{ch2:matching}
@@ -66,7 +73,7 @@ The problem of matching founders to investors in an efficient manner is crucial 
 
 We decided to not explicitly build a tool to aid in analyzing companies. Analyzing investments on the merit of the company is an invaluable aspect of the venture workflow at later stages of investment, but when it comes to the seed-stage companies we are considering, data on a given company is often scarce. Thus we opt instead to build a tool which, by aiding in more efficient and equitable matches, generates a dataset which can be used to better analyze the \textit{founders} behind these young companies.
 
-Likewise, we avoided building workflow automation tools to aid investors in supporting their portfolio companies. These tools are uninteresting to build and study, and do little to improve efficiency or equity for the entrepreneur.
+Likewise, we avoided building workflow automation tools to aid investors in supporting their portfolio companies. While these tools can be extremely impactful for the portfolio startups of a given venture firm, it is difficult to build a solution that increases equitability for those founders struggling to be included in the inner circle of venture capital. These tools are often not public, and not shared, making them a poor fit for our goals. Furthermore, while impactful, these tools are often uninteresting to study, given their routine nature.
 
 Though we seek to increase efficiency for both sides of the transaction, we decided to build a founder-facing tool, rather than one for investors. This is contrary to the majority of the technical work in the venture community today, which is focused on unilateral automated sourcing and triaging of new deals. Recent examples of this include Social Capital's Capital-As-A-Service\footnote{https://medium.com/social-capital/capital-as-a-service-a-new-operating-system-for-early-stage-investing-6d001416c0df} and the launch of Fly Ventures\footnote{https://techcrunch.com/2017/12/21/fly-ventures/}. Automated sourcing evidently increases efficiency for investors, and helps them accomplish their goal of finding those rare companies which will exit. It also makes the process more efficient for \textit{some} founders, as they might be discovered by a firm they might not have otherwise interacted with. However, these solutions may often harm the equality of the matching process: automated tools are trained on data sets of existing investment decisions, which often contain biases against a given race, gender, or educational background. A recent study by venture analytics firm CB Insights claims that only 1\% of funded startup founders are black, and only 8\% are female\footnote{https://www.cbinsights.com/research/team-blog/venture-capital-diversity-data/}. Another study from the National Venture Capital Association shows that ``black employees comprise 3 percent of the venture workforce''\cite{nvca-diversity}, an alarming statistic given that is has been shown that investors are more likely to invest in founders who share their ethnicity\cite{BENGTSSON2015338}. We avoided building these investor-facing solutions for fear of exacerbating the disadvantages faced by minorities.
 
@@ -82,7 +89,7 @@ This thesis focuses on VCWiz, the public tool discussed above. This tool is now 
 
 \section{Related Work}
 
-When it comes to products which solve for the efficiency of founder-investor matching, there are many existing solutions. These products are detailed in Section \ref{vcwiz:existing}. Our work stands out as unique among them as the only public product which has been built as the result of an academic exploration. There have also been private academic efforts to better discover and match with founders on the investor side, such as those undertaken by SignalFire (``a  mini proprietary Google''\footnote{https://techcrunch.com/2015/10/22/watch-out-vcs-chris-farmer-says-hes-about-to-massively-disrupt-the-industry/} for venture capital), or Correlation Ventures (``one of the world's most complete databases of venture capital financings''~\footnote{http://correlationvc.com/approach/about} for use in predictive models).
+When it comes to products which solve for the efficiency of founder-investor matching, there are many existing solutions. These products are detailed in Section \ref{vcwiz:existing}. Our work stands out as unique among them as the only public product which has been built as the result of an academic exploration. There have also been private academic efforts to better discover and match with founders on the investor side, such as those undertaken by SignalFire (a data-driven platform which tracks patterns in consumer behavior and the movement of engineers to better inform investment decisions\footnote{https://techcrunch.com/2015/10/22/watch-out-vcs-chris-farmer-says-hes-about-to-massively-disrupt-the-industry/}), or Correlation Ventures (``one of the world's most complete databases of venture capital financings''~\footnote{http://correlationvc.com/approach/about} for use in predictive funding models).
 
 There has been significant work done in financial and economic academic explorations of modeling venture capital. For example, we plan on borrowing several learnings from \cite{2017arXiv170604229H}, including the list of sector names to use as features for a company and the calculated features for both investors and founders. Another example is the set of economic models summarized in \cite{venture-survey}, which includes the problems of picking startups, matching founders to investors, and the interactions between venture firms and companies. While Rin et al. do not consider the practical ways we can improve these processes, they provide a background for the challenges at hand, and present mathematical abstractions which are useful in our models.
 
