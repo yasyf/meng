@@ -1,8 +1,9 @@
 \chapter{Conclusion}
+\label{ch:ch6}
 
 \section{Summary of Contributions}
 
-In this thesis, we have presented two major contributions. The first is VCWiz, a tool which aspires to aid founders in finding and connecting with seed investors. The second is a series of experiments centered around FounderRank, a method of ranking founders based on their likelihood of a successful fundraise.
+In this thesis, our goal was to learn more about the state of founder-investor matching by attempting to improve the efficiency and equitability of this process. In doing this, we have presented two major contributions. The first is VCWiz, a tool which aspires to aid founders in finding and connecting with seed investors. The second is a series of experiments centered around FounderRank, a method of ranking founders based on their likelihood of a successful fundraise.
 
 \subsection{VCWiz}
 
@@ -18,9 +19,7 @@ Using the VCWiz Email Graph, we explored the structure and interactions of a gra
 
 With a linear regression, we showed that the optimal linear combination of these three graph metrics can explain about 40\% of the variance found in a hand-crafted baseline ranking of founders, with a rank correlation of $0.68$. Furthermore, we identified access as the most important characteristic a founder can have when fundraising, followed by their importance. Influence, as proxied by Betweenness Centrality, has a near-perfect correlation with importance, and provides very little information when ranking founders.
 
-By running similar processes over the graph of public funding data, we discovered that there is not sufficient information in the relationships of venture investments alone to predict fundraising success. However, this graph does contain information which can better inform rankings of founders when used to augment a social graph such as the VCWiz Email Graph. Doing so increases the rank correlation defined above non-trivially.
-
-\textbf{TODO: summarize other experiments as we finish them}
+By running similar processes over the graph of public funding data, we discovered that a similar trend applies: there is a correlation between Closeness Centrality and founders who have achieved many exists. Despite this trend, there is not sufficient information in the relationships of venture investments alone to predict fundraising success. However, this graph does contain information which can better inform rankings of founders when used to augment a social graph such as the VCWiz Email Graph. Doing so increases the rank correlation defined above non-trivially.
 
 \section{Future Work}
 
@@ -43,6 +42,10 @@ On the VCWiz platform, there are several high-demand features which founders hav
 \end{itemize}
 
 Future work would include evaluating and implementing these features, as well as continuing to find creative data sources for aggregating more information on investors. Performance is another opportunity for future improvement: the average API request involving a filter operation takes about one second.
+
+\subsubsection{Cold Outreach}
+
+While our data shows that VCWiz is effective at aiding founders in discovering investors, and researching them in-depth, there is still work to be done on supporting the outreach to investors. Many founders found the tool to be less useful than expected when leveraging the conversation tracker and associated features, as it was often inaccurate. Future work includes finding ways to better detect transitions in investor status during an active fundraise, and novel incentives for investors to engage with the Intro Requests functionality on the platform.
 
 \subsubsection{Community Support}
 

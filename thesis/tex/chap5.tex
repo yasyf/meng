@@ -1,6 +1,5 @@
 \chapter{Graph Experiments}
-
-\textbf{\#TODO: run these again with latest data, update numbers}
+\label{ch:ch5}
 
 As part of our research into more efficiently matching founder with investors, we sought to quantitatively demonstrate some of the commonly-accepted characteristics of fundraising. Furthermore, we wish to explore how we can leverage automated ranking systems to more appropriately match companies with a source of funding. To do this, we ran various experiments on a social graph of founders, investors, and their mutual connections. This graph is built from the information provided by founders on the VCWiz platform.
 
@@ -26,7 +25,7 @@ The final step is to label each node in the graph. Every node is labeled as a \t
 
 \section{Founder Graph Analysis}
 
-Before diving into our main experiments, we did some analysis of the basic graph that was built up in the last section. At the time of writing, the VCWiz email graph has 216,774 individual nodes, with 726 verified founders and 789 verified investors.
+Before diving into our main experiments, we did some analysis of the basic graph that was built up in the last section. At the time of writing, the VCWiz email graph has $414,081$ individual nodes, including email relationships between $7679$ verified founders and $2134$ verified investors.
 
 \subsection{Connectivity}
 
@@ -36,7 +35,7 @@ Looking at just the subgraph of founders who have signed up for VCWiz, we see th
 
 In order to determine how much of the connectivity present is the result of founders sharing the tool with peers, we performed a connectivity analysis. If it turns out that the communities of the graph are isolated globally but strongly connected locally, it would support our hypothesis. Using Label Propagation (LPA)~\cite{2007PhRvE..76c6106R}, we can section the graph into partitions by flooding the nodes with labels: assigning each node an initial label and propagating these labels with a set of rules until distinct communities evolve.
 
-Upon partitioning the founder graph, we find that there are 584 communities, with an average of 1.2 founders per community. Our model of the founder community on the platform was not accurate; it is not the case that there are isolated pockets of founders who are spreading news of the product to each other. Indeed, it seems that the majority of the founders on the platform are all part of a larger, loosely-defined community that cannot easily be partitioned.
+Upon partitioning the founder graph, we find that there are $584$ communities, with an average of $1.2$ founders per community. Our model of the founder community on the platform was not accurate; it is not the case that there are isolated pockets of founders who are spreading news of the product to each other. Indeed, it seems that the majority of the founders on the platform are all part of a larger, loosely-defined community that cannot easily be partitioned.
 
 An interesting finding is that the few most-populous communities are easily recognizable, after which there is a long tail of independent communities with only one or two founders. The three top communities found by LPA are Dorm Room Fund Partners, Dorm Room Fund Portfolio Companies, and YCombinator Portfolio Companies. Given that both of these organizations helped influence this work, it is not surprising to find these communities.
 
@@ -56,13 +55,14 @@ The classic pattern of communication when fundraising is as follows. At the star
 
 We can test this by plotting weekly email volume over the percentage of ``committed investors'' (investors who have decided to make an investment). For email volume, we specifically use the percentage of the total emails sent during the fundraise that were sent in the given week. Fitting a third-degree polynomial to this data should show a relatively high volume to start, a sharp decline as a few investors commit, and a gradual increase as the fraction of decided investors approaches $1$.
 
-As show in Figure \ref{fig:patterns:email}, we see a similar pattern, but not exactly what was expected. The volume of emails sent in the early stages of the round are not as high as we believed them to be, indicating there are minimal emails back-and-forth while the first investors are diligencing and deliberating over a company. Additionally, the email volume peaks when around 70\% of the investors are committed. Our best explanation for this is that the majority of the coordination around closing the round happens with the lead investor(s), including clarification and negotiation of the fine points. Following this, the remaining investors largely fall in line without much delay. We believe founders are engaging in these discussion with the lead(s) before all the investors have committed.
+As show in Figure \ref{fig:patterns:email}, we see a similar pattern, but not exactly what was expected. The volume of emails sent in the early stages of the round are not as high as we believed them to be, indicating there are minimal emails back-and-forth while the first investors are diligencing and deliberating over a company. Additionally, the email volume peaks when around $70\%$ of the investors are committed. Our best explanation for this is that the majority of the coordination around closing the round happens with the lead investor(s), including clarification and negotiation of the fine points. Following this, the remaining investors largely fall in line without much delay. We believe founders are engaging in these discussion with the lead(s) before all the investors have committed.
 
 \subsubsection{Fundraising Timeframe}
+\label{ch5:timeline}
 
-Fundraising is a notoriously time-consuming activity. The oft-quoted timeline for raising a seed round is 90 to 120 days of engaging investors in direct solicitation for investment, with countless months leading up to this of building relationship building. It's difficult to find quantitative reports of fundraising timeframes, so we analyzed the average length of a seed fundraising attempt on VCWiz.
+Fundraising is a notoriously time-consuming activity. The oft-quoted timeline for raising a seed round is $90$ to $150$ days of engaging investors in direct solicitation for investment, with countless months leading up to this of building relationship building. One study which surveyed founders in Northern California showed a median fundraising period of $4$ to $5$ months\cite{BRUNO198561}, with $20\%$ of founders reporting the process taking over $8$ months. It's difficult to find quantitative reports of fundraising timeframes, so we analyzed the average length of a seed fundraising attempt on VCWiz.
 
-We measure the period of fundraising by defining the start as the first time an investor is added to a founder's wishlist, and the end as the last time a wishlist investor's status is updated. Based on this definition, founders on VCWiz spend an average of 107 days actively fundraising. Figure \ref{fig:patterns:fundraising} shows the distribution of weeks spent fundraising across all founders on the platform.
+We measure the period of fundraising by defining the start as the first time an investor is added to a founder's wishlist, and the end as the last time a wishlist investor's status is updated. Based on this definition, founders on VCWiz spend an average of 107 days actively fundraising. Figure \ref{fig:patterns:fundraising} shows the distribution of weeks spent fundraising across all founders on the platform. This timeline is significantly shorter the expected fundraising period identified above, which might indicate that founders who use VCWiz are more qualified than the average founder, or that the tool helps shorten the time elapsed while fundraising.
 
 It is important to note that this method of calculating the fundraising period is not perfect. As shown in Figure \ref{fig:patterns:email}, much of the communication near the end of a round happens over non-email channels. Therefore, VCWiz might have a delayed or inaccurate view of the status of the round in the tail end of fundraising. This can skew the calculation of the period send date.
 
@@ -71,13 +71,13 @@ It is important to note that this method of calculating the fundraising period i
   \begin{minipage}[t]{0.5\textwidth}
     \centering
     \includegraphics[width=\textwidth]{founder_rank/email_over_decided.png}
-    \caption{Email Volume over \% Committed}
+    \caption{Weekly email volume versus percent of eventual investors committed}
     \label{fig:patterns:email}
   \end{minipage}\hfill
   \begin{minipage}[t]{0.5\textwidth}
     \centering
     \includegraphics[width=\textwidth]{founder_rank/weeks_hist.png}
-    \caption{\# Weeks Fundraising}
+    \caption{Histogram of weeks spent fundraising}
     \label{fig:patterns:fundraising}
   \end{minipage}
 \end{figure}
@@ -122,27 +122,29 @@ A strong fundraise (based on our earlier criteria) is one which results in suffi
 
 \subsubsection{Average sentiment of investors}
 
-Intuitively, a high positive sentiment from an investor in an email indicates an affinity, and a strong relationship. Looking at the data on VCWiz, strong sentiment is often associated with a pre-existing relationship, often from a previous company. However, it is a very noisy source of data. Figures \ref{fig:sentiment:raised} shows the average sentiment of an incoming email during fundraising over the total money eventually raised, across all founders on the platform. Figure \ref{fig:sentiment:interested} shows the average sentiment over the number of featured investors who expressed interest in a startup during its fundraise. In both cases, we see that sentiment is a meaningless metric. We do not use this metric in our ranking function.
+Intuitively, a high positive sentiment from an investor in an email indicates an affinity, and a strong relationship. Looking at the data on VCWiz, strong sentiment is often associated with a pre-existing relationship, often from a previous company. However, it is a very noisy source of data, so it should not be relied upon exclusively.
+
+Using this metric adds a new dimension to our ranking function, which is not highly correlated with any other. Figures \ref{fig:sentiment:raised} shows the average sentiment of an incoming email during fundraising versus the total money eventually raised (adjusted for the average round size of the startup's industry), across all founders on the platform. Figure \ref{fig:sentiment:interested} shows the average sentiment versus the number of featured investors who expressed interest in a startup during its fundraise. In both cases, we see that sentiment doesn't follow a strong pattern.
 
 \begin{figure}[ht]
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{founder_rank/sentiment_over_funding.png}
-    \caption{Sentiment over Money Raised}
+    \caption{Incoming investor sentiment versus log-multiple of industry average round size raised}
     \label{fig:sentiment:raised}
   \end{minipage}\hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{founder_rank/sentiment_over_interested.png}
-    \caption{Sentiment over \# Interested}
+    \caption{Incoming investor sentiment versus number of interested featured investors}
     \label{fig:sentiment:interested}
   \end{minipage}
 \end{figure}
 
 \subsection{Evaluation}
 
-After evaluating each of the above metrics, we drew the following conclusions. The best metric, when available, is the aggregate funding the founder has raised to date, across any company. This is the sum of the two funding-related features above. Following this, the number of interested investors is a good proxy during the fundraise, as it represents absolute interest. The email outreach success rate (fraction of investors who respond) tends to be too noisy, as it is skewed by high-profile founders who send a very small number of emails, to already-established connections. However, the number of investors who respond after being added to a wishlist on VCWiz is a very strong signal, as it indicates success with no prior relationship.
+After evaluating each of the above metrics, we drew the following conclusions. The best metric, when available, is the aggregate funding the founder has raised to date, across any company. This is the sum of the two funding-related features above. Following this, the number of interested investors is a good proxy during the fundraise, as it represents absolute interest. The email outreach success rate (fraction of investors who respond) tends to be too noisy, as it is skewed by high-profile founders who send a very small number of emails, to already-established connections. However, the number of investors who respond after being added to a wishlist on VCWiz is a very strong signal, as it indicates success with no prior relationship. Finally, we include the average investor sentiment (as indicated by incoming emails), as it provides a dimension not captured by the other metrics.
 
 \subsection{Ranking Function}
 
@@ -162,10 +164,11 @@ We demonstrate the scoring function in Equation \ref{eq:baseline}, where $S_{m, 
 \textbf{Feature}           & \textbf{Weight} \\\hline
 Aggregate Funding          & 4 \\\hline
 \# Interested Investors    & 3 \\\hline
-\# Responded From Waitlist & 2
+\# Responded From Waitlist & 2 \\\hline
+Average Investor Sentiment & 1
 \end{tabular}
 \centering
-\caption{Baseline Weights}
+\caption{Baseline Metric Weights}
 \label{fig:nfr:baseline:weights}
 \end{figure}
 
@@ -185,7 +188,7 @@ Normalized Discounted Cumulative Gain (NDCG) simply normalizes the DCG against t
 
 Precision@n is another metric which gives preference to the top results, in this case explicitly only considering the top $n$. This metric is simply the fraction of founders in the top $n$ results that are also in the top $n$ founders of the baseline. It is a quick, useful way of evaluating a ranking for our first use case.
 
-Root-Mean-Square Error (RMSE) is a very common error function for recommender systems (\cite{Cremonesi:2010:PRA:1864708.1864721})) which measures the differences (errors) in ranking for every founder in the list. It works very well for our second use case.
+Root-Mean-Square Error (RMSE) is a very common error function for recommender systems (\cite{Cremonesi:2010:PRA:1864708.1864721}) which measures the differences (errors) in ranking for every founder in the list. It works very well for our second use case.
 
 Mean Absolute Error (MAE) is another common error function, which measures the average absolute distance between a ranking and the ranking of the baseline.
 
@@ -216,7 +219,7 @@ We decided to use NDCG, Precision@n (for various values of $n$) for evaluating t
 \end{align*}
 
 \centering
-\caption{Evaluation Criteria}
+\caption{Evaluation Criteria Formulas}
 \label{fig:evaluation:formulas}
 \end{figure}
 
@@ -265,35 +268,35 @@ While the random model would never be used for a serious application, it is wort
 \begin{figure}[ht]
 \begin{tabular}{c | c | c | c | c | c | c | c}
 NDCG & P@5 & P@10 & P@20 & $\tau$ & $\rho$ & RMSE & MAE  \\
-0.270 & 0.2 & 0.1 & 0.05 & 0.00689 & 0.0100 & 0.255 & 0.234 \\
+0.212 & 0.000 & 0.000 & 0.000 & -0.0550 & -0.0826 & 0.272 & 0.251 \\
 \end{tabular}
 \centering
 \caption{Random Results}
 \label{fig:rand:results}
 \end{figure}
 
-$\rho$ and $\tau$ have p-values of $0.808$ and $0.813$ respectively. As expected, there is essentially no correlation between the random model and the baseline.
+$\tau$ and $\rho$ have p-values of $0.0395$ and $0.0389$ respectively. As expected, there is essentially no correlation between the random model and the baseline.
 
 \subsubsection{Evaluating NFR}
 \label{ch5:nfr:eval}
 
 We now move on to evaluating NFR. The first observation we made when trying to rank the founders based on NFR is that our rankings totally missed founders on the platform who are not currently fundraising, but who are known to be repeat founders who have successfully fundraised in the past. This was a result of our email graph only spanning the last year. Relationships in the venture capital world take years to build up, and we were not evaluating them over a large enough timeframe. Thus, we re-built our graph to incorporate the last five years of data, which gave us a much more comprehensive view of the ecosystem.
 
-The below observations and conclusions are all drawn from this new graph, with up to five years of email data from 558 founders.
+The below observations and conclusions are all drawn from this new graph, with up to five years of email data from $630$ founders.
 
 We sorted the founders in our original list by their NFR score, and then evaluated this ranking based on our earlier-established criteria. The results are shown in Figure \ref{fig:nfr:results}.
 
 \begin{figure}[ht]
 \begin{tabular}{c | c | c | c | c | c | c | c}
 NDCG & P@5 & P@10 & P@20 & $\tau$ & $\rho$ & RMSE & MAE  \\
-0.448 & 0.2 & 0.3 & 0.2 & 0.484 & 0.673 & 0.0827 & 0.0637 \\
+0.525 & 0.2 & 0.1 & 0.15 & 0.413 & 0.581 & 0.197 & 0.158 \\
 \end{tabular}
 \centering
 \caption{NFR Results}
 \label{fig:nfr:results}
 \end{figure}
 
-The p-values for $\tau$ and $\rho$ are respectively $10^{-65}$ and $10^{-75}$.
+The p-values for $\tau$ and $\rho$ are respectively $10^{-54}$ and $10^{-57}$.
 
 \subsubsection{Discussion}
 
@@ -309,12 +312,12 @@ One interesting experiment we considered was using the frequency of emails excha
 
 \subsection{Weighted FounderRank}
 
-The next model we experimented with is a linear combination of the three graph metrics, as determined by a simple linear regression, using the hand-crafted baseline ranking as labels. We fit a standard linear regression model to the baseline ranking, using each of the three graph metrics as a feature. We get an $R^2$ value of $0.39$, with evaluation metrics as shown in Figure \ref{fig:wfr:results}. The change in metrics is negligible, with NDCG, $\tau$, and $\rho$ increasing slightly, but our error functions (RMSE and MAE) also increasing slightly.
+The next model we experimented with is a linear combination of the three graph metrics, as determined by a simple linear regression, using the hand-crafted baseline ranking as labels. We fit a standard linear regression model to the baseline ranking, using each of the three graph metrics as a feature. We get an $R^2$ value of $0.355$, with evaluation metrics as shown in Figure \ref{fig:wfr:results}. The change in metrics is largely positive: NDCG decreases by $16\%$, but every other metric is better. $\tau$, $\rho$, and precision all improve significantly, as do the error functions. We see that this weighted ranking function would be superior to the naive at predicting fundraising success, though it would fall short if used to rank and present the entire list of founders on their fundraising merit.
 
 \begin{figure}[ht]
 \begin{tabular}{c | c | c | c | c | c | c | c}
 NDCG & P@5 & P@10 & P@20 & $\tau$ & $\rho$ & RMSE & MAE  \\
-0.449 & 0.2 & 0.3 & 0.2 & 0.490 & 0.680 & 0.103 & 0.0787 \\
+0.441 & 0.2 & 0.2 & 0.2 & 0.481 & 0.662 & 0.0995 & 0.0729 \\
 \end{tabular}
 \centering
 \caption{WFR Results}
@@ -325,23 +328,23 @@ More interestingly, we can examine the effect on our evaluation metrics and $R^2
 
 \subsubsection{Sole Metrics}
 
-If we rank our founders based solely on their PageRank, we get abysmal evaluation metrics, with the exception of NDCG, which is significantly higher at $0.527$. This implies that if our sole concern was surfacing the best few founders from the batch, sorting by PageRank would be a good option. This corroborates our conclusions from extending the timeframe over which the graph is built: the best founders often are well-embedded and have built up strong relationships over years, giving them a high PageRank.
+If we rank our founders based solely on their PageRank, we get uniformly poorer evaluation metrics than WFR (albeit not drastically), with the exception of NDCG, which jumps up to $0.525$. This implies that if our sole concern was ranking the entirety founders of the batch, sorting by PageRank would be sufficient. In other words, PageRank is a good, not great, filter for sorting a list of founders by their expected fundraising performance. This corroborates our conclusions from extending the timeframe over which the graph is built: the best fundraisers often are well-embedded and have built up strong relationships over years, giving them a high PageRank.
 
-If we rank solely based on a founder's betweenness, every metric is strictly worse. The $R^2$ value of the regression actually goes negative, indicating that this metric alone is a very poor model of a founder's potential for fundraising success. Furthermore, a founder's betweenness is highly correlated with their PageRank (a Pearson correlation coefficient of $0.913$), making it unnecessary to ever consider it.
+If we rank solely based on a founder's betweenness, every metric is strictly worse. The $R^2$ value of the regression actually goes negative, indicating that this metric alone is a very poor model of a founder's potential for fundraising success. Furthermore, a founder's betweenness is highly correlated with their PageRank (a Pearson correlation coefficient of $0.917$), making it unnecessary to ever consider it.
 
-Finally, if we rank solely on closeness, we end up with a lower NDCG (at $0.375$), but increased P@5 ($0.4$) and $\tau$ ($0.498$). The RMSE increases to $0.135$. The conclusion here is that how much access a founder has in the graph can offer a marginally better ranking in isolation, though at the cost of less accurate individual scores. For ranking, it appears that closeness explains more of the optimal ranking than any other metric, and this is supported by the relatively close $R^2$ value of $0.348$. While it is far from a perfect model, a node's closeness centrality in the email graph explains about 35\% of the variance of a hand-tuned ranking of the founders in the graph.
+Finally, if we rank solely on closeness, we end up with a much lower NDCG (at $0.347$), and a marginally increased P@20 ($0.25$), $\rho$ ($0.669$) and $\tau$ ($0.485$). The RMSE increases to $0.133$. The conclusion here is that how much access a founder has in the graph can offer a better ranking in isolation, though at the cost of less accurate individual scores. For ranking, it appears that closeness explains more of the optimal ranking than any other metric, and this is supported by an $R^2$ value which is relatively close to that of WFR: $0.307$. While it is far from a perfect model, a node's closeness centrality in the email graph explains about 30\% of the variance of a hand-tuned ranking of the founders in the graph.
 
 Our conclusion from testing these individual metrics is that access is most important aspect of a founder's node in the graph, but a sufficiently high importance (PageRank) can compensate for a lower closeness centrality.
 
 \subsubsection{Optimal Combination}
 
-Based on the above, the optimal combination of features is some linear combination of PageRank and Closeness Centrality. We ran another linear regression with these two features, resulting in a model that has similar evaluation metrics, save for the highest NDCG seen yet ($0.533$). Adding PageRank to Closeness Centrality in our model brings $R^2$ to $0.391$, a $12.8$\% increase.
+Based on the above, the optimal combination of features is some linear combination of PageRank and Closeness Centrality. We ran another linear regression with these two features, resulting in a model that has similar evaluation metrics to WFR, save for the highest NDCG seen yet ($0.528$). Adding PageRank to Closeness Centrality in our model brings $R^2$ to $0.354$, a $15.3$\% increase.
 
 \subsubsection{Conclusion}
 
 The goal of these experiments on the VCWiz Email Graph was to explore whether the data stored in the graph structure and relationships could improve the process of predicting a founder's ability to fundraise, for use in the founder-investor matching process by both humans and other models. We have shown that there is signal in our selected graph metrics of founder nodes.
 
-Through these experiments, we have determined that graph metrics alone can do a good job scoring founders. The rankings are not perfect, and can only explain about 40\% of the variance seen in the baseline they are compared against, but they significantly best the status-quo of an effectively random model, and have considerable rank correlation with the baseline ($\rho = 0.680$, p $\approx 0$). Upon examining the individual graph metrics, we see that Closeness Centrality, which corresponds to a founders ``access'' in the graph, is the driving factor, with exceptions in the case of very successful founders who have extraordinary PageRank. We also find that Betweenness Centrality, which indicates a founder's influence over introductions, is a near-meaningless metric, with information that is captures almost entirely by PageRank.
+Through these experiments, we have determined that graph metrics alone can do a good job scoring founders. The rankings are not perfect, and can only explain about 35\% of the variance seen in the baseline they are compared against, but they significantly best the status-quo of an effectively random model, and have considerable rank correlation with the baseline ($\rho = 0.669$, p $\approx 0$). Upon examining the individual graph metrics, we see that Closeness Centrality, which corresponds to a founders ``access'' in the graph, is the driving factor, with exceptions in the case of very successful founders who have extraordinary PageRank. We also find that Betweenness Centrality, which indicates a founder's influence over introductions, is a near-meaningless metric, with information that is captures almost entirely by PageRank.
 
 The takeaway of access being a driving factor to founder fundraising success further motivates our work on the VCWiz platform. We've demonstrated that founders who have a short average distance to investors tend to see success fundraising. A stated goal of the platform is to increase founders' access to investors, a demonstrably high-impact outcome. We accomplish this by helping founders discover and understand investors who are within reach of their network, and facilitate connections which add edges in the relationship graph. VCWiz enables these connections for all founders, enshrining equality in what is otherwise an insider's game.
 
@@ -349,7 +352,7 @@ The takeaway of access being a driving factor to founder fundraising success fur
 
 The next experiment explores whether the conclusions of the FounderRank experiment hold true on the global graph of venture investments. If so, we wish to explore whether adding global investment data to the VCWIz Email Graph can augment it and provide even better rankings.
 
-We begin with considering the public graph of venture fundings, as reported by VCWiz. At the time of writing, this database contains $288,720$ founders, $92,843$ investors, and $57,131$ investments. For an overview of how this data is collected, see Section \ref{ch4:data} (\pageref{ch4:data}). The graph is constructed by creating a node for every founder and investor on the platform, each tagged as such. For each instance of an individual investor investing in a founder's company (see Section \ref{ch4:partners} for an overview of how this information is inferred), two edges are added: one from the founder to the investor, and one from the investor to the founder.
+We begin with considering the public graph of venture fundings, as reported by VCWiz. At the time of writing, this database contains $305,033$ founders, $94,190$ investors, and $298,862$ investments. For an overview of how this data is collected, see Section \ref{ch4:data} (\pageref{ch4:data}). The graph is constructed by creating a node for every founder and investor on the platform, each tagged as such. For each instance of an individual investor investing in a founder's company (see Section \ref{ch4:partners} for an overview of how this information is inferred), two edges are added: one from the founder to the investor, and one from the investor to the founder.
 
 \subsection{Baseline}
 
@@ -384,34 +387,26 @@ Much as before, a random model shows the expected characteristics with all our e
 
 \subsection{Optimal FR+I Model}
 
-The best linear combination of graph metrics for the global funding graph tells a very different story than that of the VCWiz Email Graph. In this case betweenness, which we previously identified as a near-useless metric, has a large negative coefficient when included, with a model that is effectively the same as omitting it altogether. The remaining combination of PageRank and closeness still gives us an abysmal result: an $R^2$ of $-0.268$, with a $\rho$ of $0.192$ (with a p-value of effectively $0$). We see that there is no way to give a reasonably good ranking function based on these three graph metrics on the graph of venture fundings, implying that this graph carries very different information from the social-professional email graph.
+The best linear combination of graph metrics for the global funding graph tells a similar story to that of the VCWiz Email Graph, albeit with diminished efficacy.
 
-\subsection{Broader Venture Ecosystem}
+In this case betweenness, which we previously identified as a near-useless metric, has a large negative coefficient when included, with a model that is effectively the same as omitting it altogether. The remaining combination of PageRank and closeness gives us a largely poor result: an $R^2$ of $0.268$, with precisions of $0$. However, the rank correlation still somewhat exists. We see a $\rho$ of $0.494$ and a $\tau$ of $0.343$ (with a p-value of effectively $0$). Moreover, we see that closeness explains $94\%$ of the variance of the optimal weighted model, and alone gives rank correlations that almost fully capture the correlation observed with the optimal combination of metrics ($\rho = 0.482$).
+
+We see that there is no way to reasonably surface the best fundraisers in this graph with just these metrics, though there is sufficient information to give a ranking function which would beat a random model. It is clear that the trends identified in the social-professional email graph hold for the broader venture ecosystem, but that the former has much more information than the latter.
+
+\subsection{Additional Venture Relationships}
 
 We further experimented with the graph of funding data, augmenting it with data about both co-founding relationships (founder-founder) and co-investing relationships (investor-investor). The co-investing relationships (an edge between a pair of investors if and only if those two investors have participated in the same funding round of a company) did not significantly improve our models, but the co-founding relationships did.
 
-In this new graph of investment and co-founding relationships, the best model is the one that solely uses the closeness metric. This is consistent with all our previous conclusions. With this model, we get a $\rho$ of $0.357$. While this is not as strong a correlation as the email graph was, it still shows a similar result. This result is consistent, as we expect there to be less information in a graph of public investment and cofounding data than there is in a social-professional graph that reveals the many conversations which do not end in an investment or new company.
+In this new graph of investment and co-founding relationships, the best model is the one that solely uses the closeness metric. This is consistent with all our previous conclusions. With this model, we get a $\rho$ of $0.496$. While this is not as strong a correlation as the email graph was, it still shows a similar result. Once again, we expect there to be less information in a graph of public investment and cofounding data than there is in a social-professional graph that reveals the many conversations which do not end in an investment or new company.
 
 \subsection{FR+I with Email Data}
 
-We have shown so far that the data in the global funding graph alone is not sufficient to show any meaningful correlation. However, we know that the private email graphs of founders \textit{do} have predictive power. To explore whether or not there is any value in the global funding graph's relationships in the context of ranking founders, we took the VCWiz Email Graph and overlaid the graph of investment and co-founding relationships from the previous section.
+We have shown so far that the data in the global funding graph alone is not sufficient to show significantly meaningful correlation. However, we know that the private email graphs of founders \textit{do} have predictive power. To explore whether or not there is any value in the global funding graph's relationships in the context of ranking founders, we took the VCWiz Email Graph and overlaid the graph of investment and co-founding relationships from the previous section.
 
-The results confirm what we expected: the email graph contains sufficient information to predict a founder's fundraising ability, and given this, the public funding graph adds information which makes increases the correlation of the model's ranking with the baseline. Upon adding the public graph nodes and relationships, we see an increase in $\rho$ from $0.680$ to $0.695$, and a doubled P@5 of $0.4$.
+The results confirm what we expected: the email graph contains sufficient information to predict a founder's fundraising ability, and given this, the public funding graph adds information which makes increases the correlation of the model's ranking with the baseline. Upon adding the public graph nodes and relationships, we see an increase in $\rho$ from $0.662$ to $0.696$, and a doubled P@5 of $0.4$.
 
 \subsection{Conclusion}
 
-Our conclusion from the above experiments is that the public graph of venture funding relationships does not provide adequate information on social-professional networks to draw conclusions about the strength of a founder (and his or her ability to fundraise). While private graphs, such as the VCWiz Email Graph, which capture \textit{all} communication between founders, investors, and their intermediaries can be useful in evaluating and characterizing founders, public data falls short. We believe this is in part due to private conversations including those which do not culminate in a fundraising relationship; while an investor may not invest in a founder, a strong relationship might still exist which can be leveraged at a later date. Furthermore, public data makes it difficult to infer social friendships which are captured in emails, and might be crucial to introductions. This public data can, however, still be used to successfully augment an existing private graph with additional relationships from venture investments past and present. Since the public graph adds relevant relationships to those implied by emails, we see an increase in the efficacy of the email-based graph when augmenting it with the global funding graph.
+Our conclusion from the above experiments is that the public graph of venture funding relationships does not provide adequate information on social-professional networks to draw conclusions about the strength of a founder (and his or her ability to fundraise). While private graphs, such as the VCWiz Email Graph, which capture \textit{all} communication between founders, investors, and their intermediaries can be useful in evaluating and characterizing founders, public data falls short. We believe this is in part due to private conversations including those which do not culminate in a fundraising relationship; while an investor may not invest in a founder, a strong relationship might still exist which can be leveraged at a later date. Furthermore, public data makes it difficult to infer social friendships which are captured in emails, and might be crucial to introductions.
 
-\section{InvestorRank}
-
-For this final experiment, we explore the value in calculating the same graph metrics considered above for the investors themselves.
-
-\textbf{TODO: run the numbers and see if it makes sense to include, using co-investment edges}
-
-\textbf{TODO: baseline ranking of sum of investments which have exited}
-% (don't want to use exit amounts bc outliers skew everything)
-
-% See if it makes sense to run these graph metrics for investors on the graph themselves. See is there if correlation between InvestorRank and FounderRank of the founders invested in by that investor. How to do correlation calculation for many to many -- Pairwise?
-
-% Future: Given that the FounderRank metric seems indicative of a founder's ability to raise, and that raising is a crucial part of keeping a company alive, does ranking investors by the mean founder rank of the founders they've invested in give us a reasonable ranking of investors? Manually inspect it, also compare it to baseline, which can use features like \# of exists, total follow-on raised, and total valuation at IPO sum.
-
+Despite these shortcomings, the public-data graphs exhibit the same trends that the email-based graphs do: closeness (access) is the key to success while fundraising. Additionally, this public data can still be used to successfully augment an existing private graph with additional relationships from venture investments past and present. Since the public graph adds relevant relationships to those implied by emails, we see an increase in the efficacy of the email-based graph when augmenting it with the global funding graph.

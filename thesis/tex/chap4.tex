@@ -1,4 +1,5 @@
 \chapter{Final Tool and Launch}
+\label{ch:ch4}
 
 This chapter will detail the final iteration of the VCWiz platform, and our efforts to launch it to the public.
 
@@ -11,7 +12,7 @@ The final platform incorporated all the feedback from previous iterations, and w
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{vcwiz/onboarding/techcrunch.png}
-  \caption*{Launch on TechCrunch}
+  \caption*{VCWiz launch post on TechCrunch}
 \end{figure}
 
 Founders find the VCWiz platform through one of our launch partners (such as TechCrunch\footnote{\url{https://techcrunch.com/2018/01/25/dorm-room-fund-has-built-a-crm-for-founders-raising-a-seed-round/}}), or from search engines such as Google. We spent the months leading up to the launch generating research pages for every investor, firm, and company in our database (Figure \ref{screenshots:v3:onboarding}). These pages include comprehensive details on the entity in question, as described above, as well as an embedded view of all the VCs associated with that entity, and, if the user is signed in, all the personalization included in the platform.
@@ -195,7 +196,7 @@ A ``hub city'' is defined as a city that has at least 50 venture firm offices (a
 
 One experimental part of the final VCWiz platform was the ability for founders to request introductions to out-of-network investors on the platform.
 
-The motivation behind this was to standardize the format and medium of ``cold'' intro requests in the venture community. As discussed earlier, there is both qualitative and quantitative data supporting the use of mutual connections to make introductions when reaching out to investors. This is corroborated by the results of our experiments on the VCWiz graph, which indicate that how central a founder is in the global social graph of startups and venture capital is highly correlated with how easily a founder will raise money. However, sometimes this is simply not an option. In this case, founders resort to ad-hoc, unsolicited emails to investors, leveraging myriad folklore tactics\footnote{https://hbr.org/2016/09/a-guide-to-cold-emailing} to increase the chances of a response. This is a frustrating experience for both parties: investors are deluged with a stream of unwanted pitches, mixed haphazardly into their daily business, while founders are disappointed that their carefully-crafted custom email gets lumped in with the bulk email another founder sent to 1000 investors.
+The motivation behind this was to standardize the format and medium of ``cold'' intro requests in the venture community. As discussed earlier, there is both qualitative and quantitative data supporting the use of mutual connections to make introductions when reaching out to investors. This is corroborated by the results of our experiments on the VCWiz graph, which indicate that how central a founder is in the global social graph of startups and venture capital is highly correlated with how easily a founder will raise money. However, sometimes this is simply not an option. In this case, founders resort to ad-hoc, unsolicited emails to investors, leveraging myriad folklore tactics\footnote{https://hbr.org/2016/09/a-guide-to-cold-emailing} to increase the chances of a response. This is a frustrating experience for both parties: investors are deluged with a stream of unwanted pitches, mixed haphazardly into their daily business, while founders are disappointed that their carefully-crafted custom email gets lumped in with the bulk email another founder sent to $1000$ investors.
 
 We attempted to solve this problem by providing a tool for founders to send a templated introduction request, which looks identical each time (save for a customizable blurb), to an investor (Figure \ref{screenshots:intro:request}). The investor's email address is never initially revealed to the founder. Instead, a standardized request email is sent by the VCWiz platform to the investor, containing an automatically-generated dossier on the founder and their startup (from the information provided at signup). The investor can respond to this automated email with a simple ``yes'' or ``no'', and only in the case of an affirmative response is a second email sent from the platform, connecting the founder and the investor.
 
@@ -216,11 +217,12 @@ Our hypothesis was that this experiment failed for two reasons. The first was th
 
 We tested this hypothesis by surveying every founder on the platform, and every one of the 247 investors who had received an introduction request.
 
-We asked the founders why they had or had not used the introduction request feature. 118 founders responded, with 10\% saying they had tried the feature, 23\% saying they would never get a cold introduction to an investor of any form, and 16\% not understanding the value of the feature. The long tail of remaining responses ranged from not currently needing any intros, to hitting bugs when trying to use the feature. This data supports that many founders are skeptical of using the feature, or any cold introduction, because of how ineffective they are. The majority of these founders (65\%) have exchanged emails with investors before, indicating they are the more seasoned founders.
+We asked the founders why they had or had not used the introduction request feature. $118$ founders responded, with $10\%$ saying they had tried the feature, $23\%$ saying they would never get a cold introduction to an investor of any form, and $16\%$ not understanding the value of the feature. The long tail of remaining responses ranged from not currently needing any intros, to hitting bugs when trying to use the feature. This data supports that many founders are skeptical of using the feature, or any cold introduction, because of how ineffective they are. The majority of these founders ($65\%$) have exchanged emails with investors before, indicating they are the more seasoned founders.
 
 Only 13 investors responded to the investor survey, but the overwhelming response was that the founders who had reached out were simply not high quality, or a good fit for their fund. This supports our hypothesis about founders, and the very fact that there were so few responses corroborates our hypothesis about investor response rates to unsolicited emails. An interesting corollary to a few of the responses was the realization that our solution still inconvenienced investors more than they would like. The ideal solution would involve a centralized dashboard of requests which could be checked for interesting prospects by designated individuals at the firm, often not the investors themselves.
 
 \subsection{Intro Paths}
+\label{chap4:intropaths}
 
 Founders who have shared their email graph with VCWiz can see their ``Intro Path'' to any given investor on the platform (Figure \ref{screenshots:intro:path}). The goal of displaying these paths (and the length of that path as investor's distance from the founder) is to assist founders in planning who can make an introduction for them (so as to avoid the problem discussed above).
 
@@ -350,11 +352,11 @@ A blog post detailing the full marketing efforts to launch VCWiz can be found on
 
 \subsection{Metrics}
 
-At the time of writing, there are 421,946 VCWiz research pages indexed on Google. From these, there are roughly 7000 impressions per day, resulting in about 100 clicks to the site. Similar stats are seen on other major search engines. Figure \ref{fig:acquisition} shows the top sources of new users. There are between 200 and 300 founders that actively use the site on a monthly basis, with around 1200 founders that have used the platform actively at least once since the launch. There are an additional $2700$ users who visit the site monthly, without signing up. Figure \ref{fig:actives} shows the trend of active users over time.
+At the time of writing, there are $421,946$ VCWiz research pages indexed on Google. From these, there are roughly 7000 impressions per day, resulting in about $100$ clicks to the site. Similar stats are seen on other major search engines. Figure \ref{fig:acquisition} shows the top sources of new users. There are between $200$ and $300$ founders that actively use the site on a monthly basis, with around 1200 founders that have used the platform actively at least once since the launch. There are an additional $2700$ users who visit the site monthly, without signing up. Figure \ref{fig:actives} shows the trend of active users over time.
 
-The founders who have accounts visit 1000 investor profiles monthly, for an average of four investors per founder per month. Of these, just over 50\% of them have granted access to their email inboxes for the purpose of tracking conversations with investors, and contributing anonymous, aggregate graph data for the VCWiz platform. These founders send and receive an average of 33 emails with investors per month.
+The founders who have accounts visit 1000 investor profiles monthly, for an average of four investors per founder per month. Of these, just over $50\%$ of them have granted access to their email inboxes for the purpose of tracking conversations with investors, and contributing anonymous, aggregate graph data for the VCWiz platform. These founders send and receive an average of 33 emails with investors per month.
 
-When considering how deeply founders are engaging with the research component of the platform, we see that, after filtering out sessions which last less than 10 seconds, 20\% of the sessions since launch lasted at least 10 minutes, with 5\% lasting over 30 minutes. The majority of this time is spent on the research pages generated for investors and firms. Interestingly, while founders tend to focus on the pages related to investors, they often come in through the pages focusing on a given company: 37\% of incoming search traffic is for a company page, with 30\% going to an investor page, and 20\% going to firm pages.
+When considering how deeply founders are engaging with the research component of the platform, we see that, after filtering out sessions which last less than $10$ seconds, $20\%$ of the sessions since launch lasted at least $10$ minutes, with $5\%$ lasting over 30 minutes. The majority of this time is spent on the research pages generated for investors and firms. Interestingly, while founders tend to focus on the pages related to investors, they often come in through the pages focusing on a given company: $37\%$ of incoming search traffic is for a company page, with $30\%$ going to an investor page, and $20\%$ going to firm pages.
 
 \begin{figure}[ht]
   \centering
@@ -382,3 +384,24 @@ One piece of feedback from a founder stands out in particular, and has been repr
 VCWiz was very helpful in our fundraising journey. Through it we discovered several relevant investors that weren't on our radar, and we ended up building a robust target investor list that expedited our process.
 \end{quote}
 
+\section{Evaluation}
+
+The goal of VCWiz is to be a tool that increases the efficiency and equitability of the founder-investor matching process while generating data that facilitates further study. This chapter detailed the qualitative learnings from the development of the tool, and founder reactions to the tool. The next chapter will cover a quantiative approach to the data collected.
+
+\subsection{Equitability}
+
+To evaluate equitability, we consider whether we made the fundraising process open and transparent. Our attempts have informed the research and discovery of over $18,000$ users across hundreds of cities, and have exposed thousands of founder reviews on the actions of investors. This information has been available to anyone, regardless of their background or experience in venture. Specifically, we have revealed information to these individuals that was previously only available to those ``in the know'': details such as which investments the partner at a given firm has made, or what topics an investor often enjoys discussing. We believe, at the scale described above, this information dissemination has been impactful.
+
+The true test of whether or not we increased equitability in this matching process would be to evaluate how VCWiz impacted the fundraising ability of demographic groups who have struggled in the past. Unfortunately, we did not collect sufficient data to determine this, nor has enough time elapsed to properly evaluate it.
+
+\subsection{Efficiency}
+
+To evaluate efficiency, we must consider both the time taken to complete the matching process, as well as the success rate of the matching process. Within the time to complete the process, we have two metrics: hours spent, and time elapsed.
+
+Based on our research on the status quo for fundraising tools, it's clear that VCWiz would decrease the number of hours spent manually researching and discovering investors. This is corroborated by the fact that $47.4\%$ of surveyed founders indicated they were likely to recommend VCWiz to a friend\footnote{a score of 9 or higher on an 11-point poll}---an indication of the perceived value of the platform. With respect to time elapsed, we see that founders on VCWiz who successfully raised their seed round of financing took an average of $15$ weeks from the first investor conversation. This is significantly lower than the commonly-held average of four to five months (as seen in \cite{BRUNO198561}), though there is not sufficient information available to prove this is exclusively due to the use of VCWiz. A more detailed discussion can be found in Section \ref{ch5:timeline}.
+
+Evaluating the success rate of founders on VCWiz is difficult as there we lack a baseline to compare against. Just under $35\%$ of the founders who began raising seed rounds on the platform heard back from at least one investor, of which $66\%$ received investment from at least one investor. We believe this is in part due to founders' usage of the Intro Path functionality discussed in Section \ref{chap4:intropaths}, which aids founders in making connections to potential investors. $52\%$ of the founders on VCWiz used this functionality at least once.
+
+While these numbers seem to imply that a large percentage of founders on VCWiz who find investors that are willing to engage end up making a successful match, sufficient time has not passed to validate this. Venture funding often waxes and wanes throughout the calendar year, and without a full year's worth of data, our results are as of yet inconclusive. Nonetheless, the success of our founders to make matches is encouraging, and motivates further work on the platform.
+
+In a sense, the most ambitious tool for increasing the match rate of founders and investors was the Intro Request functionality discussed in Section \ref{chap4:introrequests}. If successful, this functionality would have increased efficiency (and to a certain degree, equitability through access) for both founders and investors. Unfortunately, this experiment failed miserably. Fewer than $10$ successful matches were made through this feature of the tool, with very little engagement shown from investors. Hopefully, future work can help incentivize investors to respond to promising founders.
