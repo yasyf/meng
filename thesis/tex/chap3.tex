@@ -5,39 +5,39 @@
 
 The culmination of our research and interviews with founders and investors was the proposal of VCWiz, a three-part platform geared towards helping first-time founders better research, discover, and reach out to their optimal seed investors. The focus on seed-stage companies reflected the industry opinion that early-stage venture was an insider's game, where as later rounds of funding were more dependent on quantitative metrics around the companies growth, traction, and success. In the spirit of making venture more accessible and efficient, we chose to focus on first-time founders, who do not necessarily have the connections and tribal knowledge that makes their more experienced counterparts so much more likely to succeed.
 
-We conducted a series of user interviews (N = 21) to determine which aspects of the platform would be most crucial, and what functionality the first version of this application should contain. Appendix \ref{appf:survey:users} contains the questions that were used. The interviews were conducted across a spectrum of experience, from first-time student founders to industry veterans, based in New York, Boston, and San Francisco, and working on everything from novel social networks to machine learning-powered drug discovery. We also consulted with several reputable investors at top-tier firms such as First Round Capital and General Catalyst.
+We conducted a series of user interviews (N = 21) to determine which aspects of the platform would be most crucial, and what functionality the first version of this application should contain. Appendix \ref{appf:survey:users} contains the questions that were used. The interviews were conducted across a spectrum of experience: from first-time student founders to industry veterans, based in New York, Boston, and San Francisco, working on everything from novel social networks to machine learning-powered drug discovery. We also consulted with several reputable investors at top-tier firms such as First Round Capital and General Catalyst.
 
 We can summarize our user interview feedback into the following three feature buckets.
 
 \subsection{Discovery}
 
-Founders often complain that it is difficult to discover the set of investors that are applicable to their startup. Investors, especially at the seed stage, have a plethora of conditions imposed on the capital they distribute, including restrictions on location, industry, target market size, business model, amount of capital being raised, valuation of the startup, and terms of the deal. Frustratingly, these conditions are rarely published anywhere, meaning it is difficult to query a list of investors to reveal the ones that match your conditions as a founder. This leaves founders resorting to overwhelmingly large databases of investors, or boutique, curated lists which might miss less well-known options for capital.
+Founders often complain that it is difficult to discover the set of investors that are applicable to their startup. Investors, especially at the seed stage, have a plethora of conditions imposed on the capital they distribute, including restrictions on location, industry, target market size, business model, amount of capital being raised, valuation of the startup, and terms of the deal. Frustratingly, these conditions are rarely published anywhere, meaning it is difficult to query a list of investors and reveal the ones that match your conditions as a founder. This leaves founders resorting to overwhelmingly large databases of investors, or boutique, curated lists that might miss less-well-known options for capital.
 
 \subsection{Research}
 \label{ch3:motivation:research}
 
-Once an eligible set of venture firms has been found, the burden on the founder only increases. In addition to figuring out the specific constraints mentioned above, each firm has preferences that may or may not align with the founder's vision for the company. Furthermore, in today's markets, where capital is widely available and there are many similar sources, venture firms are fighting to differentiate themselves to founders. This adds another degree of freedom to the ranking function each founder must internally maintain. There is significant evidence that it is this ``extra-financial'' value of investors that dictates their helpfulness, given equivalent capital contributions~\cite{doi:10.1111/j.1540-6261.2004.00680.x}. However, determining the nature of this value for a given firm is often difficult without a meeting or phone call. A vast increase in the number of new seed-stage funds being started further exacerbates the problem: venture research firm CBInsights claims that ``the number of funds closed in 2014 was nearly 100\% more than 2013''~\cite{cbinsights-research-barbell}.
+Once an eligible set of venture firms has been found, the burden on the founder only increases. In addition to figuring out the specific constraints mentioned above, each firm has preferences that may or may not align with the founder's vision for their company. Furthermore, in today's markets, where capital is widely available and there are many similar sources, venture firms are fighting to differentiate themselves to founders. This adds another degree of freedom to the ranking function each founder must internally maintain. There is significant evidence that it is this ``extra-financial'' value of investors that dictates their helpfulness, given equivalent capital contributions~\cite{doi:10.1111/j.1540-6261.2004.00680.x}. However, determining the nature of this value for a given firm is often difficult without a meeting or phone call. A vast increase in the number of new seed-stage funds being started further exacerbates the problem: venture research firm CB Insights claims that ``the number of funds closed in 2014 was nearly 100\% more than 2013''~\cite{cbinsights-research-barbell}.
 
-A separate concern from the selection of the venture firm is the selection of the General Partner within the firm. Our data shows that there are an average of 4.68 partners per venture firm, with several other associates and supporting staff on the investment team. Each person often has an area of expertise and a type of company they prefer to consider, as well as a particular way to engage with the companies they support. However, as before, there is no easy way to tell which partners prefer which industries or business models, making the selection process for founders laborious at best, and arbitrary in the average case.
+A separate concern from the selection of the venture firm is the selection of the General Partner within the firm. Our data shows that there are an average of $4.18$ partners per venture firm, with a standard deviation of $3.83$ (Figure \ref{vcwiz:fig:partners}). This does not include the several other associates and supporting staff on the investment team. We note that there has been a decline in the average partnership size over the years: a 1984 survey of venture firms saw $4.7$ partners per firm~\cite{GORMAN1989231}, while a 2008 survey of European venture capital firms saw $4.3$~\cite{BOTTAZZI2008488}. This downward trend can be attributed to the growing number of small, nimble seed-stage funds. Nonetheless, the task of selecting the correct entry point to a firm is daunting and vital to founders. Each investor often has an area of expertise and a type of company they prefer to consider, as well as a particular way to engage with the companies they support. However, as before, there is no easy way to tell which partners prefer which industries or business models, making the selection process for founders laborious at best, and arbitrary in the average case.
 
 \subsection{Outreach}
 
-The final major burden for founders who have identified and researched their ideal (seed) investors is to find a way to get connected to each one. It's commonly accepted in the industry that a so-called ``warm introduction'' (a direct introduction from someone who personally knows the investor) is the best way to start a conversation with a VC. Indeed, this is corroborated by the data. It has been shown that ``direct ties are strongly and positively related to the probability of investment''~\cite{doi:10.1287/mnsc.48.3.364.7731}, in support of the hypothesis that ``investors are more likely to invest in new ventures when they have a previously established direct tie to the entrepreneur than when they do not''~\cite{doi:10.1287/mnsc.48.3.364.7731}. The further removed a founder is in the global social graph from an investor, the less chance they will be able to get a direct introduction, and the lower the likelihood of investment. However, for many first-time founders, it is simply impossible to get a direct introduction at all. The problem then shifts to finding the best ``intro path'' to a given investor, or barring that, sending the ``cold'' email which maximizes the chance the investor will consider taking a meeting. This process is often ad-hoc and confusing.
+The final major burden for founders who have identified and researched their ideal (seed) investors is to find a way to get connected to each one. It's commonly accepted in the industry that a so-called ``warm introduction'' (a direct introduction from someone who personally knows the investor) is the best way to start a conversation with a VC. Indeed, this is corroborated by the data. It has been shown that ``direct ties are strongly and positively related to the probability of investment''~\cite{doi:10.1287/mnsc.48.3.364.7731}, in support of the hypothesis that ``investors are more likely to invest in new ventures when they have a previously established direct tie to the entrepreneur than when they do not''~\cite{doi:10.1287/mnsc.48.3.364.7731}. The further removed a founder is in the global social graph from an investor, the lower the chance they will get a direct introduction, and the lower the probability of investment. For many first-time founders, it is simply impossible to get a direct introduction at all. The problem then shifts to finding the best ``intro path'' to a given investor. Barring any introduction, a founder endeavors to send the ``cold'' email that maximizes the chance the investor will consider taking a meeting. This process is often ad-hoc and confusing.
 
 \section{Existing Solutions}
 \label{vcwiz:existing}
 
-Several solutions exist which solve one or many of the problems discussed above, but there has yet to be a comprehensive solution. As we will discuss later, the threshold at which a product is considered sufficiently feature-complete is very high. Though many of the founders we interviewed used pieces of these solutions, none of them were satisfied with the status quo, and each one thought that the state of existing tools could be improved.
+Several solutions exist that solve one or many of the problems discussed above, but there has yet to be a comprehensive solution. As we will discuss later, the threshold at which a product is considered sufficiently feature-complete is very high. Though many of the founders we interviewed used pieces of these solutions, none of them were satisfied with the status quo, and each one thought that the state of existing tools could be improved.
 
 \subsubsection{Crunchbase}
 
-Crunchbase is an online database of companies, their founders, and the investors that back them. It was created ``to be the master record of data on the world's most innovative companies''~\cite{doi:10.1287/mnsc.48.3.364.7731}, and is largely used as the first place founders go to learn more about a startup's investors. While the database is very comprehensive (and indeed was use to seed the database for VCWiz), it has historically been cumbersome to navigate, and the founders we interviewed found it to be a poor choice for discovery, though an excellent first step for research.
+Crunchbase is an online database of companies, their founders, and the investors that back them. It was created ``to be the master record of data on the world's most innovative companies''~\cite{doi:10.1287/mnsc.48.3.364.7731}, and is largely used as a primary source to learn more about a startup's investors. While the database is very comprehensive (and indeed was use to seed the database for VCWiz), it has historically been cumbersome to navigate. The founders we interviewed found it to be a poor choice for discovery, though an excellent first step for research.
 
-The database offered through the Crunchbase Data Venture Program \footnote{https://about.crunchbase.com/partners/venture-program/} was used to seed the VCWiz investor database.
+The database offered through the Crunchbase Venture Program \footnote{https://about.crunchbase.com/partners/venture-program/} was used to seed the VCWiz investor database.
 
 \subsubsection{AngelList}
 
-AngelList \footnote{https://angel.co} is ``a platform for startups'', which focuses on early-stage companies and investors (both Angels and institutional seed investors). The core platform has social networking, and a directory of startups, their employees, and their early investors, akin to Crunchbase. AngelList's dataset is less comprehensive than Crunchbase's, and narrower in scope. Thus, the founders we interviewed found it less helpful for both research and discovery (though extremely helpful for recruiting employees).
+AngelList \footnote{https://angel.co} is ``a platform for startups'' that focuses on early-stage companies and investors (both angels and institutional seed investors). The core platform has social networking, and a directory of startups, their employees, and their early investors, akin to Crunchbase. AngelList's dataset is less comprehensive than Crunchbase's, and narrower in scope. Thus, the founders we interviewed found it less helpful for both research and discovery (though extremely helpful for recruiting employees).
 
 \subsubsection{LinkedIn}
 
@@ -47,72 +47,72 @@ LinkedIn \footnote{https://linkedin.com} is a very popular professional networki
 
 Signal \footnote{https://signal.nfx.com} is a platform for founders to find introduction paths to VCs. Founders on Signal grant the application access to their Gmail inboxes, and in return can see the chain of people who comprise the shortest path to any given investor. The graph is built up based solely on email activity, and profile information for investors is self-reported. While this product successfully solves the problem of figuring out which individuals in one's network can provide the introduction to an investor, founders we interviewed often shied away from using it, citing privacy concerns. Signal is operated by NFX Guild, a venture firm, and founders are often unclear about how their email data is being used.
 
-The methodology for displaying investors on Signal \cite{signal-methodolody} was the inspiration for the VCWiz ranking algorithm.
+The methodology for displaying investors on Signal~\cite{signal-methodolody} was an inspiration for the VCWiz ranking algorithm.
 
 \subsubsection{Streak}
 
-The Streak CRM \footnote{https://www.streak.com} is a popular Gmail extension which embeds a spreadsheet-like customer relationship management (CRM) system in your mailbox. It tracks the progress of conversations, updating itself based on the emails being sent and received by the user. Streak offers a template set of headers and categories for fundraising \footnote{https://www.streak.com/startup-fundraising-management-inside-google-gmail}, which is often used by founders. This means of tracking outreach and progress during a funding round was one of the most popular in the founders we interviewed: there were very few complaints, other than that this setup still requires substantial manual data entry.
+The Streak CRM is a popular Gmail extension that embeds a spreadsheet-like customer relationship management (CRM) system in your mailbox. It tracks the progress of conversations, updating itself based on the emails being sent and received by the user. Streak offers a template set of headers and categories for fundraising \footnote{https://www.streak.com/startup-fundraising-management-inside-google-gmail} that is often used by founders. This method of tracking outreach and progress during a funding round was one of the most popular in the founders we interviewed: there were very few complaints, other than that this setup still requires substantial manual data entry.
 
 The spreadsheet-like interface for tracking conversations with Streak was the inspiration for the conversation tracker in the first version of VCWiz.
 
 \subsubsection{Affinity}
 
-Affinity \footnote{https://affinity.vc} is a modern CRM solution which includes many features that make fundraising easier and more efficient. It is fully automated, with every conversation a founder has by email appearing on the platform, along with pre-filled information about investors and firms. It solves many of the qualms founders have with simpler CRM systems such as Streak, and includes a social graph which suggests introduction paths, as Signal does. The platform solves many of the common complaints around fundraising tooling, though it comes at a premium. Our interviews showed that many founders consider it to be too expensive to use.
+Affinity \footnote{https://affinity.vc} is a modern CRM solution that includes many features to make fundraising easier and more efficient. It is fully automated, presenting every conversation a founder has over email, along with pre-filled information about investors and firms. It solves many of the qualms founders have with simpler CRM systems such as Streak, and includes a social graph that suggests introduction paths, as Signal does. The platform solves many of the common complaints around fundraising tooling, though it comes at a premium. Our interviews showed that many founders consider it too expensive to use.
 
 \subsubsection{Foundersuite}
 
-Foundersuite \footnote{https://foundersuite.com} is a comprehensive set of tools for fundraising. It is as sophisticated as Affinity, but developed specifically for founders. The CRM component of Foundersuite features a card-based system with manual updating of where each investor is in the fundraising pipeline. The software also includes a pre-populated database of investors which is used to autofill fields, and provide a search tool. Like Affinity, the common complaint with Foundersuite was the cost, and complexity.
+Foundersuite \footnote{https://foundersuite.com} is a comprehensive set of tools for fundraising. It is as sophisticated as Affinity, but developed specifically for founders. The CRM component of Foundersuite features a card-based system that requires manual updating when the status of an investor in the fundraising pipeline changes. The software also includes a pre-populated database of investors that is used to autofill fields, and provide a search tool. Like Affinity, the common complaint with Foundersuite was the cost, and complexity.
 
-The set of features and tools offered by Foundersuite were used as the starting feature set for VCWiz.
+The set of features and tools offered by Foundersuite inspired the starting feature set for VCWiz.
 
 \section{Our Tool}
 \label{chap3:tool}
 
-The first step towards improving the founder-investor matching process is better tooling for both ends. Since founders are often the individuals initiating an interaction, it makes sense to first focus on founders. After reviewing the existing solutions, and the feedback of founders as above, it's clear that there is an opportunity for a product which is sufficiently comprehensive yet much more accessible (with respect to cost and usability).
+The first step towards improving the founder-investor matching process is better tooling for both ends. Since founders are often the individuals initiating an interaction, it makes sense to first focus on founders. After reviewing the existing solutions, and the feedback of founders, it was clear that there is an opportunity for a product that is sufficiently comprehensive yet much more accessible (with respect to cost and usability).
 
-Fundraising can look very different at different stages of a company's life. While raising a pre-seed or seed round can entail leveraging a network to meet and impress sufficient investors until (at least) one decides to invest, later rounds of funding (e.g. Series A or B) are more predicated on the quantifiable traction of the company. Thus, a lot of the tools above are most impactful for seed-stage founders.
+Fundraising can look very different at different stages of a company's life. While raising a pre-seed or seed round can entail leveraging one's network to meet and impress sufficient investors until (at least) one decides to invest, later rounds of funding (e.g., Series A or B) are more predicated on the quantifiable traction of the company. Thus, many of the tools above are most impactful for seed-stage founders.
 
-The process of fundraising also looks very different for the subset of founders that are so-called serial entrepreneurs: having raised money from institutional investors in the past means a founder no longer necessarily has the issue of discovering who they should take money from. Furthermore, their experience makes them more likely to succeed at fundraising and building a large business~\cite{gompers2010performance}. Research on retail businesses shows that indeed, even outside of technology, ``prior business experience increases the longevity of the next business opened''~\cite{doi:10.1086/683820}. The investing side of the equation also believes in the eminence of repeat founders---data from the First Round Capital 10 Year Project \cite{first-round-10-years} indicates that ``repeat founders' initial valuations tended to be over 50\% higher'' than those of first-time founders. As a result, our tool is not focused on providing value to serial entrepreneurs.
+The process of fundraising also looks very different for the subset of founders that are so-called serial entrepreneurs: having raised money from institutional investors in the past means a founder no longer necessarily has the issue of discovering who they should take money from. Furthermore, their experience makes them more likely to succeed at fundraising and building a large business~\cite{gompers2010performance}. Research on retail businesses shows that even outside of technology, ``prior business experience increases the longevity of the next business opened''~\cite{doi:10.1086/683820}. The investing side of the equation also believes in the eminence of repeat founders---data from the First Round Capital 10 Year Project~\cite{first-round-10-years} indicates that ``repeat founders' initial valuations tended to be over 50\% higher'' than those of first-time founders. As a result, our tool is not focused on providing value to serial entrepreneurs.
 
-Thus, in order to maximize the impact we have on the equitability and efficiency of the founder-investor matching process, we opted to design a tool geared towards first-time founders, who are raising their first (seed) rounds. The tool has discovery, research, and outreach components, borrowing interfaces and functionality from the best of the above-discussed tools. We call our new tool VCWiz. VCWiz went through three iterations, each substantially changing the functionality and interface according to feedback solicited from users. We will first discuss the first iteration of VCWiz.
+Thus, in order to maximize the impact we have on the equitability and efficiency of the founder-investor matching process, we opted to design a tool geared towards first-time founders, who are raising their first (seed) rounds. The tool has discovery, research, and outreach components, borrowing interfaces and functionality from the best of the aforementioned tools. We call our new tool VCWiz. VCWiz went through three iterations, each substantially changing the functionality and interface according to feedback solicited from users.
 
-The same three categories considered above (Discovery, Research, Outreach) are how we will partition the solution offered by VCWiz. We will first discuss the theoretical solutions to be offered by the tool, and then dive into the implementation and lessons learned for the first two iterations. The final version, which is currently live, is described in the next chapter.
+The same three categories considered above (Discovery, Research, Outreach) are how we will partition the solution offered by VCWiz. We will discuss the theoretical solutions to be offered by the tool, and then dive into the implementation and lessons learned from the first two iterations. The final version, which is currently live, is described in the next chapter.
 
 The current version of VCWiz can be found at \url{https://vcwiz.co/}.
 
 \subsection{Discovery}
 
-To solve the discovery problem, we identified the several key characteristics which founders look for in a given venture capital firm. These include:
+To solve the discovery problem, we identified several key characteristics that founders look for in a given venture capital firm. These include:
 
 \begin{itemize}
-  \item the location of the firm
-  \item the industries the firm has invested in
-  \item the average initial investment (``check size'') of the firm
-  \item the number of investments a firm makes annually
-  \item the companies a firm has invested in
+  \item the location of the firm,
+  \item the industries the firm has invested in,
+  \item the average initial investment (``check size'') of the firm,
+  \item the number of investments a firm makes annually, and
+  \item the companies a firm has invested in.
 \end{itemize}
 
-The goal of the platform is to let the founder specify their preferences in any of these characteristics, and for the system to recommend relevant investors based on those preferences, and information collected about the founder (the stage, industry, and location, and competitors of their startup).
+The goal of the platform is to let the founder specify their preferences in any of these characteristics, and for the system to recommend relevant investors based on those preferences, and information collected about the founder (the stage, industry, location, and competitors of their startup).
 
 \subsection{Research}
 
 After surfacing recommendations to the founder, the platform strives to be the single location with all the relevant information about the partners of a given venture firm. The goal is that the founder never has to leave VCWiz (or a site linked from VCWiz) in order to make a decision about an investor. To this end, in addition to the characteristics necessary for discovery, we collect and report several other pieces of information:
 
 \begin{itemize}
-  \item The most recent investments of the firm
-  \item The most recent investments of a given partner at the firm
-  \item The firms that often invest alongside a firm (``co-investors'')
-  \item The specific industries that a partner focuses on investing in
-  \item The topics a partner often discusses online
-  \item Links to online profiles and content created by the firm or a partner
-  \item Biographic and demographic information on a partner
+  \item the most recent investments of the firm,
+  \item the most recent investments of a given partner at the firm,
+  \item the firms that often invest alongside a firm (``co-investors''),
+  \item the specific industries that a partner focuses on investing in,
+  \item the topics a partner often discusses online,
+  \item links to online profiles and content created by the firm or a given partner, and
+  \item biographic and demographic information on each partner.
 \end{itemize}
 
 \subsection{Outreach}
 
-Finally, once a founder has filtered their recommendations using the research tools on the platform, the final job of VCWiz becomes to ensure the founder can begin a conversation with their desired investors. To measure progress on this front, the platform contains a ``conversation tracker'': a CRM which auto-populates the profiles of investors marked as desirable by the founder, and auto-updates as the founder has conversations with those investors. The goal of this CRM is to be as automatic as possible, making assumptions wherever it can.
+Finally, once a founder has filtered their recommendations using the research tools on the platform, the final job of VCWiz is to ensure that conversations can begin with the desired investors. To measure progress on this front, the platform contains a ``conversation tracker'': a CRM that auto-populates the profiles of investors marked as desirable by the founder, and auto-updates as the founder has email conversations with those investors. The goal of this CRM is to be as automatic as possible, making assumptions wherever it can.
 
-In addition to simply tracking conversations, VCWiz offers two tools for initiating them. The first is a NFX Signal-style introduction path system, which leverages the social graph of the founder to identify the optimal shortest path to any given investor, if one exists. The second tool is a structured system for automated introductions: the founder can request an introduction to an investor, who gets a consistently-formatted, auto-generated dossier on the startup. The investor then has the choice of accepting or rejecting the introduction request. This system is an experiment to see how structure and consistency can improve the process of cold outreach, and is discussed later.
+In addition to simply tracking conversations, VCWiz offers two tools for initiating them. The first is a NFX Signal-style introduction path system that leverages the social graph of the founder to identify the optimal shortest path to any given investor, if one exists. The second tool is a structured system for automated introductions: the founder can request an introduction to an investor, who gets a consistently-formatted, auto-generated dossier about the startup. The investor then has the choice of accepting or rejecting the introduction request. This system is an experiment to see how structure and consistency can improve the process of cold outreach, and is discussed in Section \ref{chap4:introrequests}.
 
 Investors are prompted (by email) for feedback on why they make a decision one way or another. Currently, this feedback is stored but not used. Future work could explore how to best use this feedback to categorize investors, or to educate founders.
 
@@ -122,10 +122,11 @@ Investors are prompted (by email) for feedback on why they make a decision one w
 
 \subsubsection{Design}
 
-The first step in building the first version of VCWiz was to spent time talking to 21 teams of startup founders, each going through a well-known accelerator such as Y Combinator\footnote{http://www.ycombinator.com/} (``one of the oldest and top-rated incubator/accelerator programs in the country''~\cite{stross2013launch}). This occurred in June of 2017. The goal was to capture these founders right as they were about to begin raising their seed (initial) rounds of funding. They all identified a need for personalized suggestions of investors. Our initial idea was to collect information from each founder on their ideal investor (characterizing investors and firms with features such as industry, check size, and location), and generate suggestions from a cluster of similar investors (using an item-based k-nearest neighbors model, as in \cite{Stone:2013:EST:2541167.2507882}). With this in hand, we built the first iteration of the VCWiz application.
+The first step in building the initial version of VCWiz was to spent time talking to 21 teams of startup founders, each going through a well-known accelerator such as Y Combinator (``one of the oldest and top-rated incubator/accelerator programs in the country''~\cite{stross2013launch}). This occurred in June of 2017. The goal was to capture these founders right as they were about to begin raising their initial rounds of funding. They all identified a need for personalized suggestions of investors. Thus our solution was to collect information from each founder on their ideal investor (characterizing investors and firms with features such as industry, check size, and location), and generate suggestions from a cluster of similar investors (using an item-based k-nearest neighbors model, as in \cite{Stone:2013:EST:2541167.2507882}). With this in hand, we built the first iteration of the VCWiz application.
 
-User authentication for the VCWiz platform is handled by Google (Figure \ref{screenshots:v1:login}). The first version of VCWiz collected a founder's ideal investor profile (Figure \ref{screenshots:v1:signup}), as well as basic company information, before taking them to a screen of recommendations. The founder had the option to add any of the recommended investors to a list of ``target investors'' to begin tracking them, and was then taken to the main card-based view of the app (Figure \ref{screenshots:v1:conversations}). This view presented a series of stages.
+User authentication for the VCWiz platform is handled by Google (Figure \ref{screenshots:v1:login}). The first version of VCWiz collected a founder's ideal investor profile (Figure \ref{screenshots:v1:signup}), as well as basic company information, before taking them to a screen of recommendations. The founder had the option to add any of the recommended investors to a list of ``target investors'' to begin tracking them, before being taken to the main card-based view of the app (Figure \ref{screenshots:v1:conversations}). This view presented a series of stages:
 
+\begin{multicols}{2}
 \begin{itemize}
   \item Waiting for Intro
   \item Waiting for Response
@@ -133,26 +134,27 @@ User authentication for the VCWiz platform is handled by Google (Figure \ref{scr
   \item Interested
   \item Not Interested
 \end{itemize}
+\end{multicols}
 
-Investor cards, which showed summaries of a partner at a firm, alongside community notes on both the partner and firm, could be moved between stages through dynamic buttons, which captured the transitions between stages. At this time, data collected on platform usage was not leveraged, save for sorting the recommendations for new users by popularity in the existing user base.
+Investor cards showed summaries of a partner at a firm, alongside community notes on both the partner and firm. These cards could be moved between stages with dynamic buttons that captured the transitions between stages. At this time, data on user attention patterns was not utilized, save for sorting new users' recommendations by popularity in the existing user base.
 
 \subsubsection{Feedback}
 
-We learned a few crucial insights through the launch and test of this first iteration of the application.
+We learned a few crucial insights through the launch and testing of this first iteration of the application.
 
-With respect to discovery, we realized that founders do not find investors by looking at clusters of similar investors after manually identifying a few, as our model assumed. Instead, investors were found by examining the previous investors of similar companies to the one in question. This meant that our investor-based kNN approach performed poorly for users, and that a rules-based system or user-based recommender system would perform better.
+With respect to discovery, we realized that founders do not find investors by looking at clusters of similar investors after manually identifying a few, as our model assumed. Instead, investors were found by examining the previous investors of similar (or competing) companies. This meant that our investor-based kNN approach performed poorly for users, and that a rules-based system or user-based recommender system would perform better.
 
 With respect to research, the biggest mistake we made was to include only a subset of the information we identified as useful for the founder. As a result, founders would end up leaving the platform to do further research, which was disruptive to their workflow.
 
-With respect to outreach, the first major learning was that it was very difficult to convince founders to trust us with their investor conversations, and that anything we could do to build credibility (for example, auto-filling form fields or leveraging the brands of the venture firms we were working with) vastly increased willingness to share data.
+With respect to outreach, the first major finding was that it was very difficult to convince founders to trust us with their investor conversations, and that anything we could do to build credibility and legitimacy (for example, auto-filling signup form fields or leveraging the brands of venture firms we were working with) vastly increased willingness to share data.
 
-The next big learning was that our users were very familiar with a spreadsheet-based experience (either through Streak or with actual spreadsheets), and that trying to replace it was difficult and unnecessary. A very common piece of feedback was that a ``smart spreadsheet'' would be a far superior interface to the existing card-based workflow.
+The next finding was that our users were very familiar with a spreadsheet-based experience (either through Streak or with actual spreadsheets), and that trying to replace it was difficult and unnecessary. A very common piece of feedback was that a ``smart spreadsheet'' would be a far superior interface to the existing card-based workflow.
 
 \subsection{Version 2}
 
 \subsubsection{Design}
 
-The second version of VCWiz was started in July of 2017. It featured a new recommendation engine, which first asked founders to identify competitors (or similar companies) which are more established. These companies were used to generate recommendations based on a simple algorithm, which takes the set of investors from the identified competitors, filters out the eligible ones, and sorts them based on their relevance, popularity, and whether or not they are featured. The popularity of investor $i$ is calculated based on the number of founders who have added $i$ to their outreach list.
+The second iteration of VCWiz was started in July of 2017. It featured a new recommendation engine that first asked founders to identify competitors (or similar companies) that are more established. These companies were used to generate recommendations based on a simple algorithm that takes the set of investors from the identified competitors, filters out the eligible ones, and sorts them based on their relevance, popularity, and whether or not they are featured. The popularity of investor $i$ is based on the number of founders who have added $i$ to their outreach list.
 
 \begin{lstlisting}[frame=single,mathescape=true,language=Ruby,basicstyle=\footnotesize,columns=fullflexible]
 def recommendations(founder):
@@ -168,11 +170,11 @@ def recommendations(founder):
 
 The interface for these investor recommendations is shown in Figure \ref{screenshots:v2:recs} (p. \pageref{screenshots:v2:recs}).
 
-Another addition to the second version was an augmented spreadsheet interface (shown in Figure \ref{screenshots:v2:conversations}), which looks and feels like a spreadsheet, but auto-completes information about investors based on a VCWiz investor database. Once sufficient information had been entered on an investor into a row of the sheet to uniquely identify one record in the database, the remaining fields were filled. This gave the founders an experience they were comfortable with, with the power and ease of use they expected to justify switching tools.
+Another addition to the second iteration was an augmented spreadsheet interface (shown in Figure \ref{screenshots:v2:conversations}) that looks and feels like a traditional spreadsheet, but auto-fills cells based on the VCWiz investor database. Once sufficient information had been entered into a row of the sheet to uniquely identify one record in the database, the remaining fields were filled. This gave founders a familiar input experience with a sufficiently powerful addition to justify switching tools.
 
-In order to build up the VCWiz investor database, we started with a dataset imported from the Crunchbase Data Venture Program, then further augmented it with several additional sources. We will discuss our data pipeline in depth below.
+To build the VCWiz investor database, we started with a direct import of the Crunchbase Venture Program's dataset and augmented it with several additional sources. We discuss our data pipeline in depth in Section \ref{ch4:data}.
 
-The venture firms in our database are now tagged with the stage of company they invest in, based on the latest fundraising round that has occurred. These categories are defined (and ordered) as such.
+The venture firms in our database were tagged with the stage of company they invest in. These tags are assigned based on which fundraising round the VC is expected to initially invest at. The tags are defined (and ordered) as follows:
 
 \begin{multicols}{2}
 \begin{itemize}
@@ -186,9 +188,9 @@ The venture firms in our database are now tagged with the stage of company they 
 \end{itemize}
 \end{multicols}
 
-N.B. These categories are not necessarily mutually exclusive. For example, an accelerator may indeed give a startup their pre-seed round. The category for ``Venture'' captures all growth-stage companies (Series C and later).
+N.B. These categories are not necessarily mutually exclusive. For example, an accelerator may contribute to the pre-seed round of a participating startup. The category for ``Venture'' captures all growth-stage firms (Series C and later).
 
-Finally, we refined the stages a tracked investor could fall into, based on feedback from founders who were currently fundraising. The list below indicates the ordering over stages that is used throughout the platform.
+Finally, we refined the categories that a tracked investor could fall into, based on feedback from founders who were currently fundraising. The list below indicates the ordering over stages that is used throughout the platform.
 
 \begin{multicols}{2}
 \begin{itemize}
@@ -196,6 +198,7 @@ Finally, we refined the stages a tracked investor could fall into, based on feed
   \item Asked for Intro
   \item In Talks
   \item Need to Respond
+  \columnbreak
   \item Pitching
   \item Committed
   \item Passed
@@ -205,44 +208,38 @@ Finally, we refined the stages a tracked investor could fall into, based on feed
 
 \subsubsection{Feedback}
 
-Following the completion of the second iteration of VCWiz, we did another series of user tests, asking founders to focus specifically on the improvements over the first version.
+Following the completion of the second iteration of VCWiz, we did another series of user tests, asking founders to focus specifically on the improvements over the first version. The dominant complaints are summarized below.
 
-On discovery, the recommendations were not granular enough, and it was unclear why a certain investor was being recommended. Founders expressed the desire to filter and sift through investors with certain queries (such as some subset of the characteristics being used for recommendations), instead of being blindly handed what appear to be random investors. While there was still a desire for recommendations, it seemed that the place for this was after some amount of filtering, rather than in place of the filtering.
+On discovery, the recommendations were not granular enough, and it was unclear why a certain investor was being recommended. Founders expressed the desire to filter and sift manually through investors. They demanded an interface for queries (comprised of a subset of the characteristics being used for recommendation), instead of being blindly handed what appeared to be arbitrary investors. While there was still a desire for recommendations, it seemed that the place for this was after some degree of filtering, rather than in place of the filtering.
 
-On research, it was felt that the platform still did not provide sufficient information to make it worth using over another tool. Nor did it display the little information it did show in an easy-to-digest way. A common suggestion was to incorporate content from social media and blogging platforms, as investors often use these platforms to demonstrate their interests.
+On research, it was felt that the platform still did not provide sufficient information to supplant other tools. Furthermore, it did not display the information in an easy-to-digest way. A common suggestion was to incorporate content from social media and blogging platforms, as investors often use these platforms to demonstrate their interests.
 
-On outreach, the major feedback was that the platform was too rigid. Having pre-defined stages and fields made it difficult to customize the tool for each founder's slightly different workflow, and made them feel like they were fighting the platform, instead of being empowered by it. A common feature request was some way to leverage mutual connections in the outreach.
+On outreach, the major feedback was that the platform was too rigid. Having pre-defined stages and fields made it difficult to customize the tool for the variance in each founder's workflow. Founders felt like they were fighting the platform, rather than being empowered by it. A common feature request was a way to understand and leverage mutual connections in their outreach.
 
-We used Reichheld's Net Promoter Score (NPS) \cite{reichheld2003one} to track the growth potential of the product with respect to founders. At this stage, the product had an NPS of -50, which is very weak. Only 25\% of founders said they would recommend the product to a friend.
+We used Reichheld's Net Promoter Score (NPS)~\cite{reichheld2003one} to track the growth potential of the product with respect to founders. At this stage, the product had an NPS of -50, which is very weak. Only 25\% of founders said they would recommend the product to a friend.
 
 \subsection{Version 3}
 
-The third iteration of VCWiz was started September of 2017, and aimed to incorporate all the previous feedback. The goal was for the end result to be a production-ready product that launches publicly. The interface and interactions were redesigned from the ground up, this time with the help of a professional designer. The functionality is still split across the three categories of discovery, research, and outreach, though each is now as feature-complete as the competing products which solve a narrower need. We embraced the feedback from founders that the product needed to be comprehensive and holistic, and have improved upon any of the popular features on other platforms.
+The third iteration of VCWiz was started September of 2017, and aimed to incorporate all previous feedback. The final product of this iteration was a production-ready system that launched publicly. The interface and interactions were redesigned from the ground up, this time with the help of a professional designer. The functionality is still split across the three categories of discovery, research, and outreach, though each is now as feature-complete as the competing products that solve a narrower need. We embraced the feedback from founders that the product needed to be comprehensive and holistic, and have improved upon many of the popular features from other platforms.
 
-We will first give an overview of the features of the third and final iteration of the platform, followed by an in-depth analysis of each component.
+We will first give an overview of the features in the third and final iteration of the platform. The implementation and launch of this tool is detailed in the following chapter.
 
 \subsubsection{Discovery}
 
-VCWiz's initial screen contains an interface to filter and search for investors (Figure \ref{screenshots:v3:filter}), by all the characteristics discussed previously, as well as by name and more novel metrics, such as topics often discussed. There are also options to constrain and modify the filters, such as changing a filter from a logical OR to a logical AND. In addition to the filtering and searching, there are curated lists of investors that meet specific criteria, ordered by popularity, and selectively shown to founders based on characteristics of their startup (Figure \ref{screenshots:v3:lists}).
+VCWiz's initial screen contains an interface to filter and search for investors (Figure \ref{screenshots:v3:filter}). Founder can filter by all the characteristics discussed previously, as well as by name and more novel metrics, such as topics often discussed. There are also options to constrain and modify the filters, such as changing a filter from a logical \texttt{OR} to a logical \texttt{AND}. In addition to filtering and searching, there are curated lists of investors that meet specific criteria, ordered by popularity, and selectively shown to founders based on the attributes of their startup (Figure \ref{screenshots:v3:lists}).
 
 \subsubsection{Research}
 
-Clicking through from any of the results in the filter view bring up a research screen (Figure \ref{screenshots:v3:research}) which displays comprehensive information on both a firm, as well as every partner at that firm. Every piece of information mentioned in interviews by founders as being useful is included in this view, including but not limited to biographies, social media links, recent investments, press mentions, blog posts and tweets, favorite topics to talk about, industries often invested in, and common co-investors.
+Clicking on any of the results in the filter view brings up a research screen (Figure \ref{screenshots:v3:research}) that displays comprehensive information on both a firm, as well as every partner at that firm. Every attribute mentioned in interviews by founders as being useful is included in this view, including but not limited to biographies, social media links, recent investments, press mentions, blog posts and tweets, favorite topics to talk about, industries often invested in, and common co-investors.
 
 \subsubsection{Outreach}
 
-The outreach functionality of VCWiz is embedded in every screen, as well as having a dedicated dashboard.
+The outreach functionality of VCWiz is embedded in each screen. There is also a dedicated dashboard for tracking conversations.
 
-Every tool for research and discovery has buttons to add investors and firms to the VCWiz Tracker, a CRM which is synced throughout the platform. Founders see a contextual dropdown showing the status of an investor in their pipeline any time they are researching that investor or their peers. The conversations screen is a dashboard which shows a table-like view, containing the information that was previously put in spreadsheets. We used a table to strike the balance between giving founders an interface they were familiar with, and displaying the information in a sufficiently detailed way. The data in this table is populated and updated through an integration with the founder's email provider.
+Each view for research and discovery has buttons to add investors and firms to the VCWiz Tracker, a CRM that is synced throughout the platform. Founders see a contextual dropdown, showing the status of an investor in their pipeline, at every instance where they are on a research screen including that investor.
 
-In addition to merely tracking conversations, this version of VCWiz also overlays each screen containing details about an investor with a subset of the founder's email graph, showing them the shortest path(s) to the given investor in their network. This allows the founder to understand how likely they are to be able to reach an investor without a click.
+The conversations screen is a standalone dashboard that shows a table-like view, containing the information that was previously contained in spreadsheets. We used a table to strike the balance between giving founders an interface they are familiar with, and displaying the information in a sufficiently detailed way. The data in this table is populated and updated through an integration with the founder's email provider.
 
-The implementation and launch of this tool is detailed in the following chapter.
+In addition to merely tracking conversations, this version of VCWiz overlays research and discovery screens with a subset of the founder's email graph, showing them the shortest path(s) to any given investor in their network. This allows the founder to understand how likely they are to be able to reach an investor without a single extra click.
 
 Shortly after the public launch of this third version of VCWiz on January 25th, 2018, we surveyed active founders on the platform to again calculate the NPS (see Appendix \ref{appf:survey:founders}). This time, we received 117 responses, with an NPS of 0, a significant jump from the last version. 63\% of users agreed that they would recommend VCWiz to a friend, up dramatically from 25\% previously.
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=\textwidth]{vcwiz/onboarding/landing.png}
-  \caption*{VCWiz Landing Page}
-\end{figure}

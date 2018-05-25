@@ -3,23 +3,27 @@
 
 \section{Summary of Contributions}
 
-In this thesis, our goal was to learn more about the state of founder-investor matching by attempting to improve the efficiency and equitability of this process. In doing this, we have presented two major contributions. The first is VCWiz, a tool which aspires to aid founders in finding and connecting with seed investors. The second is a series of experiments centered around FounderRank, a method of ranking founders based on their likelihood of a successful fundraise.
+In this thesis, our goal was to learn more about the state of founder-investor matching by attempting to improve the efficiency and equitability of this process. In doing this, we have presented two major contributions. The first is VCWiz, a tool that aspires to aid founders in finding and connecting with seed investors. The second is a series of experiments centered around FounderRank, a method of ranking founders based on their likelihood of a successful fundraise.
 
 \subsection{VCWiz}
 
-Through the process of designing and implementing VCWiz, we identified and enumerated three major areas, each with several opportunities, where software tools could improve the investor-founder matching process. We surveyed a group of seed-stage founders and discovered that existing tools for investor discover, research, and outreach were isolated, lacking in functionality, or not practical to use. To address this, we built three iterations of a holistic fundraising tool.
+Through the process of designing and implementing VCWiz, we identified and enumerated three major areas, each with several opportunities, where software tools could improve the investor-founder matching process: sourcing, analyzing, and supporting. We surveyed a group of seed-stage founders and discovered that existing tools for investor discover, research, and outreach were isolated, lacking in functionality, or not practical to use. To address this, we built three iterations of a holistic fundraising tool.
 
-The first iteration of the tool revealed the high bar for functionality and ease of use when it comes to replacing household tools like spreadsheets. The second iteration's feedback focused on the need for a platform to be comprehensive and customizable. The third iteration, which is currently live and in use by hundreds of founders, has proven that there are opportunities to make early-stage investing easier and more manageable to a diverse range of startup founders. The feedback and data from this tool have shown that VCWiz does indeed accomplish its goals of making fundraising more efficient, and more accessible. Hundreds of founders, amongst them many underrepresented minorities, have successfully used the VCWiz platform to discover new investors, leverage their networks, and raise a round of financing.
+The first iteration of the tool revealed the high bar for functionality and ease of use when it comes to replacing household tools like spreadsheets. The second iteration's feedback focused on the need for a platform to be comprehensive and customizable. The third iteration, which is currently live and in use by thousands of founders, has proven that there are opportunities to make early-stage investing easier and more manageable to a diverse range of startup founders. The feedback and data from this tool indicate that VCWiz does make progress towards its goals of making fundraising more efficient, and more accessible. Hundreds of founders, amongst them many underrepresented minorities, have successfully used the VCWiz platform to discover new investors, leverage their networks, and raise a round of financing. However, a lack of comprehensive data and a baseline to evaluate against leave us without conclusive evidence that VCWiz succeeds in its goals.
+
+The difficulties we faced in evaluating the impact of VCWiz on founders with respect to efficiency and equitability are indicative of the need for further research. There are very few quantitative studies on the founder-investor matching process to reference as baselines, and we are in need of standard metrics and infrastructure to understand the impact tools have on underserved founders. It is the hope of the authors that we have opened the door to further study on this front.
 
 The VCWiz Email Graph, collected from the founders on the platform, serves as the basis for the study described in this thesis.
 
 \subsection{FounderRank}
 
-Using the VCWiz Email Graph, we explored the structure and interactions of a graph of seed-stage founders from a variety of backgrounds and pedigrees. We identified that there are three important social characteristics of a founder when fundraising: importance, influence, and access. We identified three graph metrics that correspond to the three characteristics: PageRank, Betweenness Centrality, and Closeness Centrality.
+Using the VCWiz Email Graph, we explored the structure and interactions of a graph of seed-stage founders from a variety of backgrounds and pedigrees. We identified that there are three important social characteristics of a founder when fundraising: importance, influence, and access. We identified three graph metrics that correspond to the characteristics: PageRank, Betweenness Centrality, and Closeness Centrality.
 
-With a linear regression, we showed that the optimal linear combination of these three graph metrics can explain about 40\% of the variance found in a hand-crafted baseline ranking of founders, with a rank correlation of $0.68$. Furthermore, we identified access as the most important characteristic a founder can have when fundraising, followed by their importance. Influence, as proxied by Betweenness Centrality, has a near-perfect correlation with importance, and provides very little information when ranking founders.
+With a linear regression, we showed that the optimal linear combination of these three graph metrics can explain about 35\% of the variance found in a hand-crafted baseline ranking of founders, with a rank correlation of $0.66$. Furthermore, we identified access as the most important characteristic a founder can have when fundraising, followed by their importance. Influence, as proxied by Betweenness Centrality, has a near-perfect correlation with importance, and provides very little information when ranking founders.
 
-By running similar processes over the graph of public funding data, we discovered that a similar trend applies: there is a correlation between Closeness Centrality and founders who have achieved many exists. Despite this trend, there is not sufficient information in the relationships of venture investments alone to predict fundraising success. However, this graph does contain information which can better inform rankings of founders when used to augment a social graph such as the VCWiz Email Graph. Doing so increases the rank correlation defined above non-trivially.
+By running an identical process over the graph of public funding data, we discovered that a similar trend applies: there is a correlation between Closeness Centrality and founders who have achieved many exists. Despite this trend, there is not sufficient information in the relationships of venture investments alone to predict fundraising success. However, this graph does contain information that can better inform rankings of founders when used to augment a social graph such as the VCWiz Email Graph. Doing so increases the rank correlation defined above non-trivially, to $0.70$.
+
+The experiments detailed in this thesis indicate that there is an exciting opportunity to further study how the social characteristics of founders can impact and predict fundraising success. We hope to see additional research exploring how one might use this information to more efficiently match founders with investors, and to educate inexperienced founders on the relationships they should be building.
 
 \section{Future Work}
 
@@ -27,7 +31,7 @@ By running similar processes over the graph of public funding data, we discovere
 
 \subsubsection{Requested Features}
 
-On the VCWiz platform, there are several high-demand features which founders have requested repeatedly. In a survey of 118 founders, the most requested features were:
+On the VCWiz platform, there are several high-demand features that founders have requested repeatedly. In a survey of 118 founders, the most requested features were:
 
 \begin{itemize}
   \item Importing and syncing intro paths from LinkedIn in addition to email
@@ -35,7 +39,7 @@ On the VCWiz platform, there are several high-demand features which founders hav
   \item Per-investor notes across communities of founders
   \item Shared accounts for co-founders to share
   \item A faster, more responsive filtering interface
-  \item Incentives for investors to respond to Intro Requests
+  \item Incentives for investors to respond to intro requests
   \item Custom CRM columns
   \item More angel investors in the database
   \item Information on why an investor made a given investment
@@ -45,7 +49,7 @@ Future work would include evaluating and implementing these features, as well as
 
 \subsubsection{Cold Outreach}
 
-While our data shows that VCWiz is effective at aiding founders in discovering investors, and researching them in-depth, there is still work to be done on supporting the outreach to investors. Many founders found the tool to be less useful than expected when leveraging the conversation tracker and associated features, as it was often inaccurate. Future work includes finding ways to better detect transitions in investor status during an active fundraise, and novel incentives for investors to engage with the Intro Requests functionality on the platform.
+While our data shows that VCWiz is effective at aiding founders in discovering investors, and researching them in-depth, there is still work to be done on supporting the outreach to investors. Many founders found the tool to be less useful than expected when leveraging the conversation tracker and associated features, as it was often inaccurate. Future work includes finding ways to better detect transitions in investor status during an active fundraise, and novel incentives for investors to engage with the intro request functionality on the platform.
 
 \subsubsection{Community Support}
 
@@ -63,6 +67,8 @@ The ranking function discussed in Section \ref{ch4:filtering} is currently very 
 
 While we have examined the relationship between founder and investors in social graphs, we have yet to rank and score the two sets of nodes jointly. There are several opportunities to explore the efficacy of this technique, including explicitly exploring how the scores of the founders that an investor has funded correlate with the rank of the investor, and vice-versa.
 
+Additionally, we have yet to explore the rankings calculated by combining social graph metrics with the baseline metrics used to evaluate FounderRank. Considering characteristics of the company and the founder jointly should result in holistic rankings which can be evaluated over time. We believe these joint rankings would be superior to anything discussed thus far.
+
 \subsubsection{Clustering}
 
 The rank assigned to a founder (or investor) is an indicator of their social characteristics, which might make it a useful feature when clustering individuals. One hypothesis to test in the future is that investors prefer to invest in founders who have a similar relative rank to themselves. If this is true, and investors have an affinity to similarly-ranked founders, then it would be prudent to show founders investors of a comparable rank in a tool such as VCWiz, so as to maximize their chances of an investment being made.
@@ -73,4 +79,4 @@ The experiments to date with data generated from founders on VCWiz has focused o
 
 The crucial hypothesis to test is that incorporating data from the platform increases the quality of recommendations over classic techniques. This information includes attention-based features, such as which investors are clicked on, reached out to, and interacted with. If this hypothesis is proven, a recommender system would increase the efficiency of investment matches, with founders discovering investors they would not have otherwise. However, we must be careful to not sacrifice the equitability of our system: as discussed in Section \ref{ch2:matching}, models trained on existing data can incorporate the dangerous biases that are pervasive in venture capital.
 
-One could test this hypothesis by beginning with a classic item-based recommender system, trained on features extracted from the investor's profile, as well as InvestorRank. This model could be evaluated against a simple baseline, which suggests the co-investors of a startup's competitors as the recommended investors. The performance of this model could then be compared against a hybrid model, which adds a user-based layer that is trained on the click and outreach data of founders on the VCWiz platform.
+One could test this hypothesis by beginning with a classic item-based recommender system, trained on features extracted from the investor's profile. This model could be evaluated against a simple baseline, which suggests the co-investors of a startup's competitors as the recommended investors. The performance of this model could then be compared to a hybrid model, which adds a user-based layer that is trained on the click and outreach data of founders on the VCWiz platform.
